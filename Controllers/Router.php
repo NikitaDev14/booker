@@ -29,6 +29,8 @@
 			{
 				self::$controller->actionIndex(
 					(new \DateTime())->setDate((int)$url[2], (int)$url[3], 1));
+
+				self::$view = new \core\View();
 			}
 			else
 			{

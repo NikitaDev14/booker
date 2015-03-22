@@ -35,6 +35,8 @@
 				$month->append(null);
 			}
 
+			//var_dump($month);
+
 			return $month;
 		}
 	}

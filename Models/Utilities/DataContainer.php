@@ -11,8 +11,8 @@
 
 			return $this;
 		}
-		public function getPageParams()
+		public function getPageParam($arg = null)
 		{
-			return self::$pageParams;
+			return ($arg !== null)? self::$pageParams[$arg] : self::$pageParams;
 		}
 	}
