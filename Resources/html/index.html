@@ -13,23 +13,6 @@
         <script src="/booker/Resources/js/script.js"></script>
     </head>
     <body ng-controller="calendarCtrl as calendar">
-        <div class="container">
-            <table class="table table-bordered calendar example-animate-container">
-                <tr class="info">
-                    <th>Monday</th>
-                    <th>Tuesday</th>
-                    <th>Wednesday</th>
-                    <th>Thursday</th>
-                    <th>Friday</th>
-                    <th>Saturday</th>
-                    <th>Sunday</th>
-                </tr>
-                <tr class="animate-repeat" ng-repeat="week in calendar.month">
-                    <td ng-repeat="day in week track by $index">
-                        {{day}}
-                    </td>
-                </tr>
-            </table>
-        </div>
+        <div class="container" ui-view></div>
     </body>
 </html>

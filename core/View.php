@@ -14,7 +14,7 @@
 
 			$content = $this->model->getCalendar($this->dataContainer->getPageParam('date'));
 
-			require_once '/Resources/html/index.html';
+			require_once 'Resources/html/index.html';
 
 			//echo json_encode(['date' => $this->dataContainer->getPageParam('date')]);
 		}

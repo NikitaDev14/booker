@@ -12,6 +12,9 @@ booker.factory('calendarFact', function () {
     };
 
     this.calendar.create = function (date) {
+        this.month = [];
+        this.baseDate = new Date(date);
+
         date.setDate(date.getDay() - date.getDay() + 1);
 
         var offset = (date.getDay() || 7) - 1;
@@ -56,8 +59,33 @@ booker.factory('calendarFact', function () {
     return this.calendar;
 });
 
-booker.controller('calendarCtrl', function (dataServ, calendarFact) {
-    calendarFact.create(new Date());
+booker.controller('calendarCtrl', function (dataServ, calendarFact, $stateParams) {
+    var date;
 
-    this.month = calendarFact.month;
+    if($stateParams.y !== undefined && $stateParams.m !== undefined) {
+        date = new Date($stateParams.y, $stateParams.m, 1);
+    }
+    else{
+        date = new Date();
+    }
+
+    calendarFact.create(date);
+
+    this.calendar = calendarFact;
+});
+
+booker.config(function ($stateProvider, $urlRouterProvider) {
+    $urlRouterProvider.otherwise('/');
+
+    $stateProvider
+        .state('default', {
+            url: '/',
+            templateUrl: 'Resources/html/calendar.html',
+            controller: 'calendarCtrl'
+        })
+        .state('anotherDate', {
+            url: '/:y/:m',
+            templateUrl: 'Resources/html/calendar.html',
+            controller: 'calendarCtrl'
+        })
 });
