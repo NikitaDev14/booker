@@ -6,6 +6,34 @@ booker.service('dataServ', function ($http) {
     };
 });
 
+booker.factory('paginator', function () {
+    this.paginator = {
+        baseDate: new Date()
+    };
+
+    this.paginator.prev = function () {
+        var temp = new Date(this.baseDate);
+
+        temp.setMonth(this.baseDate.getMonth() - 1);
+
+        return temp;
+    };
+
+    this.paginator.next = function () {
+        var temp = new Date(this.baseDate);
+
+        temp.setMonth(this.baseDate.getMonth() + 1);
+
+        return temp;
+    };
+    
+    this.paginator.monthToString = function () {
+        return this.baseDate.toDateString().substring(4, 7);
+    };
+
+    return this.paginator;
+});
+
 booker.factory('calendarFact', function () {
     this.calendar = {
         month: []
@@ -15,41 +43,43 @@ booker.factory('calendarFact', function () {
         this.month = [];
         this.baseDate = new Date(date);
 
-        date.setDate(date.getDay() - date.getDay() + 1);
+        this.baseDate.setDate(this.baseDate.getDay() - this.baseDate.getDay() + 1);
 
-        var offset = (date.getDay() || 7) - 1;
+        var offset = (this.baseDate.getDay() || 7) - 1;
         var week = [];
-        var month = date.getMonth();
+        var month = this.baseDate.getMonth();
 
         for(var i = 0; i < offset; i++) {
             week.push(null);
         }
 
         for(i = 0; i < 7 - offset; i++) {
-            week.push(date.getDate());
+            week.push(this.baseDate.getDate());
+
+            this.baseDate.setDate(this.baseDate.getDate() + 1);
         }
 
         this.month.push(week);
 
-        while(date.getMonth() === month) {
+        while(this.baseDate.getMonth() === month) {
             week = [];
 
             for(i = 0; i < 7; i++) {
-                date.setDate(date.getDate() + 1);
-
-                if(date.getMonth() !== month) {
+                if(this.baseDate.getMonth() !== month) {
                     break;
                 }
 
-                week.push(date.getDate());
+                week.push(this.baseDate.getDate());
+
+                this.baseDate.setDate(this.baseDate.getDate() + 1);
             }
 
             this.month.push(week);
         }
 
-        date.setDate(date.getDate() - 1);
+        this.baseDate.setDate(this.baseDate.getDate() - 1);
 
-        offset = 7 - (date.getDay() || 7);
+        offset = 7 - (this.baseDate.getDay() || 7);
 
         for(i = 0; i < offset; i++) {
             week.push(null);
@@ -59,18 +89,20 @@ booker.factory('calendarFact', function () {
     return this.calendar;
 });
 
-booker.controller('calendarCtrl', function (dataServ, calendarFact, $stateParams) {
+booker.controller('calendarCtrl', function (dataServ, calendarFact, paginator, $stateParams) {
     var date;
 
     if($stateParams.y !== undefined && $stateParams.m !== undefined) {
-        date = new Date($stateParams.y, $stateParams.m, 1);
+        date = new Date($stateParams.y, $stateParams.m - 1, 1);
     }
     else{
         date = new Date();
     }
 
+    paginator.baseDate = date;
     calendarFact.create(date);
 
+    this.paginator = paginator;
     this.calendar = calendarFact;
 });
 

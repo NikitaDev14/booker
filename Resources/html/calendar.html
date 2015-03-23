@@ -1,24 +1,29 @@
 <nav>
-    <ul class="pagination">
-        <li>
-            <a href="#" aria-label="Previous">
-                <span aria-hidden="true">&laquo;</span>
+    <ul class="pager">
+        <li class="previous">
+            <a ng-href="#{{clnCtrl.paginator.prev().getFullYear()+'/'+(clnCtrl.paginator.prev().getMonth()+1)}}">
+                <span aria-hidden="true">&larr;</span>
+                Older
             </a>
         </li>
-        <li ></li>
-        <li><a href="#/2015/0">1</a></li>
-        <li><a href="#/2015/1">2</a></li>
-        <li><a href="#/2015/2">3</a></li>
-        <li><a href="#/2015/3">4</a></li>
-        <li><a href="#/2015/4">5</a></li>
         <li>
-            <a href="#" aria-label="Next">
-                <span aria-hidden="true">&raquo;</span>
+            <strong ng-bind="clnCtrl.paginator.monthToString()"></strong>
+        </li>
+        <li class="next">
+            <a ng-href="#{{clnCtrl.paginator.next().getFullYear()+'/'+(clnCtrl.paginator.next().getMonth()+1)}}">
+                Newer
+                <span aria-hidden="true">&rarr;</span>
             </a>
         </li>
     </ul>
 </nav>
-<p ng-bind="calendar.calendar.baseDate.getMonth() + 1"></p>
+<label>First day in week</label>
+<label class="radio-inline">
+    <input type="radio" name="firstDay" value="Mon" checked> Mon
+</label>
+<label class="radio-inline">
+    <input type="radio" name="firstDay" value="Sun"> Sun
+</label>
 <table class="table table-bordered calendar">
     <tr class="info">
         <th>Monday</th>
@@ -29,7 +34,7 @@
         <th>Saturday</th>
         <th>Sunday</th>
     </tr>
-    <tr ng-repeat="week in calendar.calendar.month">
+    <tr ng-repeat="week in clnCtrl.calendar.month">
         <td ng-repeat="day in week track by $index" ng-class="{'otherMonth': day === null}">
             {{day}}
         </td>
