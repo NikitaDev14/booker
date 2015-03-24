@@ -7,7 +7,7 @@
             </a>
         </li>
         <li>
-            <strong ng-bind="clnCtrl.paginator.monthToString()"></strong>
+            <strong ng-bind="clnCtrl.paginator.monthToString()+' '+clnCtrl.paginator.getBaseDate().getFullYear()"></strong>
         </li>
         <li class="next">
             <a ng-href="#{{clnCtrl.paginator.next().getFullYear()+'/'+(clnCtrl.paginator.next().getMonth()+1)}}">
@@ -19,13 +19,14 @@
 </nav>
 <label>First day in week</label>
 <label class="radio-inline">
-    <input type="radio" name="firstDay" value="Mon" checked> Mon
+    <input type="radio" ng-model="firstDay" value="Mon"> Mon
 </label>
 <label class="radio-inline">
-    <input type="radio" name="firstDay" value="Sun"> Sun
+    <input type="radio" ng-model="firstDay" value="Sun"> Sun
 </label>
 <table class="table table-bordered calendar">
     <tr class="info">
+        <th ng-repeat="day in clnCtrl.calendar.header"></th>
         <th>Monday</th>
         <th>Tuesday</th>
         <th>Wednesday</th>

@@ -6,104 +6,132 @@ booker.service('dataServ', function ($http) {
     };
 });
 
-booker.factory('paginator', function () {
-    this.paginator = {
-        baseDate: new Date()
+booker.factory('paginatorFact', function () {
+    var baseDate;
+
+    this.paginator = {};
+
+    this.paginator.init = function (date) {
+        baseDate = new Date(date);
     };
 
     this.paginator.prev = function () {
-        var temp = new Date(this.baseDate);
+        var temp = new Date(baseDate);
 
-        temp.setMonth(this.baseDate.getMonth() - 1);
+        temp.setMonth(baseDate.getMonth() - 1);
 
         return temp;
     };
 
     this.paginator.next = function () {
-        var temp = new Date(this.baseDate);
+        var temp = new Date(baseDate);
 
-        temp.setMonth(this.baseDate.getMonth() + 1);
+        temp.setMonth(baseDate.getMonth() + 1);
 
         return temp;
     };
     
     this.paginator.monthToString = function () {
-        return this.baseDate.toDateString().substring(4, 7);
+        return baseDate.toDateString().substring(4, 7);
+    };
+
+    this.paginator.getBaseDate = function () {
+        return new Date(baseDate);
     };
 
     return this.paginator;
 });
 
 booker.factory('calendarFact', function () {
-    this.calendar = {
-        month: []
+    var params = {
+        baseDate: null,
+        firstDay: null
     };
 
-    this.calendar.create = function (date) {
+    this.calendar = {};
+
+    this.calendar.init = function (date, firstDay) {
+        params.baseDate = new Date(date);
+        params.firstDay = firstDay;
+
+        this.createBody();
+    };
+
+    this.calendar.createBody = function () {
         this.month = [];
-        this.baseDate = new Date(date);
 
-        this.baseDate.setDate(this.baseDate.getDay() - this.baseDate.getDay() + 1);
+        var date = new Date(params.baseDate);
 
-        var offset = (this.baseDate.getDay() || 7) - 1;
+        date.setDate(date.getDay() - date.getDay() + 1);
+
+        var offset = (date.getDay() || 7) - 1;
         var week = [];
-        var month = this.baseDate.getMonth();
+        var month = date.getMonth();
 
         for(var i = 0; i < offset; i++) {
             week.push(null);
         }
 
         for(i = 0; i < 7 - offset; i++) {
-            week.push(this.baseDate.getDate());
+            week.push(date.getDate());
 
-            this.baseDate.setDate(this.baseDate.getDate() + 1);
+            date.setDate(date.getDate() + 1);
         }
 
         this.month.push(week);
 
-        while(this.baseDate.getMonth() === month) {
+        while(date.getMonth() === month) {
             week = [];
 
             for(i = 0; i < 7; i++) {
-                if(this.baseDate.getMonth() !== month) {
+                if(date.getMonth() !== month) {
                     break;
                 }
 
-                week.push(this.baseDate.getDate());
+                week.push(date.getDate());
 
-                this.baseDate.setDate(this.baseDate.getDate() + 1);
+                date.setDate(date.getDate() + 1);
             }
 
             this.month.push(week);
         }
 
-        this.baseDate.setDate(this.baseDate.getDate() - 1);
+        date.setDate(date.getDate() - 1);
 
-        offset = 7 - (this.baseDate.getDay() || 7);
+        offset = 7 - (date.getDay() || 7);
 
         for(i = 0; i < offset; i++) {
             week.push(null);
         }
+
+        return this.month;
+    };
+
+    this.calendar.createHeader = function () {
+        this.header = [];
+
+        alert()
     };
 
     return this.calendar;
 });
 
-booker.controller('calendarCtrl', function (dataServ, calendarFact, paginator, $stateParams) {
+booker.controller('calendarCtrl', function ($scope, dataServ, calendarFact, paginatorFact, $stateParams) {
     var date;
+    $scope.firstDay = $scope.firstDay || 'Mon';
 
     if($stateParams.y !== undefined && $stateParams.m !== undefined) {
         date = new Date($stateParams.y, $stateParams.m - 1, 1);
     }
-    else{
+    else {
         date = new Date();
     }
 
-    paginator.baseDate = date;
-    calendarFact.create(date);
-
-    this.paginator = paginator;
+    this.paginator = paginatorFact;
     this.calendar = calendarFact;
+
+    this.paginator.init(date);
+    this.calendar.init(date, $scope.firstDay);
 });
 
 booker.config(function ($stateProvider, $urlRouterProvider) {
