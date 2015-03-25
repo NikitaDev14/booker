@@ -1,7 +1,7 @@
 <nav>
     <ul class="pager">
         <li class="previous">
-            <a ng-href="#{{clnCtrl.paginator.prev().getFullYear()+'/'+(clnCtrl.paginator.prev().getMonth()+1)}}">
+            <a ng-href="#{{clnCtrl.paginator.prev().getFullYear()+'/'+(clnCtrl.paginator.prev().getMonth()+1)+'/'+firstDay}}">
                 <span aria-hidden="true">&larr;</span>
                 Older
             </a>
@@ -10,7 +10,7 @@
             <strong ng-bind="clnCtrl.paginator.monthToString()+' '+clnCtrl.paginator.getBaseDate().getFullYear()"></strong>
         </li>
         <li class="next">
-            <a ng-href="#{{clnCtrl.paginator.next().getFullYear()+'/'+(clnCtrl.paginator.next().getMonth()+1)}}">
+            <a ng-href="#{{clnCtrl.paginator.next().getFullYear()+'/'+(clnCtrl.paginator.next().getMonth()+1)+'/'+firstDay}}">
                 Newer
                 <span aria-hidden="true">&rarr;</span>
             </a>
@@ -19,21 +19,20 @@
 </nav>
 <label>First day in week</label>
 <label class="radio-inline">
-    <input type="radio" ng-model="firstDay" value="Mon"> Mon
+    <a ng-href="#{{clnCtrl.paginator.getBaseDate().getFullYear()+'/'+(clnCtrl.paginator.getBaseDate().getMonth()+1)+'/'+firstDay}}">
+        <input type="radio" name="firstDay" ng-model="firstDay" value="mon" checked>
+    </a>
+    Monday
 </label>
 <label class="radio-inline">
-    <input type="radio" ng-model="firstDay" value="Sun"> Sun
+    <a ng-href="#{{clnCtrl.paginator.getBaseDate().getFullYear()+'/'+(clnCtrl.paginator.getBaseDate().getMonth()+1)+'/'+firstDay}}">
+        <input type="radio" name="firstDay" ng-model="firstDay" value="sun">
+    </a>
+    Sunday
 </label>
 <table class="table table-bordered calendar">
     <tr class="info">
-        <th ng-repeat="day in clnCtrl.calendar.header"></th>
-        <th>Monday</th>
-        <th>Tuesday</th>
-        <th>Wednesday</th>
-        <th>Thursday</th>
-        <th>Friday</th>
-        <th>Saturday</th>
-        <th>Sunday</th>
+        <th ng-repeat="day in clnCtrl.calendar.header" ng-bind="day"></th>
     </tr>
     <tr ng-repeat="week in clnCtrl.calendar.month">
         <td ng-repeat="day in week track by $index" ng-class="{'otherMonth': day === null}">
