@@ -16,7 +16,7 @@ DELIMITER $$
 -- Процедуры
 --
 DROP PROCEDURE IF EXISTS `addAppointment`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `addAppointment`(IN `NewDate` DATE, IN `NewStart` TIME, IN `NewEnd` TIME, IN `idRoom` INT(6) UNSIGNED, IN `idEmployee` INT(6) UNSIGNED, IN `Description` TEXT CHARSET utf8, IN `Recurring` ENUM('','weekly','bi-weekly','monthly') CHARSET utf8, IN `Duration` INT(1) UNSIGNED)
+CREATE PROCEDURE `addAppointment`(IN `NewDate` DATE, IN `NewStart` TIME, IN `NewEnd` TIME, IN `idRoom` INT(6) UNSIGNED, IN `idEmployee` INT(6) UNSIGNED, IN `Description` TEXT CHARSET utf8, IN `Recurring` ENUM('','weekly','bi-weekly','monthly') CHARSET utf8, IN `Duration` INT(1) UNSIGNED)
     MODIFIES SQL DATA
     COMMENT '@Date @Start @End @idRoom @idEmpl @Descr @Recurring @Duration'
 BEGIN
@@ -89,7 +89,7 @@ BEGIN
 END$$
 
 DROP PROCEDURE IF EXISTS `addEmployee`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `addEmployee`(IN `Email` VARCHAR(255) CHARSET utf8, IN `Name` VARCHAR(50) CHARSET utf8, IN `Passw` VARCHAR(50) CHARSET utf8)
+CREATE PROCEDURE `addEmployee`(IN `Email` VARCHAR(255) CHARSET utf8, IN `Name` VARCHAR(50) CHARSET utf8, IN `Passw` VARCHAR(50) CHARSET utf8)
     MODIFIES SQL DATA
     COMMENT '@Email @Name @Password'
 BEGIN
@@ -103,7 +103,7 @@ END$$
 -- Функции
 --
 DROP FUNCTION IF EXISTS `getColision`$$
-CREATE DEFINER=`root`@`localhost` FUNCTION `getColision`(`NewDate` DATE, `NewStart` TIME, `NewEnd` TIME, `idRoom` INT(6) UNSIGNED) RETURNS varchar(15) CHARSET utf8
+CREATE FUNCTION `getColision`(`NewDate` DATE, `NewStart` TIME, `NewEnd` TIME, `idRoom` INT(6) UNSIGNED) RETURNS varchar(15) CHARSET utf8
     READS SQL DATA
     COMMENT '@Date @Start @End @idRoom'
 BEGIN
