@@ -2,4 +2,4 @@
 	require_once 'config.php';
 	require_once 'loader.php';
 
-	Controllers\Router::start();
+	Controllers\Router::getInstance()->start();

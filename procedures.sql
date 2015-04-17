@@ -89,14 +89,69 @@ BEGIN
 END$$
 
 DROP PROCEDURE IF EXISTS `addEmployee`$$
-CREATE PROCEDURE `addEmployee`(IN `Email` VARCHAR(255) CHARSET utf8, IN `Name` VARCHAR(50) CHARSET utf8, IN `Passw` VARCHAR(50) CHARSET utf8)
+CREATE PROCEDURE `addEmployee`(IN `Email` VARCHAR(255) CHARSET utf8, IN `Name` VARCHAR(50) CHARSET utf8, IN `Passw` VARCHAR(50) CHARSET utf8, IN `IsAdmin` TINYINT(1) UNSIGNED)
     MODIFIES SQL DATA
     COMMENT '@Email @Name @Password'
 BEGIN
-	INSERT INTO employees (employees.Email, employees.Name, employees.Password)
-    VALUES (Email, Name, PASSWORD(Passw));
+	INSERT INTO employees (employees.Email, employees.Name, employees.Password, employees.IsAdmin)
+    VALUES (Email, Name, PASSWORD(Passw), IsAdmin);
 
     SELECT LAST_INSERT_ID() AS newId;
+END$$
+
+DROP PROCEDURE IF EXISTS `getEmplByCookie`$$
+CREATE PROCEDURE `getEmplByCookie`(IN `idUser` INT(6) UNSIGNED, IN `SessionId` VARCHAR(50) CHARSET utf8)
+    READS SQL DATA
+    COMMENT '@idUser @SessionId'
+BEGIN
+	SELECT empl.idEmployee, empl.SessionId
+    FROM employees AS empl
+    WHERE empl.idEmployee = idUser AND
+    	empl.SessionId = SessionId;
+END$$
+
+DROP PROCEDURE IF EXISTS `getEmplByEml`$$
+CREATE PROCEDURE `getEmplByEml`(IN `Email` VARCHAR(255) CHARSET utf8)
+    READS SQL DATA
+    COMMENT '@Email'
+BEGIN
+	SELECT empl.idEmployee
+    FROM employees AS empl
+    WHERE empl.Email = Email;
+END$$
+
+DROP PROCEDURE IF EXISTS `getEmplByEmlPass`$$
+CREATE PROCEDURE `getEmplByEmlPass`(IN `Email` VARCHAR(255) CHARSET utf8, IN `Passw` VARCHAR(50) CHARSET utf8)
+    READS SQL DATA
+    COMMENT '@Email @Password'
+BEGIN
+	SELECT empl.idEmployee, empl.Name, empl.IsAdmin
+    FROM employees AS empl
+    WHERE empl.Email = Email AND
+    	empl.Password = PASSWORD(Passw);
+END$$
+
+DROP PROCEDURE IF EXISTS `sessionDestroy`$$
+CREATE PROCEDURE `sessionDestroy`(IN `idEmployee` INT(6) UNSIGNED)
+    MODIFIES SQL DATA
+    COMMENT '@idEmployee'
+BEGIN
+	UPDATE employees
+    SET employees.SessionId = NULL;
+
+    SELECT ROW_COUNT() AS result;
+END$$
+
+DROP PROCEDURE IF EXISTS `sessionStart`$$
+CREATE PROCEDURE `sessionStart`(IN `idEmployee` INT(6) UNSIGNED, IN `SessionId` VARCHAR(50) CHARSET utf8)
+    MODIFIES SQL DATA
+    COMMENT '@idEmployee @SessionId'
+BEGIN
+	UPDATE employees
+    SET employees.SessionId = SessionId
+    WHERE employees.idEmployee = idEmployee;
+
+    SELECT ROW_COUNT() AS result;
 END$$
 
 --

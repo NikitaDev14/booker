@@ -1,4 +1,4 @@
-booker.controller('calendarCtrl', function ($scope, dataServ, calendarFact, paginatorFact, $stateParams) {
+booker.controller('calendarController', function ($scope, dataServ, calendarFact, paginatorFact, $stateParams) {
     var date;
 
     $scope.firstDay = $stateParams.d || 'mon';

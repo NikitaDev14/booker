@@ -1,6 +1,11 @@
-RewriteEngine on
+<IfModule mod_rewrite.c>
+    RewriteEngine On
 
-RewriteCond %{REQUEST_FILENAME} !-f
-RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
 
-RewriteRule .* index.php [L]
+    #DirectoryIndex /~user10/PHP/book_shop/index.php
+    DirectoryIndex /booker/index.php
+
+    RewriteRule ^(.*)$ index.php [QSA,L]
+</IfModule>

@@ -1,0 +1,30 @@
+<nav class="navbar navbar-default navbar-fixed-top">
+    <div class="container-fluid">
+        <div class="row" ng-controller="userController as userCtrl">
+            <div class="col-xs-5">
+                <a class="btn btn-warning" ng-href="#/" role="button"
+                   ng-bind="userCtrl.lang.template.header.mainPage"></a>
+            </div>
+            <div class="col-xs-3 text-center">
+                <button class="btn btn-default" type="button" ng-click="userCtrl.lang.changeLang('ua')"
+                        ng-class="{'active': userCtrl.lang.get() === 'ua'}">
+                    <img class="lang-button" src="Resources/img/ua_icon.jpg">
+                </button>
+                <button class="btn btn-default" type="button" ng-click="userCtrl.lang.changeLang('en')"
+                        ng-class="{'active': userCtrl.lang.get() === 'en'}">
+                    <img class="lang-button" src="Resources/img/usa_icon.png">
+                </button>
+            </div>
+            <div class="col-xs-4 text-right">
+
+                <a class="btn btn-success" ng-href="#/signup" ng-hide="userCtrl.isValidUser" role="button"
+                   ng-bind="userCtrl.lang.template.header.signup"></a>
+
+                <form action="index.php?controller=User&action=logout" method="post">
+                    <button class="btn btn-default" type="submit" ng-show="userCtrl.isValidUser"
+                            ng-bind="userCtrl.lang.template.header.logout"></button>
+                </form>
+            </div>
+        </div>
+    </div>
+</nav>

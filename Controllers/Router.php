@@ -1,42 +1,58 @@
 <?php
-
 	namespace Controllers;
 
 	class Router
 	{
-		private function __construct(){}
+		private static $instance;
 
-		private static $request_tpl = array
-		(
-			'index' => '/^\/((ru|en)\/room=(1|2|3)\/m=([1-9]|1[0-2])\/y=20(1[5-9]|2[0-9]|30)\/(12|24)\/(mon|sun))?$/'
-		);
-
-		private static $controller;
-		private static $view;
-
-		private static function isValidURL($url)
+		private function __construct()
 		{
-			return preg_match(self::$request_tpl[$url], $_SERVER['REQUEST_URI']);
 		}
 
-		public static function start()
+		public static function getInstance()
 		{
-			self::$controller = new PageControllers\IndexController();
-
-			$url = explode('/', $_SERVER['REQUEST_URI']);
-
-			if(!empty($url[2]))
-			{
-				self::$controller->actionIndex(
-					(new \DateTime())->setDate((int)$url[2], (int)$url[3], 1));
-
-				self::$view = new \core\View();
+			if (null === self::$instance) {
+				self::$instance = new Router();
 			}
-			else
-			{
-				self::$controller->actionIndex(new \DateTime());
 
-				self::$view = new \core\View();
+			return self::$instance;
+		}
+
+		/**
+		 * application start
+		 */
+		public function start()
+		{
+			$controllerName = 'Index'; // default controller
+			$actionName = 'index'; // default action
+
+			$view = new \Views\View();
+
+			$form = false;
+
+			// from HTTP request define needed controller its action,
+			// and set HTTP form
+
+			if (!empty($_GET['controller']))
+			{
+				$controllerName = $_GET['controller'];
+				$actionName = $_GET['action'];
+
+				$form = $_GET;
+			} elseif (!empty($_POST['controller']))
+			{
+				$controllerName = $_POST['controller'];
+				$actionName = $_POST['action'];
+
+				$form = $_POST;
 			}
+
+			$controllerPath = '\Controllers\\' . $controllerName . 'Controller';
+
+			$controllerObj = new $controllerPath($form);
+
+			$controllerObj->$actionName();
+
+			$view->render();
 		}
 	}

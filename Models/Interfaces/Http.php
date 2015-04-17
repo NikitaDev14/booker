@@ -1,17 +1,12 @@
 <?php
 
-	namespace Models\Utilities;
+	namespace Models\Interfaces;
 
-	/**
-	 * this is link between controller and view
-	 * controller push data here
-	 * view pull data here
-	 */
-	class DataContainer
+	class Http
 	{
 		private static $instance;
 
-		private $params; // data set by controller
+		private $params; // data from HTTP form
 
 		private function __construct()
 		{
@@ -20,7 +15,7 @@
 		public static function getInstance()
 		{
 			if (null === self::$instance) {
-				self::$instance = new DataContainer();
+				self::$instance = new Http();
 			}
 
 			return self::$instance;

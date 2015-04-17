@@ -1,8 +1,13 @@
-.calendar td:hover
+body
+{
+    padding-top: 70px;
+}
+
+.calendar td:hover, .otherMonth
 {
     background-color: rgb(240, 240, 240);
 }
-.otherMonth
-{
-    background-color: rgb(240, 240, 240);
+
+.lang-button {
+    height: 20px;
 }

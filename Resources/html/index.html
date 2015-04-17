@@ -6,17 +6,23 @@
         <script src="https://code.jquery.com/jquery-1.11.2.min.js"></script>
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css">
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap-theme.min.css">
-        <link rel="stylesheet" href="/booker/Resources/css/style.css">
+        <link rel="stylesheet" href="Resources/css/style.css">
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.js"></script>
-	    <script src="/booker/Resources/js/core/angular.js"></script>
-        <script src="/booker/Resources/js/core/ui-router.js"></script>
-        <script src="/booker/Resources/js/models/dataService.js"></script>
-        <script src="/booker/Resources/js/models/paginatorFactory.js"></script>
-        <script src="/booker/Resources/js/models/calendarFactory.js"></script>
-        <script src="/booker/Resources/js/controllers/calendarController.js"></script>
-        <script src="/booker/Resources/js/config.js"></script>
+        <script src="Resources/js/core/angular.js"></script>
+        <script src="Resources/js/core/ui-router.js"></script>
+        <script src="Resources/js/models/booker.js"></script>
+        <script src="Resources/js/services/dataService.js"></script>
+        <script src="Resources/js/services/userService.js"></script>
+        <script src="Resources/js/services/langService.js"></script>
+        <script src="Resources/js/factories/paginatorFactory.js"></script>
+        <script src="Resources/js/factories/calendarFactory.js"></script>
+        <script src="Resources/js/factories/langFactory.js"></script>
+        <script src="Resources/js/controllers/calendarController.js"></script>
+        <script src="Resources/js/controllers/userController.js"></script>
+        <script src="Resources/js/directives/header.js"></script>
+        <script src="Resources/js/config.js"></script>
     </head>
-    <body ng-controller="calendarCtrl as clnCtrl">
+    <body>
         <div class="container" ui-view></div>
     </body>
 </html>
