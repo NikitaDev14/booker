@@ -10,7 +10,7 @@
 		 */
 		public function validate()
 		{
-			$result = (bool)$this->objFactory->getObjValidatorUser()
+			$result = (bool) $this->objFactory->getObjValidatorUser()
 				->isValidUser();
 
 			$this->objFactory->getObjDataContainer()
@@ -27,13 +27,15 @@
 			$formData = $this->objFactory->getObjHttp()
 				->setParams($this->form)->getParams();
 
-			$userId = $this->objFactory->getObjValidatorLogin()
+			$user = $this->objFactory->getObjValidatorLogin()
 				->setForm($formData)->isValidForm();
 
+			$nextPage = 'Echo';
 			$result = false;
 
-			if (!empty($userId)) {
-				$userId = $userId[0]['idUser'];
+			if (!empty($user))
+			{
+				$userId = $user[0]['idEmployee'];
 
 				$sessionId = $this->objFactory->getObjSession()
 					->getSessionId();
@@ -45,10 +47,11 @@
 					->setCookie('id', $userId)
 					->setCookie('session', $sessionId);
 
-				$result = $userId;
+				$nextPage = 'Login';
+				$result = $user;
 			}
 
 			$this->objFactory->getObjDataContainer()
-				->setParams(['nextPage' => 'Echo', 'result' => $result]);
+				->setParams(['nextPage' => $nextPage, 'result' => $result]);
 		}
 	}

@@ -64,11 +64,11 @@
 		 * @param $idUser
 		 * @param $sessionId
 		 * set new session for specified user
-		 * @return (ROW_COUNT())
+		 * @return bool (result)
 		 */
 		public function sessionStart($idUser, $sessionId)
 		{
-			return $this->objFactory->getObjDatabase()
+			return (bool) $this->objFactory->getObjDatabase()
 				->setQuery('CALL sessionStart(?, ?)')
 				->setParam([$idUser, $sessionId])
 				->execute()->getResult();
@@ -77,11 +77,11 @@
 		/**
 		 * @param $idUser
 		 * stop session of specified user
-		 * @return (ROW_COUNT())
+		 * @return bool (result)
 		 */
 		public function sessionDestroy($idUser)
 		{
-			return $this->objFactory->getObjDatabase()
+			return (bool) $this->objFactory->getObjDatabase()
 				->setQuery('CALL sessionDestroy(?)')
 				->setParam([$idUser])->execute()->getResult();
 		}

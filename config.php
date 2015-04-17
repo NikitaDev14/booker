@@ -14,3 +14,6 @@
 	define('PASSWORD_TEMPLATE', '/.{4,}/');
 
 	define('COOKIE_EXPIRE', 60 * 15);
+
+	define('HEADER_FOR_HTML', 'Content-Type: text/html; charset=utf-8');
+	define('HEADER_FOR_JSON', 'Content-Type: application/json; charset=utf-8');

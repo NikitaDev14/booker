@@ -1,4 +1,4 @@
-booker.factory('paginatorFact', function () {
+booker.factory('paginatorFactory', function () {
     var baseDate;
 
     this.paginator = {};

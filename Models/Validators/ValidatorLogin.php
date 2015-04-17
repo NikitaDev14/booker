@@ -9,7 +9,8 @@
 
 		public static function getInstance()
 		{
-			if (null === self::$instance) {
+			if (null === self::$instance)
+			{
 				self::$instance = new ValidatorLogin();
 			}
 
@@ -29,14 +30,17 @@
 		 */
 		public function isValidForm()
 		{
-			if (isset($this->form['email'], $this->form['password'])) {
+			if (isset($this->form['email'], $this->form['password']))
+			{
 				$result = $this->objFactory->getObjUser()
-					->isValidLogin
+					->getUserByEmlPass
 					(
 						$this->form['email'],
 						$this->form['password']
 					);
-			} else {
+			}
+			else
+			{
 				$result = false;
 			}
 

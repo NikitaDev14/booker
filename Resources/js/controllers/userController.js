@@ -24,9 +24,11 @@ booker.controller('userController',
                 }
             });
         };
+
         this.logout = function () {
             userService.logout();
         };
+
         this.signup = function () {
             userService.signup($scope.email, $scope.password,
                 $scope.passwordRepeat, function (data) {

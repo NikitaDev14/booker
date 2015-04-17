@@ -8,7 +8,8 @@
 
 		public static function getInstance()
 		{
-			if (null === self::$instance) {
+			if (null === self::$instance)
+			{
 				self::$instance = new ValidatorUser();
 			}
 
@@ -26,23 +27,7 @@
 			$idUser = $cookie->getCookie('id');
 			$sessionId = $cookie->getCookie('session');
 
-			$user = $this->objFactory->getObjUser()
+			return $this->objFactory->getObjUser()
 				->getUserByCookie($idUser, $sessionId);
-
-			if (!empty($user[0]['idUser']) && !empty($user[0]['SessionId'])) {
-				if ($user[0]['idUser'] === $idUser &&
-					$user[0]['SessionId'] === $sessionId
-				) {
-					$result = $idUser;
-				} else {
-					$cookie->deleteCookie('id')->deleteCookie('session');
-
-					$result = false;
-				}
-			} else {
-				$result = false;
-			}
-
-			return $result;
 		}
 	}

@@ -1,4 +1,4 @@
-booker.factory('calendarFact', function () {
+booker.factory('calendarFactory', function () {
     var params = {
         baseDate: null,
         firstDay: null
