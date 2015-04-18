@@ -17,12 +17,13 @@
         <script src="Resources/js/factories/paginatorFactory.js"></script>
         <script src="Resources/js/factories/calendarFactory.js"></script>
         <script src="Resources/js/factories/langFactory.js"></script>
+        <script src="Resources/js/factories/userFactory.js"></script>
         <script src="Resources/js/controllers/calendarController.js"></script>
         <script src="Resources/js/controllers/userController.js"></script>
         <script src="Resources/js/directives/header.js"></script>
         <script src="Resources/js/config.js"></script>
     </head>
-    <body>
+    <body ng-controller="userController as userCtrl">
         <div class="container" ui-view></div>
     </body>
 </html>

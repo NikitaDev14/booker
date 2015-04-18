@@ -1,11 +1,6 @@
-booker.controller('calendarController', function ($scope, userService, calendarFactory, paginatorFactory, $stateParams, $location) {
+booker.controller('calendarController', function ($scope, langFactory, calendarFactory, paginatorFactory, $stateParams) {
 
-    userService.isValidUser(function (response) {
-        if('' === response) {
-            $location.path('/login');
-        }
-    });
-
+    var self = this;
     var date;
 
     $scope.firstDay = $stateParams.d || 'mon';
@@ -20,6 +15,8 @@ booker.controller('calendarController', function ($scope, userService, calendarF
     this.paginator = paginatorFactory;
     this.calendar = calendarFactory;
 
+    this.lang = langFactory;
+
     this.paginator.init(date);
-    this.calendar.init(date, $scope.firstDay);
+    this.calendar.init(date, $scope.firstDay, self.lang.template.days);
 });

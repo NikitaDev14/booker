@@ -10,7 +10,7 @@
 		 */
 		public function generate($user)
 		{
-			//header(HEADER_FOR_JSON);
+			header(HEADER_FOR_JSON);
 
 			echo json_encode
 			([

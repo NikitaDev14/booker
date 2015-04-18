@@ -23,10 +23,6 @@ booker.factory('paginatorFactory', function () {
         return temp;
     };
 
-    this.paginator.monthToString = function () {
-        return baseDate.toDateString().substring(4, 7);
-    };
-
     this.paginator.getBaseDate = function () {
         return new Date(baseDate);
     };

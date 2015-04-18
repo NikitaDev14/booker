@@ -1,43 +1,45 @@
 <div class="container" ng-controller="calendarController as clnCtrl">
+    <div header></div>
     <nav>
         <ul class="pager">
             <li class="previous">
                 <a ng-href="#{{clnCtrl.paginator.prev().getFullYear()+'/'+(clnCtrl.paginator.prev().getMonth()+1)+'/'+firstDay}}">
                     <span aria-hidden="true">&larr;</span>
-                    Older
+                    {{clnCtrl.lang.template.main.btnPrev}}
                 </a>
             </li>
             <li>
-                <strong ng-bind="clnCtrl.paginator.monthToString()+' '+clnCtrl.paginator.getBaseDate().getFullYear()"></strong>
+                <strong ng-bind="clnCtrl.lang.template.mons[clnCtrl.paginator.getBaseDate().getMonth()]
+                    +' '+clnCtrl.paginator.getBaseDate().getFullYear()"></strong>
             </li>
             <li class="next">
                 <a ng-href="#{{clnCtrl.paginator.next().getFullYear()+'/'+(clnCtrl.paginator.next().getMonth()+1)+'/'+firstDay}}">
-                    Newer
+                    {{clnCtrl.lang.template.main.btnNext}}
                     <span aria-hidden="true">&rarr;</span>
                 </a>
             </li>
         </ul>
     </nav>
-    <label>First day in week</label>
+    <label ng-bind="clnCtrl.lang.template.main.labFrstDay"></label>
     <label class="radio-inline">
         <a ng-href="#{{clnCtrl.paginator.getBaseDate().getFullYear()+'/'+(clnCtrl.paginator.getBaseDate().getMonth()+1)+'/'+firstDay}}">
             <input type="radio" name="firstDay" ng-model="firstDay" value="mon" checked>
         </a>
-        Monday
+        {{clnCtrl.lang.template.days.mon}}
     </label>
     <label class="radio-inline">
         <a ng-href="#{{clnCtrl.paginator.getBaseDate().getFullYear()+'/'+(clnCtrl.paginator.getBaseDate().getMonth()+1)+'/'+firstDay}}">
             <input type="radio" name="firstDay" ng-model="firstDay" value="sun">
         </a>
-        Sunday
+        {{clnCtrl.lang.template.days.sun}}
     </label>
     <table class="table table-bordered calendar">
         <tr class="info">
-            <th ng-repeat="day in clnCtrl.calendar.header" ng-bind="day"></th>
+            <th ng-repeat="day in clnCtrl.calendar.header" ng-bind="clnCtrl.lang.template.days[day]"></th>
         </tr>
         <tr ng-repeat="week in clnCtrl.calendar.month">
-            <td ng-repeat="day in week track by $index" ng-class="{'otherMonth': day === null}">
-                {{day}}
+            <td ng-repeat="day in week track by $index" ng-class="{'otherMonth': day === null || day.day === 6 || day.day === 0}">
+                {{day.date}}
             </td>
         </tr>
     </table>

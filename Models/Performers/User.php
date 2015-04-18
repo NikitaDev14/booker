@@ -52,11 +52,11 @@
 		 * check session of specified user
 		 * @return (idUser, SessionId)
 		 */
-		public function getUserByCookie($idUser, $sessionId)
+		public function getUserByCookie($idUser, $sessionId, $isAdmin)
 		{
 			return $this->objFactory->getObjDatabase()
-				->setQuery('CALL getEmplByCookie(?, ?)')
-				->setParam([$idUser, $sessionId])
+				->setQuery('CALL getEmplByCookie(?, ?, ?)')
+				->setParam([$idUser, $sessionId, $isAdmin])
 				->execute()->getResult();
 		}
 

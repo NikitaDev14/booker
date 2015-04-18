@@ -6,11 +6,17 @@ booker.factory('calendarFactory', function () {
 
     this.calendar = {};
 
-    this.calendar.init = function (date, firstDay) {
+    this.calendar.init = function (date, firstDay, header) {
         params.baseDate = new Date(date);
         params.firstDay = firstDay;
 
-        this.createHeader();
+        var tempHeader = [];
+
+        for(var item in header) {
+            tempHeader.push(item)
+        }
+
+        this.createHeader(tempHeader);
         this.createBody();
     };
 
@@ -21,7 +27,9 @@ booker.factory('calendarFactory', function () {
 
         date.setDate(date.getDay() - date.getDay() + 1);
 
-        var offset = (params.firstDay === 'mon')? (date.getDay() || 7) - 1 : date.getDay();
+        var offset = (params.firstDay === 'mon')?
+            (date.getDay() || 7) - 1 : date.getDay();
+
         var week = [];
         var month = date.getMonth();
 
@@ -30,7 +38,11 @@ booker.factory('calendarFactory', function () {
         }
 
         for(i = 0; i < 7 - offset; i++) {
-            week.push(date.getDate());
+
+            week.push({
+                'date': date.getDate(),
+                'day': date.getDay()
+            });
 
             date.setDate(date.getDate() + 1);
         }
@@ -45,7 +57,10 @@ booker.factory('calendarFactory', function () {
                     break;
                 }
 
-                week.push(date.getDate());
+                week.push({
+                    'date': date.getDate(),
+                    'day': date.getDay()
+                });
 
                 date.setDate(date.getDate() + 1);
             }
@@ -55,20 +70,21 @@ booker.factory('calendarFactory', function () {
 
         date.setDate(date.getDate() - 1);
 
-        offset = (params.firstDay === 'mon')? 7 - (date.getDay() || 7) : 6 - date.getDay();
+        offset = (params.firstDay === 'mon')?
+            7 - (date.getDay() || 7) : 6 - date.getDay();
 
         for(i = 0; i < offset; i++) {
             week.push(null);
         }
     };
 
-    this.calendar.createHeader = function () {
-        this.header = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+    this.calendar.createHeader = function (header) {
+        this.header = header;
 
-        if(this.header[6].toLowerCase().indexOf(params.firstDay) >= 0) {
+        if(this.header[6] === params.firstDay) {
             this.header.unshift(this.header.pop());
         }
-        else if(this.header[1].toLowerCase().indexOf(params.firstDay) >= 0) {
+        else if(this.header[1] === params.firstDay) {
             this.header.push(this.header.shift());
         }
     };

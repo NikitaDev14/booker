@@ -6,15 +6,26 @@
 	{
 		/**
 		 * if user is logged
-		 * set response true, false otherwise
+		 * set response (idEmployee, Name, IsAdmin), false otherwise
 		 */
 		public function validate()
 		{
-			$result = (bool) $this->objFactory->getObjValidatorUser()
+			$result = $this->objFactory->getObjValidatorUser()
 				->isValidUser();
 
+			$nextPage = 'Echo';
+
+			if(false != $result)
+			{
+				$nextPage = 'Login';
+			}
+			else
+			{
+				$result = (bool) $result;
+			}
+
 			$this->objFactory->getObjDataContainer()
-				->setParams(['nextPage' => 'Echo', 'result' => $result]);
+				->setParams(['nextPage' => $nextPage, 'result' => $result]);
 		}
 
 		/**
@@ -45,6 +56,7 @@
 
 				$this->objFactory->getObjCookie()
 					->setCookie('id', $userId)
+					->setCookie('isAdmin', $user[0]['IsAdmin'])
 					->setCookie('session', $sessionId);
 
 				$nextPage = 'Login';
@@ -53,5 +65,28 @@
 
 			$this->objFactory->getObjDataContainer()
 				->setParams(['nextPage' => $nextPage, 'result' => $result]);
+		}
+
+		/**
+		 * delete cookie and session
+		 * set response true, false otherwise
+		 */
+		public function logout()
+		{
+			$result = $this->objFactory->getObjValidatorUser()->isValidUser();
+
+			if(false != $result)
+			{
+				$result = $this->objFactory->getObjUser()
+					->sessionDestroy($result[0]['idEmployee']);
+
+				$this->objFactory->getObjCookie()
+					->deleteCookie('id')
+					->deleteCookie('isAdmin')
+					->deleteCookie('session');
+			}
+
+			$this->objFactory->getObjDataContainer()
+				->setParams(['nextPage' => 'Echo', 'result' => $result]);
 		}
 	}

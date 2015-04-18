@@ -26,8 +26,11 @@
 
 			$idUser = $cookie->getCookie('id');
 			$sessionId = $cookie->getCookie('session');
+			$isAdmin = $cookie->getCookie('isAdmin');
 
-			return $this->objFactory->getObjUser()
-				->getUserByCookie($idUser, $sessionId);
+			$result = $this->objFactory->getObjUser()
+				->getUserByCookie($idUser, $sessionId, $isAdmin);
+
+			return $result;
 		}
 	}
