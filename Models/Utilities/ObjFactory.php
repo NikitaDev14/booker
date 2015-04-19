@@ -74,4 +74,14 @@
 		{
 			return new \Models\Performers\User();
 		}
+
+		public function getObjRoom()
+		{
+			return new \Models\Performers\Room();
+		}
+
+		public function getObjAppointment()
+		{
+			return new \Models\Performers\Appointment();
+		}
 	}

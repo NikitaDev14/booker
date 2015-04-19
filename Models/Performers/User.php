@@ -12,7 +12,7 @@
 		 * add new email, name, password, isAdmin (flag)
 		 * @return (newId)
 		 */
-		public function addEmployee($email, $name, $password, $isAdmin)
+		public function addUser($email, $name, $password, $isAdmin)
 		{
 			return $this->objFactory->getObjDatabase()
 				->setQuery('CALL addEmployee(?, ?, ?, ?)')
@@ -36,7 +36,7 @@
 		 * @param $email
 		 * @param $password
 		 * check existing pair $email and $password
-		 * @return (idEmployee, Name, isAdmin)
+		 * @return (idEmployee, IsAdmin)
 		 */
 		public function getUserByEmlPass($email, $password)
 		{
@@ -50,7 +50,7 @@
 		 * @param $idUser
 		 * @param $sessionId
 		 * check session of specified user
-		 * @return (idUser, SessionId)
+		 * @return (idEmployee, Name)
 		 */
 		public function getUserByCookie($idUser, $sessionId, $isAdmin)
 		{

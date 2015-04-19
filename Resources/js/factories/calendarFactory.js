@@ -1,14 +1,28 @@
 booker.factory('calendarFactory', function () {
     var params = {
         baseDate: null,
-        firstDay: null
+        firstDay: null,
+        events: null
+    };
+
+    var getEventsOfDay = function (day) {
+        var result = [];
+
+        for(var event in params.events) {
+            if((new Date(params.events[event].Date)).getDate() === day) {
+                result.push(params.events[event]);
+            }
+        }
+
+        return result;
     };
 
     this.calendar = {};
 
-    this.calendar.init = function (date, firstDay, header) {
+    this.calendar.init = function (date, firstDay, header, events) {
         params.baseDate = new Date(date);
         params.firstDay = firstDay;
+        params.events = events;
 
         var tempHeader = [];
 
@@ -41,7 +55,8 @@ booker.factory('calendarFactory', function () {
 
             week.push({
                 'date': date.getDate(),
-                'day': date.getDay()
+                'day': date.getDay(),
+                'events': getEventsOfDay(date.getDate())
             });
 
             date.setDate(date.getDate() + 1);
@@ -59,7 +74,8 @@ booker.factory('calendarFactory', function () {
 
                 week.push({
                     'date': date.getDate(),
-                    'day': date.getDay()
+                    'day': date.getDay(),
+                    'events': getEventsOfDay(date.getDate())
                 });
 
                 date.setDate(date.getDate() + 1);

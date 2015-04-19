@@ -20,19 +20,34 @@
             </li>
         </ul>
     </nav>
-    <label ng-bind="clnCtrl.lang.template.main.labFrstDay"></label>
-    <label class="radio-inline">
-        <a ng-href="#{{clnCtrl.paginator.getBaseDate().getFullYear()+'/'+(clnCtrl.paginator.getBaseDate().getMonth()+1)+'/'+firstDay}}">
-            <input type="radio" name="firstDay" ng-model="firstDay" value="mon" checked>
-        </a>
-        {{clnCtrl.lang.template.days.mon}}
-    </label>
-    <label class="radio-inline">
-        <a ng-href="#{{clnCtrl.paginator.getBaseDate().getFullYear()+'/'+(clnCtrl.paginator.getBaseDate().getMonth()+1)+'/'+firstDay}}">
-            <input type="radio" name="firstDay" ng-model="firstDay" value="sun">
-        </a>
-        {{clnCtrl.lang.template.days.sun}}
-    </label>
+    <div class="row">
+        <div class="col-xs-6 text-center">
+            <label ng-bind="clnCtrl.lang.template.main.labFrstDay"></label>
+            <label class="radio-inline">
+                <a ng-href="#{{clnCtrl.paginator.getBaseDate().getFullYear()+'/'+(clnCtrl.paginator.getBaseDate().getMonth()+1)+'/'+firstDay}}">
+                    <input type="radio" name="firstDay" ng-model="firstDay" value="mon">
+                </a>
+                {{clnCtrl.lang.template.days.mon}}
+            </label>
+            <label class="radio-inline">
+                <a ng-href="#{{clnCtrl.paginator.getBaseDate().getFullYear()+'/'+(clnCtrl.paginator.getBaseDate().getMonth()+1)+'/'+firstDay}}">
+                    <input type="radio" name="firstDay" ng-model="firstDay" value="sun">
+                </a>
+                {{clnCtrl.lang.template.days.sun}}
+            </label>
+        </div>
+        <div class="col-xs-6 text-center">
+            <label ng-bind="clnCtrl.lang.template.main.labTimeFrm"></label>
+            <label class="radio-inline">
+                <input type="radio" name="timeFormat" ng-model="timeFormat" value="HH:mm">
+                24
+            </label>
+            <label class="radio-inline">
+                <input type="radio" name="timeFormat" ng-model="timeFormat" value="hh:mm a">
+                AM/PM
+            </label>
+        </div>
+    </div>
     <table class="table table-bordered calendar">
         <tr class="info">
             <th ng-repeat="day in clnCtrl.calendar.header" ng-bind="clnCtrl.lang.template.days[day]"></th>
@@ -40,6 +55,7 @@
         <tr ng-repeat="week in clnCtrl.calendar.month">
             <td ng-repeat="day in week track by $index" ng-class="{'otherMonth': day === null || day.day === 6 || day.day === 0}">
                 {{day.date}}
+                <p ng-repeat="event in day.events">{{event.Start | date: timeFormat}} - {{event.End | date: timeFormat}}</p>
             </td>
         </tr>
     </table>

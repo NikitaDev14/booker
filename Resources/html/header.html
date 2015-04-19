@@ -4,10 +4,11 @@
             <div class="col-xs-3">
                 <a class="btn btn-primary" ng-href="#/" role="button" ng-show="userCtrl.isValidUser" ng-bind="userCtrl.lang.template.header.mainPage"></a>
                 <a class="btn btn-success" ng-href="#/" role="button" ng-show="userCtrl.isValidUser" ng-bind="userCtrl.lang.template.header.bookIt"></a>
-                <a class="btn btn-warning" ng-href="#/" role="button" ng-show="userCtrl.isValidUser && userCtrl.user.isAdmin" ng-bind="userCtrl.lang.template.header.emplLst"></a>
+                <a class="btn btn-warning" ng-href="#/" role="button" ng-show="userCtrl.isValidUser && userCtrl.isValidAdmin" ng-bind="userCtrl.lang.template.header.emplLst"></a>
             </div>
             <div class="col-xs-4 text-center">
-
+                <button class="btn btn-info" type="button" ng-repeat="room in userCtrl.rooms" ng-click="userCtrl.roomFact.set(room.idRoom)"
+                        ng-class="{'active': userCtrl.roomFact.get() === room.idRoom}" ng-bind="room.Name"></button>
             </div>
             <div class="col-xs-3 text-center">
                 <button class="btn btn-default" type="button" ng-click="userCtrl.lang.changeLang('ua')" ng-class="{'active': userCtrl.lang.get() === 'ua'}">
@@ -18,7 +19,7 @@
                 </button>
             </div>
             <div class="col-xs-2 text-right">
-                <mark ng-bind="userCtrl.user.name"></mark>
+                <mark ng-bind="userCtrl.user"></mark>
                 <button class="btn btn-default" type="button" ng-show="userCtrl.isValidUser" ng-click="userCtrl.logout()" ng-bind="userCtrl.lang.template.header.logout"></button>
             </div>
         </div>

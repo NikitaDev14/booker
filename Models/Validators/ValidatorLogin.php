@@ -25,7 +25,7 @@
 		}
 
 		/**
-		 * @return idUser if he's valid
+		 * @return (idEmployee, IsAdmin) if he's valid
 		 * otherwise false
 		 */
 		public function isValidForm()

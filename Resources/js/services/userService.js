@@ -1,6 +1,10 @@
 booker.service('userService', function ($http) {
     this.isValidUser = function (callback) {
-        $http.get('index.php?controller=User&action=validate').
+        $http.get('index.php?controller=User&action=validateUser').
+            success(callback);
+    };
+    this.isValidAdmin = function (callback) {
+        $http.get('index.php?controller=User&action=validateAdmin').
             success(callback);
     };
     this.logout = function (callback) {

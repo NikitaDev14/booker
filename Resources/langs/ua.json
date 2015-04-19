@@ -25,7 +25,8 @@
     "btnPrev": "Попередній",
     "btnNext": "Наступний",
     "labMon": "Details",
-    "labFrstDay": "Початок тиждня з"
+    "labFrstDay": "Початок тиждня з",
+    "labTimeFrm": "Формат часу"
   },
   "mons": {
     "0": "Січень",

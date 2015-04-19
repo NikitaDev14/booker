@@ -25,7 +25,8 @@
     "btnPrev": "Previous",
     "btnNext": "Next",
     "labMon": "Details",
-    "labFrstDay": "Start week of"
+    "labFrstDay": "Start week of",
+    "labTimeFrm": "Time format"
   },
   "mons": {
     "0": "January",
