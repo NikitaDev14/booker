@@ -7,8 +7,8 @@
                 <a class="btn btn-warning" ng-href="#/" role="button" ng-show="userCtrl.isValidUser && userCtrl.isValidAdmin" ng-bind="userCtrl.lang.template.header.emplLst"></a>
             </div>
             <div class="col-xs-4 text-center">
-                <button class="btn btn-info" type="button" ng-repeat="room in userCtrl.rooms" ng-click="userCtrl.roomFact.set(room.idRoom)"
-                        ng-class="{'active': userCtrl.roomFact.get() === room.idRoom}" ng-bind="room.Name"></button>
+                <button class="btn btn-info" type="button" ng-repeat="room in userCtrl.rooms" ng-click="userCtrl.calendar.setRoom(room.idRoom)"
+                        ng-class="{'active': userCtrl.room.get() === room.idRoom}" ng-bind="room.Name"></button>
             </div>
             <div class="col-xs-3 text-center">
                 <button class="btn btn-default" type="button" ng-click="userCtrl.lang.changeLang('ua')" ng-class="{'active': userCtrl.lang.get() === 'ua'}">

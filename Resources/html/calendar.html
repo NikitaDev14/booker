@@ -3,7 +3,7 @@
     <nav>
         <ul class="pager">
             <li class="previous">
-                <a ng-href="#{{clnCtrl.paginator.prev().getFullYear()+'/'+(clnCtrl.paginator.prev().getMonth()+1)+'/'+firstDay}}">
+                <a ng-href="#{{clnCtrl.paginator.prev().getFullYear()+'/'+(clnCtrl.paginator.prev().getMonth()+1)}}">
                     <span aria-hidden="true">&larr;</span>
                     {{clnCtrl.lang.template.main.btnPrev}}
                 </a>
@@ -13,7 +13,7 @@
                     +' '+clnCtrl.paginator.getBaseDate().getFullYear()"></strong>
             </li>
             <li class="next">
-                <a ng-href="#{{clnCtrl.paginator.next().getFullYear()+'/'+(clnCtrl.paginator.next().getMonth()+1)+'/'+firstDay}}">
+                <a ng-href="#{{clnCtrl.paginator.next().getFullYear()+'/'+(clnCtrl.paginator.next().getMonth()+1)}}">
                     {{clnCtrl.lang.template.main.btnNext}}
                     <span aria-hidden="true">&rarr;</span>
                 </a>
@@ -24,26 +24,22 @@
         <div class="col-xs-6 text-center">
             <label ng-bind="clnCtrl.lang.template.main.labFrstDay"></label>
             <label class="radio-inline">
-                <a ng-href="#{{clnCtrl.paginator.getBaseDate().getFullYear()+'/'+(clnCtrl.paginator.getBaseDate().getMonth()+1)+'/'+firstDay}}">
-                    <input type="radio" name="firstDay" ng-model="firstDay" value="mon">
-                </a>
+                <input type="radio" name="firstDay" ng-model="firstDay" ng-change="clnCtrl.calendar.setFirstDay(firstDay)" value="mon">
                 {{clnCtrl.lang.template.days.mon}}
             </label>
             <label class="radio-inline">
-                <a ng-href="#{{clnCtrl.paginator.getBaseDate().getFullYear()+'/'+(clnCtrl.paginator.getBaseDate().getMonth()+1)+'/'+firstDay}}">
-                    <input type="radio" name="firstDay" ng-model="firstDay" value="sun">
-                </a>
+                <input type="radio" name="firstDay" ng-model="firstDay" ng-change="clnCtrl.calendar.setFirstDay(firstDay)" value="sun">
                 {{clnCtrl.lang.template.days.sun}}
             </label>
         </div>
         <div class="col-xs-6 text-center">
             <label ng-bind="clnCtrl.lang.template.main.labTimeFrm"></label>
             <label class="radio-inline">
-                <input type="radio" name="timeFormat" ng-model="timeFormat" value="HH:mm">
+                <input type="radio" name="timeFormat" ng-model="timeFormat" ng-change="clnCtrl.setTimeFormat(timeFormat)" value="HH:mm">
                 24
             </label>
             <label class="radio-inline">
-                <input type="radio" name="timeFormat" ng-model="timeFormat" value="hh:mm a">
+                <input type="radio" name="timeFormat" ng-model="timeFormat" ng-change="clnCtrl.setTimeFormat(timeFormat)" value="hh:mm a">
                 AM/PM
             </label>
         </div>
@@ -55,7 +51,7 @@
         <tr ng-repeat="week in clnCtrl.calendar.month">
             <td ng-repeat="day in week track by $index" ng-class="{'otherMonth': day === null || day.day === 6 || day.day === 0}">
                 {{day.date}}
-                <p ng-repeat="event in day.events">{{event.Start | date: timeFormat}} - {{event.End | date: timeFormat}}</p>
+                <p ng-repeat="event in day.events"><a ng-click="clnCtrl.showEvent(event.idAppointment)">{{event.Start | date: timeFormat}} - {{event.End | date: timeFormat}}</a></p>
             </td>
         </tr>
     </table>

@@ -1,9 +1,7 @@
-booker.factory('calendarFactory', function () {
-    var params = {
-        baseDate: null,
-        firstDay: null,
-        events: null
-    };
+booker.factory('calendarFactory', function (eventService) {
+    var params = {};
+
+    var self = this;
 
     var getEventsOfDay = function (day) {
         var result = [];
@@ -19,19 +17,42 @@ booker.factory('calendarFactory', function () {
 
     this.calendar = {};
 
-    this.calendar.init = function (date, firstDay, header, events) {
+    this.calendar.setFirstDay = function (firstDay) {
+        params.firstDay = firstDay;
+
+        this.createHeader();
+        this.createBody();
+
+        localStorage.setItem('firstDay', firstDay);
+    };
+
+    this.calendar.setRoom = function (room) {
+        params.room = room;
+
+        this.load();
+
+        localStorage.setItem('room', room);
+    };
+
+    this.calendar.load = function () {
+        eventService.getEvents(params.baseDate.getFullYear(), params.baseDate.getMonth() + 1, params.room, function (response) {
+
+            params.events = response['events'];
+
+            self.calendar.createHeader();
+            self.calendar.createBody();
+        });
+    };
+
+    this.calendar.init = function (date, firstDay, header, room) {
         params.baseDate = new Date(date);
         params.firstDay = firstDay;
-        params.events = events;
-
-        var tempHeader = [];
+        params.header = [];
+        params.room = room;
 
         for(var item in header) {
-            tempHeader.push(item)
+            params.header.push(item);
         }
-
-        this.createHeader(tempHeader);
-        this.createBody();
     };
 
     this.calendar.createBody = function () {
@@ -94,8 +115,8 @@ booker.factory('calendarFactory', function () {
         }
     };
 
-    this.calendar.createHeader = function (header) {
-        this.header = header;
+    this.calendar.createHeader = function () {
+        this.header = params.header;
 
         if(this.header[6] === params.firstDay) {
             this.header.unshift(this.header.pop());

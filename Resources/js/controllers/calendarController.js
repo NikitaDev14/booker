@@ -1,16 +1,29 @@
-booker.controller('calendarController', function ($scope, eventService, roomFactory, langFactory, calendarFactory, paginatorFactory, $stateParams) {
+booker.controller('calendarController', function ($scope, eventService, roomFactory, langFactory, calendarFactory, paginatorFactory, $stateParams, $window) {
 
     var self = this;
-    var date;
 
-    $scope.firstDay = $stateParams.d || 'mon';
+    $scope.firstDay = localStorage.getItem('firstDay') || 'mon';
+
     $scope.timeFormat = $scope.timeFormat || 'HH:mm';
 
+    this.showEvent = function (id) {
+        $window.open('#/event/'+id, '_blank', 'width=400,height=400,resizable=0,status=0,menubar=0,toolbar=0,location=0,scrollbars=0');
+    };
+
+    this.setTimeFormat = function (timeForm) {
+
+        $scope.timeFormat = timeForm || localStorage.getItem('timeForm') || 'HH:mm';
+
+        localStorage.setItem('timeForm', $scope.timeFormat);
+    };
+
+    this.setTimeFormat();
+
     if($stateParams.y !== undefined && $stateParams.m !== undefined) {
-        date = new Date($stateParams.y, $stateParams.m - 1, 1);
+        self.date = new Date($stateParams.y, $stateParams.m - 1, 1);
     }
     else {
-        date = new Date();
+        self.date = new Date();
     }
 
     this.paginator = paginatorFactory;
@@ -18,11 +31,8 @@ booker.controller('calendarController', function ($scope, eventService, roomFact
 
     this.lang = langFactory;
 
-    this.paginator.init(date);
+    this.paginator.init(self.date);
 
-    this.events = eventService.getEvents(date.getFullYear(), date.getMonth() + 1, roomFactory.get(), function (response) {
-        self.events = response['events'];
-
-        self.calendar.init(date, $scope.firstDay, self.lang.template.days, response['events']);
-    });
+    this.calendar.init(self.date, $scope.firstDay, self.lang.template.days, roomFactory.get());
+    this.calendar.load();
 });
