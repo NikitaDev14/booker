@@ -2,7 +2,7 @@
 
 	namespace Views\Pallets;
 
-	class LoginPallet
+	class UserPallet
 	{
 		/**
 		 * send id, name, isAdmin(flag)
@@ -16,6 +16,7 @@
 			([
 				'idUser' => $user[0]['idEmployee'],
 				'name' => $user[0]['Name'],
+				'email' => $user[0]['Email'],
 				'isAdmin' => $user[0]['IsAdmin']
 			]);
 		}

@@ -50,13 +50,23 @@
 		 * @param $idUser
 		 * @param $sessionId
 		 * check session of specified user
-		 * @return (idEmployee, Name)
+		 * @return (idEmployee, Name, Email, IsAdmin)
 		 */
 		public function getUserByCookie($idUser, $sessionId, $isAdmin)
 		{
 			return $this->objFactory->getObjDatabase()
 				->setQuery('CALL getEmplByCookie(?, ?, ?)')
 				->setParam([$idUser, $sessionId, $isAdmin])
+				->execute()->getResult();
+		}
+
+		/**
+		 * @return (idEmployee, Name, Email, IsAdmin)
+		 */
+		public function getAllUsers()
+		{
+			return $this->objFactory->getObjDatabase()
+				->setQuery('CALL getAllEmpl()')
 				->execute()->getResult();
 		}
 

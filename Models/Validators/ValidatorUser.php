@@ -42,7 +42,7 @@
 
 			if('1' === $isAdmin)
 			{
-				$result = (bool) $this->objFactory->getObjUser()
+				$result = $this->objFactory->getObjUser()
 					->getUserByCookie($idUser, $sessionId, $isAdmin);
 			}
 			else

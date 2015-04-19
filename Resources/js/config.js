@@ -20,7 +20,7 @@ booker.config(function ($stateProvider, $urlRouterProvider) {
         .state('book', {
             url: '/book',
             templateUrl: 'Resources/html/book.html',
-            controller: 'userController'
+            controller: 'bookController'
         })
         .state('event', {
             url: '/event/:id',

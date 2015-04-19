@@ -3,7 +3,7 @@
         <div class="row" ng-controller="userController as userCtrl">
             <div class="col-xs-3">
                 <a class="btn btn-primary" ng-href="#/" role="button" ng-show="userCtrl.isValidUser" ng-bind="userCtrl.lang.template.header.mainPage"></a>
-                <a class="btn btn-success" ng-href="#/" role="button" ng-show="userCtrl.isValidUser" ng-bind="userCtrl.lang.template.header.bookIt"></a>
+                <a class="btn btn-success" ng-href="#/book" role="button" ng-show="userCtrl.isValidUser" ng-bind="userCtrl.lang.template.header.bookIt"></a>
                 <a class="btn btn-warning" ng-href="#/" role="button" ng-show="userCtrl.isValidUser && userCtrl.isValidAdmin" ng-bind="userCtrl.lang.template.header.emplLst"></a>
             </div>
             <div class="col-xs-4 text-center">
@@ -19,7 +19,7 @@
                 </button>
             </div>
             <div class="col-xs-2 text-right">
-                <mark ng-bind="userCtrl.user"></mark>
+                <mark ng-bind="userCtrl.user.name"></mark>
                 <button class="btn btn-default" type="button" ng-show="userCtrl.isValidUser" ng-click="userCtrl.logout()" ng-bind="userCtrl.lang.template.header.logout"></button>
             </div>
         </div>

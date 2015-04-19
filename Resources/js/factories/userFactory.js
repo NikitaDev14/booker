@@ -1,23 +1,18 @@
 booker.factory('userFactory', function () {
     var self = this;
 
-    this.user = {
-        'isValid' : false,
-        'id' : null,
-        'name' : null,
-        'isAdmin' : null
-    };
+    this.user = {};
 
-    this.user.save = function (id, name, isAdmin) {
+    this.user.save = function (newUser) {
 
-        self.user.id = id;
-        self.user.name = name;
-        self.user.isAdmin = Boolean(Number(isAdmin));
+        this.id = newUser.idUser;
+        this.name = newUser.name;
+        this.email = newUser.email;
+        this.isAdmin = Boolean(Number(newUser.isAdmin));
     };
 
     this.user.remove = function () {
-
-        self.user.id = self.user.name = self.user.isAdmin = null;
+        self.user = null;
     };
 
     return this.user;

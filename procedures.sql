@@ -91,6 +91,14 @@ BEGIN
     SELECT LAST_INSERT_ID() AS newId;
 END$$
 
+DROP PROCEDURE IF EXISTS `getAllEmpl`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getAllEmpl`()
+    READS SQL DATA
+BEGIN
+	SELECT empl.idEmployee, empl.Name, empl.Email, empl.IsAdmin
+    FROM employees AS empl;
+END$$
+
 DROP PROCEDURE IF EXISTS `getAppnsByMonthRoom`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `getAppnsByMonthRoom`(IN `Year` VARCHAR(4) CHARSET utf8, IN `Month` VARCHAR(2) CHARSET utf8, IN `idRoom` INT(6) UNSIGNED)
     READS SQL DATA
@@ -108,7 +116,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `getEmplByCookie`(IN `idUser` INT(6)
     READS SQL DATA
     COMMENT '@idUser @SessionId @isAdmin'
 BEGIN
-	SELECT empl.idEmployee, empl.Name
+	SELECT empl.idEmployee, empl.Name, empl.Email, empl.IsAdmin
     FROM employees AS empl
     WHERE empl.idEmployee = idUser AND
     	empl.SessionId = SessionId AND

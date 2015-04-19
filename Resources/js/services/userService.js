@@ -7,6 +7,10 @@ booker.service('userService', function ($http) {
         $http.get('index.php?controller=User&action=validateAdmin').
             success(callback);
     };
+    this.getAllUsers = function (callback) {
+        $http.get('index.php?controller=User&action=getAllUsers').
+            success(callback);
+    };
     this.logout = function (callback) {
         $http.get('index.php?controller=User&action=logout').
             success(callback);

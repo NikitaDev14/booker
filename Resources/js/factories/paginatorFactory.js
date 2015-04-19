@@ -5,6 +5,8 @@ booker.factory('paginatorFactory', function () {
 
     this.paginator.init = function (date) {
         baseDate = new Date(date);
+
+        localStorage.setItem('baseDate', baseDate.getTime());
     };
 
     this.paginator.prev = function () {

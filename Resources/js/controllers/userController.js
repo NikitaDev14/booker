@@ -1,5 +1,5 @@
 booker.controller('userController',
-    function ($scope, $http, userService, roomService, roomFactory, calendarFactory, langFactory, $location) {
+    function ($scope, $http, userService, roomService, userFactory, roomFactory, calendarFactory, langFactory, $location) {
         this.template = {
             email: '[0-9a-z_]+@[0-9a-z_]+\\.[a-z]{1,3}',
             password: '.{4,}'
@@ -8,6 +8,7 @@ booker.controller('userController',
         var self = this;
 
         this.lang = langFactory;
+        this.user = userFactory;
         this.calendar = calendarFactory;
         this.room = roomFactory;
 
@@ -16,10 +17,13 @@ booker.controller('userController',
             self.isValidUser = Boolean(response);
 
             if(false === self.isValidUser) {
+
+                self.user.remove();
+
                 $location.path('/login');
             }
             else {
-                self.user = response;
+                self.user.save(response);
 
                 roomService.getRooms(function (rooms) {
                     self.rooms = rooms['rooms'];

@@ -6,35 +6,62 @@
 	{
 		/**
 		 * if user is logged
-		 * set response (Name), false otherwise
+		 * set response (idEmployee, Name, Email, IsAdmin), false otherwise
 		 */
 		public function validateUser()
 		{
 			$user = $this->objFactory->getObjValidatorUser()
 				->isValidUser();
 
+			$nextPage = 'Echo';
 			$result = false;
 
 			if(true == $user)
 			{
-				$result = $user[0]['Name'];
+				$nextPage = 'User';
+				$result = $user;
 			}
 
 			$this->objFactory->getObjDataContainer()
-				->setParams(['nextPage' => 'Echo', 'result' => $result]);
+				->setParams(['nextPage' => $nextPage, 'result' => $result]);
 		}
 
 		/**
 		 * if user is logged
-		 * set response (Name), false otherwise
+		 * set response (idEmployee, Name, Email, IsAdmin), false otherwise
 		 */
 		public function validateAdmin()
 		{
-			$result = $this->objFactory->getObjValidatorUser()
+			$user = $this->objFactory->getObjValidatorUser()
 				->isValidAdmin();
 
+			$nextPage = 'Echo';
+			$result = false;
+
+			if(true == $user)
+			{
+				$nextPage = 'User';
+				$result = $user;
+			}
+
 			$this->objFactory->getObjDataContainer()
-				->setParams(['nextPage' => 'Echo', 'result' => $result]);
+				->setParams(['nextPage' => $nextPage, 'result' => $result]);
+		}
+
+		public function getAllUsers()
+		{
+			$result = (bool) $this->objFactory->getObjValidatorUser()
+				->isValidAdmin();
+
+			$nextPage = 'Echo';
+
+			if(true == $result)
+			{
+				$nextPage = 'EmployeeList';
+			}
+
+			$this->objFactory->getObjDataContainer()
+				->setParams(['nextPage' => $nextPage, 'result' => $result]);
 		}
 
 		/**
