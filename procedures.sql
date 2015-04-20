@@ -1,3 +1,6 @@
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+SET time_zone = "+02:00";
+
 DELIMITER $$
 --
 -- Процедуры
@@ -37,30 +40,34 @@ BEGIN
         CASE Recurring
         	
             WHEN '' THEN
-            LEAVE addApp;
+            	LEAVE addApp;
             
             WHEN 'weekly' THEN
-            SET tempDate = tempDate + INTERVAL 7 DAY;
+            	SET tempDate = tempDate + INTERVAL 7 DAY;
             
             WHEN 'bi-weekly' THEN
-            SET tempDate = tempDate + INTERVAL 14 DAY;
+            	SET tempDate = tempDate + INTERVAL 14 DAY;
             
             WHEN 'monthly' THEN
-            SET tempDate = tempDate + INTERVAL 1 MONTH;
+                SET tempDate = tempDate + INTERVAL 1 MONTH;
+                
+                IF(WEEKDAY(tempDate) = 5 OR WEEKDAY(tempDate) = 6) THEN
+                	SET tempDate = tempDate + INTERVAL (7 - WEEKDAY(tempDate)) DAY;
+                END IF;
         
         END CASE;
-                        
-        SET i = i + 1;
-    
-        IF (i >= Duration) THEN
-            LEAVE addApp;
-        END IF;
         
         SELECT CONCAT_WS(',', getColision(tempDate, NewStart, NewEnd, idRoom), colision)
         INTO colision;
         
         INSERT INTO appointments (appointments.Date, appointments.Start, appointments.End, appointments.idRecurring, appointments.idRoom, appointments.idEmployee, appointments.Description)
         VALUES (tempDate, NewStart, NewEnd, idNewRecurring, idRoom, idEmployee, Description);
+                        
+        SET i = i + 1;
+    
+        IF (i >= Duration) THEN
+            LEAVE addApp;
+        END IF;
         
     END LOOP addApp;
     
@@ -128,7 +135,7 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `getAppnsByMonthRoom`(IN `Year` VARC
     READS SQL DATA
     COMMENT '@Year @Month @idRoom'
 BEGIN
-	SELECT app.idAppointment, app.Date, UNIX_TIMESTAMP(app.Start)*1000 AS Start, UNIX_TIMESTAMP(app.End)*1000 AS End
+	SELECT app.idAppointment, app.Date, UNIX_TIMESTAMP(app.Start) AS Start, UNIX_TIMESTAMP(app.End) AS End
     FROM appointments AS app
     WHERE YEAR(app.Date) = Year AND
     	MONTH(app.Date) = Month AND

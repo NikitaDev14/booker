@@ -10,6 +10,23 @@
 
         <h4>2. I would like to book this meeting:</h4>
 
+
+        <div>
+            <h4>Popup</h4>
+            <div class="row">
+                <div class="col-md-6">
+                    <p class="input-group">
+                        <input type="text" class="form-control" datepicker-popup="{{format}}" ng-model="date" is-open="opened" min-date="minDate" datepicker-options="dateOptions" date-disabled="disabled(date, mode)" ng-required="true" close-text="Close" />
+              <span class="input-group-btn">
+                <button type="button" class="btn btn-default" ng-click="open($event)"><i class="glyphicon glyphicon-calendar"></i></button>
+              </span>
+                    </p>
+                </div>
+            </div>
+        </div>
+
+
+        <!--
         <select class="form-control" ng-model="month">
             <option ng-repeat="mon in bkCtrl.lang.template.mons" ng-bind="bkCtrl.lang.template.mons[$index]" value="{{$index}}"></option>
         </select>
@@ -20,7 +37,24 @@
         <select class="form-control" ng-model="year">
             <option class="selected" ng-repeat="year in [2014, 2015, 2016]" value="{{year}}" ng-bind="year"></option>
         </select>
+        -->
+
         <h4>3. Specify what the start and end of meeting (This will be what people see on the calendar).</h4>
+
+        <div>
+
+            <timepicker ng-model="start" hour-step="hstep" minute-step="mstep" show-meridian="ismeridian"></timepicker>
+
+            <p ng-bind="start.getTime()"></p>
+
+            <timepicker ng-model="end" hour-step="hstep" minute-step="mstep" show-meridian="ismeridian"></timepicker>
+
+            <p ng-bind="end.getTime()"></p>
+
+        </div>
+
+
+        <!--
         <select class="form-control" ng-model="startHour">
             <option class="selected" ng-repeat="hour in [8, 10, 12]" value="{{hour}}" ng-bind="hour"></option>
         </select>
@@ -47,6 +81,9 @@
             <option value="AM">AM</option>
             <option value="PM">PM</option>
         </select>
+        -->
+
+
 
         <h4>Enter the specifics for the meeting. (This will be what people see when they click on an event link)</h4>
 

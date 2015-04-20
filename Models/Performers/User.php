@@ -79,7 +79,7 @@
 		public function sessionStart($idUser, $sessionId)
 		{
 			return (bool) $this->objFactory->getObjDatabase()
-				->setQuery('CALL sessionStart(?, ?)')
+				->setQuery('CALL bkr_sessionStart(?, ?)')
 				->setParam([$idUser, $sessionId])
 				->execute()->getResult();
 		}
@@ -92,7 +92,7 @@
 		public function sessionDestroy($idUser)
 		{
 			return (bool) $this->objFactory->getObjDatabase()
-				->setQuery('CALL sessionDestroy(?)')
+				->setQuery('CALL bkr_sessionDestroy(?)')
 				->setParam([$idUser])->execute()->getResult();
 		}
 	}

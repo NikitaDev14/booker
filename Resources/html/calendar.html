@@ -51,7 +51,7 @@
         <tr ng-repeat="week in clnCtrl.calendar.month">
             <td ng-repeat="day in week track by $index" ng-class="{'otherMonth': day === null || day.day === 6 || day.day === 0}">
                 {{day.date}}
-                <p ng-repeat="event in day.events"><a ng-click="clnCtrl.showEvent(event.idAppointment)">{{event.Start | date: timeFormat}} - {{event.End | date: timeFormat}}</a></p>
+                <p ng-repeat="event in day.events"><a ng-click="clnCtrl.showEvent(event.idAppointment)">{{event.Start * 1000 | date: timeFormat}} - {{event.End * 1000 | date: timeFormat}}</a></p>
             </td>
         </tr>
     </table>

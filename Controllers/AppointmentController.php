@@ -24,8 +24,6 @@
 			$isValidAppn = $this->objFactory->getObjValidatorAppointment()
 				->setForm($formData)->isValidAppointment();
 
-			//var_dump($formData);
-
 			$nextPage = 'Echo';
 			$result = false;
 
@@ -34,7 +32,7 @@
 				$result = $this->objFactory->getObjAppointment()
 					->addAppn
 					(
-						$formData['date'],
+						$formData['date']->format('Y-m-d'),
 						$formData['start']->format('H:i'),
 						$formData['end']->format('H:i'),
 						$formData['room'],

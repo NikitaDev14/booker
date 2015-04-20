@@ -28,9 +28,11 @@
 		{
 			$now = new \DateTime();
 			$form = $this->form;
+			$day = $form['date']->format('N');
 
 			if($form['start'] < $form['end'] &&
-				$form['start'] >  $now)
+				$form['start'] >  $now &&
+				$day != '6' && $day != '7')
 			{
 				$result = true;
 			}

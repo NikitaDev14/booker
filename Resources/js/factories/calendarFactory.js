@@ -35,6 +35,8 @@ booker.factory('calendarFactory', function (eventService) {
     };
 
     this.calendar.load = function () {
+        params.baseDate = new Date(Number(localStorage.getItem('baseDate')));
+
         eventService.getEvents(params.baseDate.getFullYear(), params.baseDate.getMonth() + 1, params.room, function (response) {
 
             params.events = response['events'];

@@ -1,4 +1,4 @@
-var booker = angular.module('booker', ['ui.router'], function ($httpProvider) {
+var booker = angular.module('booker', ['ui.router', 'ui.bootstrap'], function ($httpProvider) {
 
     // use x-www-form-urlencoded Content-Type
     $httpProvider.defaults.headers.post['Content-Type'] =
