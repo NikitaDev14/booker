@@ -2,7 +2,7 @@
 
 	namespace Controllers;
 
-	class UserController extends \Controllers\BaseController
+	class UserController extends BaseController
 	{
 		/**
 		 * if user is logged
@@ -55,7 +55,7 @@
 
 			$nextPage = 'Echo';
 
-			if(true == $result)
+			if(true === $result)
 			{
 				$nextPage = 'EmployeeList';
 			}

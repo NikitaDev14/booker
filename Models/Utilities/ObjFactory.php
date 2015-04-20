@@ -55,6 +55,11 @@
 			return \Models\Validators\ValidatorUser::getInstance();
 		}
 
+		public function getObjValidatorAppointment()
+		{
+			return \Models\Validators\ValidatorAppointment::getInstance();
+		}
+
 		public function getObjHttp()
 		{
 			return \Models\Interfaces\Http::getInstance();

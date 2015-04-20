@@ -5,7 +5,7 @@
 	class UserPallet
 	{
 		/**
-		 * send id, name, isAdmin(flag)
+		 * send id, name, email, isAdmin(flag)
 		 * @param $user
 		 */
 		public function generate($user)

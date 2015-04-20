@@ -1,4 +1,4 @@
-booker.controller('bookController', function ($scope, userService, userFactory, langFactory) {
+booker.controller('bookController', function ($scope, eventService, userService, userFactory, langFactory, roomFactory) {
     var self = this;
 
     Date.prototype.daysInMonth = function() {
@@ -16,4 +16,17 @@ booker.controller('bookController', function ($scope, userService, userFactory, 
             self.users = response['users'];
         });
     }
+    else {
+        $scope.employee = self.user.id;
+    }
+
+    this.addEvent = function () {
+        var date = $scope.year+'-'+$scope.month+'-'+$scope.day;
+        var start = (($scope.startFormat === 'PM')? Number($scope.startHour) + 12 : $scope.startHour) +':'+$scope.startMin;
+        var end = (($scope.endFormat === 'PM')? Number($scope.endHour) + 12 : $scope.endHour) +':'+$scope.endMin;
+
+        eventService.addEvent(date, start, end, roomFactory.get(), $scope.employee, $scope.description, $scope.recurring, $scope.duration, function (response) {
+            console.log(response);
+        });
+    };
 });

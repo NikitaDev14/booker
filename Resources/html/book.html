@@ -1,82 +1,87 @@
 <div header></div>
 <div ng-controller="bookController as bkCtrl">
-    <h4>1. Booked for:</h4>
-    <select class="form-control" ng-model="employee">
-        <option ng-repeat="user in bkCtrl.users" value="{{user.idEmployee}}" ng-bind="user.Name"></option>
-    </select>
+    <form name="bookForm">
+        <h4>1. Booked for:</h4>
+        <select class="form-control" ng-model="employee">
+            <option ng-repeat="user in bkCtrl.users" value="{{user.idEmployee}}" ng-bind="user.Name"></option>
+        </select>
 
-    <p ng-bind="bkCtrl.user.name"></p>
+        <p ng-bind="bkCtrl.user.name"></p>
 
-    <h4>2. I would like to book this meeting:</h4>
+        <h4>2. I would like to book this meeting:</h4>
 
-    <select class="form-control" ng-model="month">
-        <option ng-repeat="mon in bkCtrl.lang.template.mons" ng-bind="bkCtrl.lang.template.mons[$index]" value="{{$index}}"></option>
-    </select>
-    {{bkCtrl.baseDate}}
-    <select class="form-control" ng-model="day">
-        <option class="selected" data-ng-repeat="day in [1, 31]" value="{{day}}" ng-bind="day"></option>
-    </select>
-    <select class="form-control" ng-model="year">
-        <option class="selected" data-ng-repeat="year in [2014, 2015, 2016]" value="{{year}}" ng-bind="year"></option>
-    </select>
-    <h4>3. Specify what the start and end of meeting (This will be what people see on the calendar).</h4>
-    <select class="form-control" ng-model="startHour">
-        <option class="selected" data-ng-repeat="hour in [8, 10, 12]" value="{{hour}}" ng-bind="hour"></option>
-    </select>
-    <select class="form-control" ng-model="startMin">
-        <option class="selected" data-ng-repeat="min in ['00', 15, 30, 45]" value="{{min}}" ng-bind="min"></option>
-    </select>
-    <select class="form-control" ng-model="startFormat">
-        <option class="selected" data-ng-repeat="format in ['AM', 'PM']" value="{{format}}" ng-bind="format"></option>
-    </select>
-    <select class="form-control" ng-model="endHour">
-        <option class="selected" data-ng-repeat="hour in [8, 10, 12]" value="{{hour}}" ng-bind="hour"></option>
-    </select>
-    <select class="form-control" ng-model="endMin">
-        <option class="selected" data-ng-repeat="min in ['00', 15, 30, 45]" value="{{min}}" ng-bind="min"></option>
-    </select>
-    <select class="form-control" ng-model="endFormat">
-        <option class="selected" data-ng-repeat="format in ['AM', 'PM']" value="{{format}}" ng-bind="format"></option>
-    </select>
+        <select class="form-control" ng-model="month">
+            <option ng-repeat="mon in bkCtrl.lang.template.mons" ng-bind="bkCtrl.lang.template.mons[$index]" value="{{$index}}"></option>
+        </select>
+        {{bkCtrl.baseDate}}
+        <select class="form-control" ng-model="day">
+            <option class="selected" ng-repeat="day in [1, 31]" value="{{day}}" ng-bind="day"></option>
+        </select>
+        <select class="form-control" ng-model="year">
+            <option class="selected" ng-repeat="year in [2014, 2015, 2016]" value="{{year}}" ng-bind="year"></option>
+        </select>
+        <h4>3. Specify what the start and end of meeting (This will be what people see on the calendar).</h4>
+        <select class="form-control" ng-model="startHour">
+            <option class="selected" ng-repeat="hour in [8, 10, 12]" value="{{hour}}" ng-bind="hour"></option>
+        </select>
+        <select class="form-control" ng-model="startMin">
+            <option value="00">00</option>
+            <option value="15">15</option>
+            <option value="30">30</option>
+            <option value="45">45</option>
+        </select>
+        <select class="form-control" ng-model="startFormat">
+            <option value="AM">AM</option>
+            <option value="PM">PM</option>
+        </select>
+        <select class="form-control" ng-model="endHour">
+            <option class="selected" ng-repeat="hour in [8, 10, 12]" value="{{hour}}" ng-bind="hour"></option>
+        </select>
+        <select class="form-control" ng-model="endMin">
+            <option value="00">00</option>
+            <option value="15">15</option>
+            <option value="30">30</option>
+            <option value="45">45</option>
+        </select>
+        <select class="form-control" ng-model="endFormat">
+            <option value="AM">AM</option>
+            <option value="PM">PM</option>
+        </select>
 
-    <select>
-        <option>AM</option>
-        <option>PM</option>
-    </select>
+        <h4>Enter the specifics for the meeting. (This will be what people see when they click on an event link)</h4>
 
-    <h4>Enter the specifics for the meeting. (This will be what people see when they click on an event link)</h4>
+        <textarea ng-model="description"></textarea>
 
-    <textarea></textarea>
+        <h4>5. Is this going to be a recurring event?</h4>
 
-    <h4>5. Is this going to be a recurring event?</h4>
+        <label class="radio-inline">
+            <input type="radio" name="isRecurring" ng-model="isRecurring" value="yes">
+            Yes
+        </label>
+        <label class="radio-inline">
+            <input type="radio" name="isRecurring" ng-model="isRecurring" value="no">
+            No
+        </label>
 
-    <label class="radio-inline">
-        <input type="radio" name="recurring" ng-model="recurring" value="yes">
-        Yes
-    </label>
-    <label class="radio-inline">
-        <input type="radio" name="recurring" ng-model="recurring" value="no">
-        No
-    </label>
+        <h4>6. If it is recurring, specify weekly, bi-weekly, or monthly.</h4>
 
-    <h4>6. If it is recurring, specify weekly, bi-weekly, or monthly.</h4>
+        <label class="radio-inline">
+            <input type="radio" name="recurring" ng-model="recurring" value="weekly">
+            Weekly
+        </label>
+        <label class="radio-inline">
+            <input type="radio" name="recurring" ng-model="recurring" value="bi-weekly">
+            bi-weekly
+        </label>
+        <label class="radio-inline">
+            <input type="radio" name="recurring" ng-model="recurring" value="monthly">
+            monthly
+        </label>
 
-    <label class="radio-inline">
-        <input type="radio" name="recurring" ng-model="recurring" value="weekly">
-        Weekly
-    </label>
-    <label class="radio-inline">
-        <input type="radio" name="recurring" ng-model="recurring" value="bi-weekly">
-        bi-weekly
-    </label>
-    <label class="radio-inline">
-        <input type="radio" name="recurring" ng-model="recurring" value="monthly">
-        monthly
-    </label>
+        If weekly or bi-weekly, specify the number of weeks for it to keep recurring. If monthly, specify the number of
+        month. (If you choose "bi-weekly" and put in an odd number of weeks, the computer will round down).
 
-    If weekly or bi-weekly, specify the number of weeks for it to keep recurring. If monthly, specify the number of
-    month. (If you choose "bi-weekly" and put in an odd number of weeks, the computer will round down).
-
-    <input type="number" ng-model="duration">duration (max 4 weeks)
-    <button class="btn btn-primary" type="button">Submit</button>
+        <input type="number" ng-model="duration">duration (max 4 weeks)
+        <button class="btn btn-primary" type="button" ng-click="bkCtrl.addEvent()">Submit</button>
+    </form>
 </div>

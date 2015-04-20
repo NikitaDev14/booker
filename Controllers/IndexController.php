@@ -1,7 +1,7 @@
 <?php
 	namespace Controllers;
 
-	class IndexController extends \Controllers\BaseController
+	class IndexController extends BaseController
 	{
 		public function index()
 		{
@@ -35,7 +35,7 @@
 
 			if(false !== $result)
 			{
-				$nextPage = 'Appointments';
+				$nextPage = 'AppointmentList';
 			}
 
 			$this->objFactory->getObjDataContainer()

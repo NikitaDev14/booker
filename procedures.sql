@@ -66,13 +66,13 @@ BEGIN
     
     IF(colision = '') THEN
     
-    	SELECT idNewRecurring, 1 AS result;
+    	SELECT idNewRecurring AS mess, 1 AS result;
         
         COMMIT;
         
     ELSE
     	
-        SELECT colision, 0 AS result;
+        SELECT colision AS mess, 0 AS result;
         
         ROLLBACK;
         
@@ -89,6 +89,30 @@ BEGIN
     VALUES (Email, Name, PASSWORD(Passw), IsAdmin);
     
     SELECT LAST_INSERT_ID() AS newId;
+END$$
+
+DROP PROCEDURE IF EXISTS `bkr_sessionDestroy`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `bkr_sessionDestroy`(IN `idEmployee` INT(6) UNSIGNED)
+    MODIFIES SQL DATA
+    COMMENT '@idEmployee'
+BEGIN
+	UPDATE employees
+    SET employees.SessionId = NULL
+    WHERE employees.idEmployee = idEmployee;
+    
+    SELECT ROW_COUNT() AS result;
+END$$
+
+DROP PROCEDURE IF EXISTS `bkr_sessionStart`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `bkr_sessionStart`(IN `idEmployee` INT(6) UNSIGNED, IN `SessionId` VARCHAR(50) CHARSET utf8)
+    MODIFIES SQL DATA
+    COMMENT '@idEmployee @SessionId'
+BEGIN
+	UPDATE employees
+    SET employees.SessionId = SessionId
+    WHERE employees.idEmployee = idEmployee;
+    
+    SELECT ROW_COUNT() AS result;
 END$$
 
 DROP PROCEDURE IF EXISTS `getAllEmpl`$$
@@ -150,30 +174,6 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `getRooms`()
 BEGIN
 	SELECT rm.idRoom, rm.Name
     FROM rooms AS rm;
-END$$
-
-DROP PROCEDURE IF EXISTS `sessionDestroy`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sessionDestroy`(IN `idEmployee` INT(6) UNSIGNED)
-    MODIFIES SQL DATA
-    COMMENT '@idEmployee'
-BEGIN
-	UPDATE employees
-    SET employees.SessionId = NULL
-    WHERE employees.idEmployee = idEmployee;
-    
-    SELECT ROW_COUNT() AS result;
-END$$
-
-DROP PROCEDURE IF EXISTS `sessionStart`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `sessionStart`(IN `idEmployee` INT(6) UNSIGNED, IN `SessionId` VARCHAR(50) CHARSET utf8)
-    MODIFIES SQL DATA
-    COMMENT '@idEmployee @SessionId'
-BEGIN
-	UPDATE employees
-    SET employees.SessionId = SessionId
-    WHERE employees.idEmployee = idEmployee;
-    
-    SELECT ROW_COUNT() AS result;
 END$$
 
 --

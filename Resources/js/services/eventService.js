@@ -7,4 +7,19 @@ booker.service('eventService', function ($http) {
             '&room='+room
         ).success(callback);
     };
+    this.addEvent = function (date, start, end, room, empl, descr, recurr, dur, callback) {
+        $http.get('index.php?controller=Appointment'+
+            '&action=addAppointment'+
+            '&date='+date+
+            '&start='+start+
+            '&end='+end+
+            '&room='+room+
+            '&empl='+empl+
+            '&descr='+descr+
+            '&recurr='+recurr+
+            '&dur='+dur
+        ).success(callback);
+    };
 });
+
+//date, start, end, roomFactory.get(), $scope.employee, $scope.description, $scope.recurring, $scope.duration, function (response)

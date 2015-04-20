@@ -2,7 +2,7 @@
 
 	namespace Views\Pallets;
 
-	class AppointmentsPallet extends \BaseRegular
+	class AppointmentListPallet extends \BaseRegular
 	{
 		public function generate($form)
 		{
