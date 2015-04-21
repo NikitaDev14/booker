@@ -1,46 +1,68 @@
 <div header></div>
 <div ng-controller="bookController as bkCtrl">
-    <form name="bookForm">
-        <h4>1. Booked for:</h4>
-        <select class="form-control" ng-model="employee">
-            <option ng-repeat="user in bkCtrl.users" value="{{user.idEmployee}}" ng-bind="user.Name"></option>
-        </select>
-
-        <p ng-bind="bkCtrl.user.name"></p>
-
-        <h4>2. I would like to book this meeting:</h4>
-
-
-        <div>
-            <h4>Popup</h4>
-            <div class="row">
-                <div class="col-md-6">
-                    <p class="input-group">
-                        <input type="text" class="form-control" datepicker-popup="{{format}}" ng-model="date" is-open="opened" min-date="minDate" datepicker-options="dateOptions" date-disabled="disabled(date, mode)" ng-required="true" close-text="Close" />
-              <span class="input-group-btn">
-                <button type="button" class="btn btn-default" ng-click="open($event)"><i class="glyphicon glyphicon-calendar"></i></button>
-              </span>
-                    </p>
-                </div>
+    <form class="form-horizontal" name="bookForm">
+        <div class="form-group has-feedback" ng-class="(bookForm.employee != undefined)? 'has-success' : 'has-error'">
+            <label for="selectEmployee" class="col-sm-2 control-label">1.Booked for:</label>
+            <div class="col-sm-4">
+                <select class="form-control" id="selectEmployee" name="employee"  aria-describedby="employeeStatus"ng-model="employee">
+                    <option ng-repeat="user in bkCtrl.users" value="{{user.idEmployee}}" ng-bind="user.Name"></option>
+                </select>
+            </div>
+            <div class="col-sm-4">
+                <span class="glyphicon glyphicon-ok form-control-feedback" aria-hidden="true" ng-show="bookForm.employee.$valid"></span>
+                <span id="employeeStatus" class="sr-only" ng-show="bookForm.employee.$valid">(success)</span>
+                <span class="glyphicon glyphicon-remove form-control-feedback" aria-hidden="true" ng-show="bookForm.employee.$invalid"></span>
+                <span id="employeeStatus" class="sr-only" ng-show="bookForm.employee.$invalid">(error)</span>
             </div>
         </div>
 
+        <div class="form-group has-feedback" ng-class="(bookForm.date.$valid)? 'has-success' : 'has-error'">
+            <label for="inputDate" class="col-sm-2 control-label">2.I would like to book this meeting:</label>
+            <div class="col-sm-4">
+                <p class="input-group">
+                <input type="text" class="form-control" id="inputDate" name="date" datepicker-popup="{{format}}" ng-model="date" is-open="opened" min-date="minDate" datepicker-options="dateOptions" date-disabled="disabled(date, mode)" ng-required="true" close-text="Close" />
+                <span class="input-group-btn">
+                    <button type="button" class="btn btn-default" ng-click="open($event)"><i class="glyphicon glyphicon-calendar"></i></button>
+                </span>
+                </p>
+            </div>
+            <div class="col-sm-4">
+                <span class="glyphicon glyphicon-ok form-control-feedback" aria-hidden="true" ng-show="bookForm.date.$valid"></span>
+                <span id="inputDate" class="sr-only" ng-show="bookForm.date.$valid">(success)</span>
+                <span class="glyphicon glyphicon-remove form-control-feedback" aria-hidden="true" ng-show="bookForm.date.$invalid"></span>
+                <span id="inputDate" class="sr-only" ng-show="bookForm.date.$invalid">(error)</span>
+            </div>
+        </div>
+<!--
+        <div class="form-group has-feedback" ng-class="(bookForm.start.$valid && bookForm.end.$valid)? 'has-success' : 'has-error'">
+            <label for="inputDate" class="col-sm-2 control-label">3. Specify what the start and end of meeting (This will be what people see on the calendar).</label>
+            <div class="col-sm-3">
+                <timepicker id="inputStart" name="start" ng-model="start" hour-step="hstep" minute-step="mstep" show-meridian="ismeridian"></timepicker>
 
-        <!--
-        <select class="form-control" ng-model="month">
-            <option ng-repeat="mon in bkCtrl.lang.template.mons" ng-bind="bkCtrl.lang.template.mons[$index]" value="{{$index}}"></option>
-        </select>
-        {{bkCtrl.baseDate}}
-        <select class="form-control" ng-model="day">
-            <option class="selected" ng-repeat="day in [1, 31]" value="{{day}}" ng-bind="day"></option>
-        </select>
-        <select class="form-control" ng-model="year">
-            <option class="selected" ng-repeat="year in [2014, 2015, 2016]" value="{{year}}" ng-bind="year"></option>
-        </select>
+                <p ng-bind="start.getTime()"></p>
+            </div>
+            <div class="col-sm-3">
+                <span class="glyphicon glyphicon-ok form-control-feedback" aria-hidden="true" ng-show="bookForm.start.$valid"></span>
+                <span id="inputStart" class="sr-only" ng-show="bookForm.start.$valid">(success)</span>
+                <span class="glyphicon glyphicon-remove form-control-feedback" aria-hidden="true" ng-show="bookForm.start.$invalid"></span>
+                <span id="inputStart" class="sr-only" ng-show="bookForm.start.$invalid">(error)</span>
+            </div>
+            <div class="col-sm-3">
+                <timepicker id="inputEnd" name="end" ng-model="end" hour-step="hstep" minute-step="mstep" show-meridian="ismeridian"></timepicker>
+
+                <p ng-bind="end.getTime()"></p>
+            </div>
+            <div class="col-sm-3">
+                <span class="glyphicon glyphicon-ok form-control-feedback" aria-hidden="true" ng-show="bookForm.end.$valid"></span>
+                <span id="inputEnd" class="sr-only" ng-show="bookForm.end.$valid">(success)</span>
+                <span class="glyphicon glyphicon-remove form-control-feedback" aria-hidden="true" ng-show="bookForm.end.$invalid"></span>
+                <span id="inputEnd" class="sr-only" ng-show="bookForm.end.$invalid">(error)</span>
+            </div>
+
+        </div>
         -->
 
-        <h4>3. Specify what the start and end of meeting (This will be what people see on the calendar).</h4>
-
+        
         <div>
 
             <timepicker ng-model="start" hour-step="hstep" minute-step="mstep" show-meridian="ismeridian"></timepicker>
@@ -52,38 +74,7 @@
             <p ng-bind="end.getTime()"></p>
 
         </div>
-
-
-        <!--
-        <select class="form-control" ng-model="startHour">
-            <option class="selected" ng-repeat="hour in [8, 10, 12]" value="{{hour}}" ng-bind="hour"></option>
-        </select>
-        <select class="form-control" ng-model="startMin">
-            <option value="00">00</option>
-            <option value="15">15</option>
-            <option value="30">30</option>
-            <option value="45">45</option>
-        </select>
-        <select class="form-control" ng-model="startFormat">
-            <option value="AM">AM</option>
-            <option value="PM">PM</option>
-        </select>
-        <select class="form-control" ng-model="endHour">
-            <option class="selected" ng-repeat="hour in [8, 10, 12]" value="{{hour}}" ng-bind="hour"></option>
-        </select>
-        <select class="form-control" ng-model="endMin">
-            <option value="00">00</option>
-            <option value="15">15</option>
-            <option value="30">30</option>
-            <option value="45">45</option>
-        </select>
-        <select class="form-control" ng-model="endFormat">
-            <option value="AM">AM</option>
-            <option value="PM">PM</option>
-        </select>
-        -->
-
-
+        
 
         <h4>Enter the specifics for the meeting. (This will be what people see when they click on an event link)</h4>
 
@@ -121,4 +112,5 @@
         <input type="number" ng-model="duration">duration (max 4 weeks)
         <button class="btn btn-primary" type="button" ng-click="bkCtrl.addEvent()">Submit</button>
     </form>
+
 </div>

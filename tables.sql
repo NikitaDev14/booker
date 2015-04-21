@@ -14,7 +14,7 @@ CREATE TABLE IF NOT EXISTS `appointments` (
   `Start` time NOT NULL,
   `End` time NOT NULL,
   `Description` text NOT NULL,
-  `Submitted` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
+  `Submitted` timestamp DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB AUTO_INCREMENT=38 DEFAULT CHARSET=utf8;
 
 --
