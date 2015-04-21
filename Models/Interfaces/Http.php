@@ -24,7 +24,7 @@
 			return $this->params;
 		}
 
-		public function convertStartEnd()
+		public function convertDates()
 		{
 			$this->params['date'] =
 				\DateTime::createFromFormat('Y-n-j', $this->params['date']);

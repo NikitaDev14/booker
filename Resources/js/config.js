@@ -7,6 +7,11 @@ booker.config(function ($stateProvider, $urlRouterProvider) {
             templateUrl: 'Resources/html/calendar.html',
             controller: 'calendarController'
         })
+        .state('event', {
+            url: '/event/:id',
+            templateUrl: 'Resources/html/event.html',
+            controller: 'eventController'
+        })
         .state('anotherDate', {
             url: '/:y/:m',
             templateUrl: 'Resources/html/calendar.html',
@@ -22,11 +27,7 @@ booker.config(function ($stateProvider, $urlRouterProvider) {
             templateUrl: 'Resources/html/book.html',
             controller: 'bookController'
         })
-        .state('event', {
-            url: '/event/:id',
-            templateUrl: 'Resources/html/event.html',
-            controller: 'calendarController'
-        })
+
         .state('error 404', {
             url: '/error_404',
             templateUrl: 'Resources/html/404.html'

@@ -25,4 +25,12 @@
 				->setParam([$date, $start, $end, $room, $empl, $descr, $recurr, $dur])
 				->execute()->getResult();
 		}
+
+		public function getAppointmentDetails($idAppointment)
+		{
+			return $this->objFactory->getObjDatabase()
+				->setQuery('CALL getAppnDetails(?)')
+				->setParam([$idAppointment])
+				->execute()->getResult();
+		}
 	}

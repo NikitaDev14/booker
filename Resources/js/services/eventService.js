@@ -1,6 +1,7 @@
 booker.service('eventService', function ($http) {
     this.getEvents = function (year, month, room, callback) {
-        $http.get('index.php?controller=Index' +
+        $http.get('index.php'+
+            '?controller=Index'+
             '&action=getAppointments'+
             '&year='+year+
             '&month='+month+
@@ -8,7 +9,8 @@ booker.service('eventService', function ($http) {
         ).success(callback);
     };
     this.addEvent = function (date, start, end, room, empl, descr, recurr, dur, callback) {
-        $http.get('index.php?controller=Appointment'+
+        $http.get('index.php'+
+            '?controller=Appointment'+
             '&action=addAppointment'+
             '&date='+date+
             '&start='+start+
@@ -20,6 +22,11 @@ booker.service('eventService', function ($http) {
             '&dur='+dur
         ).success(callback);
     };
+    this.getEventDetails = function (idEvent, callback) {
+        $http.get('index.php'+
+            '?controller=Appointment'+
+            '&action=getAppointmentDetails'+
+            '&idAppn='+idEvent
+        ).success(callback);
+    };
 });
-
-//date, start, end, roomFactory.get(), $scope.employee, $scope.description, $scope.recurring, $scope.duration, function (response)

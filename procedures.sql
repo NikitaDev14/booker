@@ -1,6 +1,3 @@
-SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
-SET time_zone = "+02:00";
-
 DELIMITER $$
 --
 -- Процедуры
@@ -122,12 +119,43 @@ BEGIN
     SELECT ROW_COUNT() AS result;
 END$$
 
+DROP PROCEDURE IF EXISTS `deleteAppointment`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteAppointment`(IN `idAppn` INT(6) UNSIGNED, IN `isRecurring` BOOLEAN)
+    MODIFIES SQL DATA
+    COMMENT '@idAppn @isRecurring'
+BEGIN
+	IF(isRecurring = 0) THEN
+		SELECT * 
+        FROM appointments AS app
+        WHERE (app.Date + INTERVAL app.Start HOUR_SECOND) > NOW()
+        	AND app.idAppointment = idAppn;
+    ELSE
+    	SELECT *
+        FROM appointments as app
+        WHERE app.idRecurring = (
+            					SELECT app.idRecurring 
+            					FROM appointments AS app
+            					WHERE app.idAppointment = idAppn)
+        	AND (app.Date + INTERVAL app.Start HOUR_SECOND) > NOW();
+    END IF;
+END$$
+
 DROP PROCEDURE IF EXISTS `getAllEmpl`$$
 CREATE DEFINER=`root`@`localhost` PROCEDURE `getAllEmpl`()
     READS SQL DATA
 BEGIN
 	SELECT empl.idEmployee, empl.Name, empl.Email, empl.IsAdmin
     FROM employees AS empl;
+END$$
+
+DROP PROCEDURE IF EXISTS `getAppnDetails`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getAppnDetails`(IN `idAppn` INT(6) UNSIGNED)
+    READS SQL DATA
+    COMMENT '@idAppn'
+BEGIN
+	SELECT UNIX_TIMESTAMP(app.Date) AS Date, UNIX_TIMESTAMP(app.Start) AS Start, UNIX_TIMESTAMP(app.End) AS End, app.Description, app.Submitted
+    FROM appointments AS app
+    WHERE app.idAppointment = idAppn;
 END$$
 
 DROP PROCEDURE IF EXISTS `getAppnsByMonthRoom`$$

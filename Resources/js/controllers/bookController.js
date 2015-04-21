@@ -1,4 +1,4 @@
-booker.controller('bookController', function ($scope, eventService, userService, userFactory, langFactory, roomFactory, $log) {
+booker.controller('bookController', function ($scope, eventService, userService, userFactory, langFactory, roomFactory) {
     var self = this;
 
     this.user = userFactory;
@@ -8,10 +8,12 @@ booker.controller('bookController', function ($scope, eventService, userService,
     if(true === this.user.isAdmin) {
         userService.getAllUsers(function (response) {
             self.users = response['users'];
+
+            $scope.employee = self.user.id;
         });
     }
     else {
-        $scope.employee = self.user.id;
+        $scope.employee = self.user.name;
     }
 
     this.addEvent = function () {

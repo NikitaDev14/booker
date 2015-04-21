@@ -11,3 +11,8 @@ body
 .lang-button {
     height: 20px;
 }
+
+a:hover
+{
+    cursor: pointer;
+}
