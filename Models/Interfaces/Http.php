@@ -26,14 +26,20 @@
 
 		public function convertDates()
 		{
+			$date = $this->params['date'];
+
 			$this->params['date'] =
 				\DateTime::createFromFormat('Y-n-j', $this->params['date']);
 
 			$this->params['start'] =
-				\DateTime::createFromFormat('G:i', $this->params['start']);
+				\DateTime::createFromFormat('Y-n-j G:i', $date .
+					' ' . $this->params['start']);
 
 			$this->params['end'] =
-				\DateTime::createFromFormat('G:i', $this->params['end']);
+				\DateTime::createFromFormat('Y-n-j G:i', $date .
+					' ' . $this->params['end']);
+
+
 
 			return self::$instance;
 		}

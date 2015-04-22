@@ -1,22 +1,23 @@
 <div header></div>
 <div ng-controller="bookController as bkCtrl">
     <form class="form-horizontal" name="bookForm">
-        <div class="form-group has-feedback" ng-class="(bookForm.employee != undefined)? 'has-success' : 'has-error'">
+        <div class="form-group has-feedback" ng-hide="(bkCtrl.users == undefined)" ng-class="(bkCtrl.form.employee != undefined)? 'has-success' : 'has-error'">
             <label for="selectEmployee" class="col-sm-2 control-label">1.Booked for:</label>
             <div class="col-sm-4">
-                <select class="form-control" id="selectEmployee" name="employee"  aria-describedby="employeeStatus"ng-model="employee">
+                <select class="form-control" id="selectEmployee" name="employee"  aria-describedby="employeeStatus" ng-model="employee">
                     <option ng-repeat="user in bkCtrl.users" value="{{user.idEmployee}}" ng-bind="user.Name"></option>
                 </select>
             </div>
             <div class="col-sm-4">
-                <span class="glyphicon glyphicon-ok form-control-feedback" aria-hidden="true" ng-show="bookForm.employee.$valid"></span>
-                <span id="employeeStatus" class="sr-only" ng-show="bookForm.employee.$valid">(success)</span>
-                <span class="glyphicon glyphicon-remove form-control-feedback" aria-hidden="true" ng-show="bookForm.employee.$invalid"></span>
-                <span id="employeeStatus" class="sr-only" ng-show="bookForm.employee.$invalid">(error)</span>
+                <span class="glyphicon glyphicon-ok form-control-feedback" aria-hidden="true" ng-show="(bkCtrl.form.employee != undefined)"></span>
+                <span id="employeeStatus" class="sr-only" ng-show="(bkCtrl.form.employee != undefined)">(success)</span>
+                <span class="glyphicon glyphicon-remove form-control-feedback" aria-hidden="true" ng-show="(bkCtrl.form.employee == undefined)"></span>
+                <span id="employeeStatus" class="sr-only" ng-show="(bkCtrl.form.employee == undefined)">(error)</span>
             </div>
         </div>
+        <h4 ng-show="(bkCtrl.users == undefined)">1.Booked for: {{bkCtrl.user.name}}</h4>
 
-        <div class="form-group has-feedback" ng-class="(bookForm.date.$valid)? 'has-success' : 'has-error'">
+        <div class="form-group has-feedback" ng-class="(bkCtrl.form.date >= bkCtrl.form.minDate)? 'has-success' : 'has-error'">
             <label for="inputDate" class="col-sm-2 control-label">2.I would like to book this meeting:</label>
             <div class="col-sm-4">
                 <p class="input-group">
@@ -83,11 +84,11 @@
         <h4>5. Is this going to be a recurring event?</h4>
 
         <label class="radio-inline">
-            <input type="radio" name="isRecurring" ng-model="isRecurring" value="yes">
+            <input type="radio" name="isRecurring" ng-model="isRecurring" value="1">
             Yes
         </label>
         <label class="radio-inline">
-            <input type="radio" name="isRecurring" ng-model="isRecurring" value="no">
+            <input type="radio" name="isRecurring" ng-model="isRecurring" value="0">
             No
         </label>
 
@@ -109,8 +110,26 @@
         If weekly or bi-weekly, specify the number of weeks for it to keep recurring. If monthly, specify the number of
         month. (If you choose "bi-weekly" and put in an odd number of weeks, the computer will round down).
 
-        <input type="number" ng-model="duration">duration (max 4 weeks)
-        <button class="btn btn-primary" type="button" ng-click="bkCtrl.addEvent()">Submit</button>
+        <input type="number" ng-init="1" max="4" ng-model="duration">duration (max 4 weeks)
+        <button class="btn btn-primary" data-toggle="modal" data-target="#book" type="button" ng-click="bkCtrl.addEvent()">Submit</button>
     </form>
 
+    <!-- Modal -->
+
+    <div class="modal fade" id="book" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <h4 class="modal-title text-center" id="myModalLabel">
+                        {{bkCtrl.messHead}}</h4>
+                </div>
+                <div class="modal-body">
+                    <p class="text-center">{{bkCtrl.messText}}</p>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>

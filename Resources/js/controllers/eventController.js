@@ -1,4 +1,4 @@
-booker.controller('eventController', function ($scope, userService, eventService, roomFactory, userFactory, langFactory, calendarFactory, paginatorFactory, $stateParams, $window, $location) {
+booker.controller('eventController', function ($scope, userService, eventService, userFactory, langFactory, roomFactory, calendarFactory, $stateParams) {
     var self = this;
 
     this.lang = langFactory;
@@ -12,18 +12,45 @@ booker.controller('eventController', function ($scope, userService, eventService
         });
     }
     else {
-        $scope.employee = self.user.name;
+        $scope.employee = self.user.id;
     }
 
     eventService.getEventDetails($stateParams.id, function (response) {
         self.event = response['event'][0];
 
-        $scope.start = new Date(Number(self.event.Start)*1000);
-        $scope.end = new Date(Number(self.event.End)*1000);
+        $scope.start = new Date((response['event'][0]['Start'].split('.'))[0]*1000);
+        $scope.end = new Date((response['event'][0]['End'].split('.'))[0]*1000);
 
         $scope.hstep = 1;
         $scope.mstep = 15;
 
         $scope.ismeridian = localStorage.getItem('timeForm') === 'hh:mm a';
+        $scope.recurred = false;
+        $scope.description = self.event.Description;
+
+        self.disabled = self.user.isAdmin == false || self.event.idRecurring == null || self.event.idEmployee != self.user.id || $scope.start < (new Date());
     });
+
+    this.updateEvent = function () {
+
+    };
+
+    this.deleteEvent = function () {
+        eventService.deleteEvent(self.event['idAppointment'], self.event['idEmployee'], $scope.recurred, function (response) {
+            console.log(response);
+
+            if('' === response) {
+                self.messHead = 'Error';
+                self.messText = 'You are not admin';
+            }
+            else if('0' === response) {
+                self.messHead = 'Fail';
+                self.messText = 'The event could not be deleted';
+            }
+            else {
+                self.messHead = 'Success';
+                self.messText = 'The event deleted successfully';
+            }
+        });
+    };
 });

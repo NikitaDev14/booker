@@ -15,26 +15,46 @@
     </div>
 
     <div>
-        <p>Notes:{{eventCtrl.event.Description}}</p>
+        <p>Notes:</p>
+        <textarea ng-model="description"></textarea>
     </div>
-    <div ng-controller="userController">
-        <p>Who:</p>
+    <p>Who:</p>
 
-        <select class="form-control" ng-model="employee">
-            <option ng-repeat="user in eventCtrl.users" value="{{user.idEmployee}}" ng-bind="user.Name"></option>
-        </select>
-    </div>
+    <select class="form-control" ng-show="(eventCtrl.user.isAdmin == true)" ng-model="employee">
+        <option ng-repeat="user in eventCtrl.users" value="{{user.idEmployee}}" ng-bind="user.Name"></option>
+    </select>
+
+    <h4 ng-show="(eventCtrl.user.isAdmin == false)">{{eventCtrl.event.EmployeeName}}</h4>
     <div>
         <p>Submitted: {{eventCtrl.event.Submitted}}</p>
     </div>
 
     <div class="checkbox">
         <label>
-            <input type="checkbox" value="">
+            <input type="checkbox" ng-model="recurred" name="recurred" value="1">
             Apply to all occurrences?
         </label>
     </div>
 
-    <button type="button" class="btn btn-warning">Update</button>
-    <button type="button" class="btn btn-danger">Delete</button>
+    <button class="btn btn-warning" type="button" >Update</button>
+    <button class="btn btn-danger" type="button" data-toggle="modal" data-target="#event" ng-click="eventCtrl.deleteEvent()" >Delete</button>
+
+    <!-- Modal -->
+
+    <div class="modal fade" id="event" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <h4 class="modal-title text-center" id="myModalLabel">
+                        {{eventCtrl.messHead}}</h4>
+                </div>
+                <div class="modal-body">
+                    <p class="text-center">{{eventCtrl.messText}}</p>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>

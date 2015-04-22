@@ -3,7 +3,7 @@ DELIMITER $$
 -- Процедуры
 --
 DROP PROCEDURE IF EXISTS `addAppointment`$$
-CREATE PROCEDURE `addAppointment`(IN `NewDate` DATE, IN `NewStart` TIME, IN `NewEnd` TIME, IN `idRoom` INT(6) UNSIGNED, IN `idEmployee` INT(6) UNSIGNED, IN `Description` TEXT CHARSET utf8, IN `Recurring` ENUM('','weekly','bi-weekly','monthly') CHARSET utf8, IN `Duration` INT(1) UNSIGNED)
+CREATE DEFINER=`root`@`localhost` PROCEDURE `addAppointment`(IN `NewDate` DATE, IN `NewStart` TIME, IN `NewEnd` TIME, IN `idRoom` INT(6) UNSIGNED, IN `idEmployee` INT(6) UNSIGNED, IN `Description` TEXT CHARSET utf8, IN `Recurring` ENUM('','weekly','bi-weekly','monthly') CHARSET utf8, IN `Duration` INT(1) UNSIGNED)
     MODIFIES SQL DATA
     COMMENT '@Date @Start @End @idRoom @idEmpl @Descr @Recurring @Duration'
 BEGIN
@@ -22,15 +22,11 @@ BEGIN
     SELECT CONCAT_WS(',', getColision(tempDate, NewStart, NewEnd, idRoom), colision)
     INTO colision;
     
-    INSERT INTO appointments (appointments.Date, appointments.Start, appointments.End, appointments.idRecurring, appointments.idRoom, appointments.idEmployee, appointments.Description)
-    VALUES (tempDate, NewStart, NewEnd, 0, idRoom, idEmployee, Description);
+    INSERT INTO appointments (appointments.Date, appointments.Start, appointments.End, appointments.idRoom, appointments.idEmployee, appointments.Description)
+    VALUES (tempDate, NewStart, NewEnd, idRoom, idEmployee, Description);
             
     SELECT LAST_INSERT_ID() 
     INTO idNewRecurring;
-    
-    UPDATE appointments 
-    SET appointments.idRecurring = idNewRecurring
-    WHERE appointments.idAppointment = idNewRecurring;
     
     addApp: LOOP
         
@@ -54,17 +50,21 @@ BEGIN
         
         END CASE;
         
+        IF (i >= Duration) THEN
+            LEAVE addApp;
+        END IF;
+        
         SELECT CONCAT_WS(',', getColision(tempDate, NewStart, NewEnd, idRoom), colision)
         INTO colision;
         
         INSERT INTO appointments (appointments.Date, appointments.Start, appointments.End, appointments.idRecurring, appointments.idRoom, appointments.idEmployee, appointments.Description)
         VALUES (tempDate, NewStart, NewEnd, idNewRecurring, idRoom, idEmployee, Description);
-                        
+        
+        UPDATE appointments 
+        SET appointments.idRecurring = idNewRecurring
+        WHERE appointments.idAppointment = idNewRecurring;
+        
         SET i = i + 1;
-    
-        IF (i >= Duration) THEN
-            LEAVE addApp;
-        END IF;
         
     END LOOP addApp;
     
@@ -85,7 +85,7 @@ BEGIN
 END$$
 
 DROP PROCEDURE IF EXISTS `addEmployee`$$
-CREATE PROCEDURE `addEmployee`(IN `Email` VARCHAR(255) CHARSET utf8, IN `Name` VARCHAR(50) CHARSET utf8, IN `Passw` VARCHAR(50) CHARSET utf8, IN `IsAdmin` TINYINT(1) UNSIGNED)
+CREATE DEFINER=`root`@`localhost` PROCEDURE `addEmployee`(IN `Email` VARCHAR(255) CHARSET utf8, IN `Name` VARCHAR(50) CHARSET utf8, IN `Passw` VARCHAR(50) CHARSET utf8, IN `IsAdmin` TINYINT(1) UNSIGNED)
     MODIFIES SQL DATA
     COMMENT '@Email @Name @Password'
 BEGIN
@@ -96,7 +96,7 @@ BEGIN
 END$$
 
 DROP PROCEDURE IF EXISTS `bkr_sessionDestroy`$$
-CREATE PROCEDURE `bkr_sessionDestroy`(IN `idEmployee` INT(6) UNSIGNED)
+CREATE DEFINER=`root`@`localhost` PROCEDURE `bkr_sessionDestroy`(IN `idEmployee` INT(6) UNSIGNED)
     MODIFIES SQL DATA
     COMMENT '@idEmployee'
 BEGIN
@@ -108,7 +108,7 @@ BEGIN
 END$$
 
 DROP PROCEDURE IF EXISTS `bkr_sessionStart`$$
-CREATE PROCEDURE `bkr_sessionStart`(IN `idEmployee` INT(6) UNSIGNED, IN `SessionId` VARCHAR(50) CHARSET utf8)
+CREATE DEFINER=`root`@`localhost` PROCEDURE `bkr_sessionStart`(IN `idEmployee` INT(6) UNSIGNED, IN `SessionId` VARCHAR(50) CHARSET utf8)
     MODIFIES SQL DATA
     COMMENT '@idEmployee @SessionId'
 BEGIN
@@ -120,28 +120,45 @@ BEGIN
 END$$
 
 DROP PROCEDURE IF EXISTS `deleteAppointment`$$
-CREATE PROCEDURE `deleteAppointment`(IN `idAppn` INT(6) UNSIGNED, IN `isRecurring` BOOLEAN)
+CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteAppointment`(IN `idAppn` INT(6) UNSIGNED, IN `idEmpl` INT(6) UNSIGNED, IN `isRecurred` BOOLEAN)
     MODIFIES SQL DATA
     COMMENT '@idAppn @isRecurring'
 BEGIN
-	IF(isRecurring = 0) THEN
-		SELECT * 
-        FROM appointments AS app
-        WHERE (app.Date + INTERVAL app.Start HOUR_SECOND) > NOW()
-        	AND app.idAppointment = idAppn;
-    ELSE
-    	SELECT *
-        FROM appointments as app
-        WHERE app.idRecurring = (
-            					SELECT app.idRecurring 
-            					FROM appointments AS app
-            					WHERE app.idAppointment = idAppn)
-        	AND (app.Date + INTERVAL app.Start HOUR_SECOND) > NOW();
+	DECLARE tempId INT(6) UNSIGNED DEFAULT 0;
+    
+	IF(isRecurred = 0) THEN
+		DELETE
+        FROM appointments
+        WHERE (appointments.Date + INTERVAL appointments.Start HOUR_SECOND) > NOW()
+        	AND appointments.idAppointment = idAppn
+            AND (appointments.idEmployee = idEmpl 
+                 OR EXISTS(SELECT employees.idEmployee
+                           FROM employees
+                           WHERE employees.idEmployee = idEmpl
+                           AND employees.IsAdmin = 1));
+    ELSE 
+    	SELECT appointments.idRecurring
+        INTO tempId
+        FROM appointments 
+        WHERE appointments.idAppointment = idAppn;
+        
+        DELETE 
+        FROM appointments
+        WHERE (appointments.Date + INTERVAL appointments.Start HOUR_SECOND) > NOW()
+        	AND appointments.idRecurring = tempId
+            AND (appointments.idEmployee = idEmpl 
+                 OR EXISTS(SELECT employees.idEmployee
+                           FROM employees
+                           WHERE employees.idEmployee = idEmpl
+                           AND employees.IsAdmin = 1));
+            
     END IF;
+    
+    SELECT ROW_COUNT();
 END$$
 
 DROP PROCEDURE IF EXISTS `getAllEmpl`$$
-CREATE PROCEDURE `getAllEmpl`()
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getAllEmpl`()
     READS SQL DATA
 BEGIN
 	SELECT empl.idEmployee, empl.Name, empl.Email, empl.IsAdmin
@@ -149,17 +166,19 @@ BEGIN
 END$$
 
 DROP PROCEDURE IF EXISTS `getAppnDetails`$$
-CREATE PROCEDURE `getAppnDetails`(IN `idAppn` INT(6) UNSIGNED)
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getAppnDetails`(IN `idAppn` INT(6) UNSIGNED)
     READS SQL DATA
     COMMENT '@idAppn'
 BEGIN
-	SELECT UNIX_TIMESTAMP(app.Date) AS Date, UNIX_TIMESTAMP(CONCAT(app.Date, ' ', app.Start)) AS Start, UNIX_TIMESTAMP(CONCAT(app.Date, ' ', app.End)) AS End, app.Description, app.Submitted
+	SELECT UNIX_TIMESTAMP(app.Date) AS Date, UNIX_TIMESTAMP(CONCAT(app.Date, ' ', app.Start)) AS Start, UNIX_TIMESTAMP(CONCAT(app.Date, ' ', app.End)) AS End, app.idAppointment, app.idEmployee, empl.Name AS EmployeeName, app.idRecurring, app.Description, app.Submitted
     FROM appointments AS app
+    	JOIN employees AS empl
+        	ON app.idEmployee = empl.idEmployee
     WHERE app.idAppointment = idAppn;
 END$$
 
 DROP PROCEDURE IF EXISTS `getAppnsByMonthRoom`$$
-CREATE PROCEDURE `getAppnsByMonthRoom`(IN `Year` VARCHAR(4) CHARSET utf8, IN `Month` VARCHAR(2) CHARSET utf8, IN `idRoom` INT(6) UNSIGNED)
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getAppnsByMonthRoom`(IN `Year` VARCHAR(4) CHARSET utf8, IN `Month` VARCHAR(2) CHARSET utf8, IN `idRoom` INT(6) UNSIGNED)
     READS SQL DATA
     COMMENT '@Year @Month @idRoom'
 BEGIN
@@ -171,7 +190,7 @@ BEGIN
 END$$
 
 DROP PROCEDURE IF EXISTS `getEmplByCookie`$$
-CREATE PROCEDURE `getEmplByCookie`(IN `idUser` INT(6) UNSIGNED, IN `SessionId` VARCHAR(50) CHARSET utf8, IN `isAdmin` BOOLEAN)
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getEmplByCookie`(IN `idUser` INT(6) UNSIGNED, IN `SessionId` VARCHAR(50) CHARSET utf8, IN `isAdmin` BOOLEAN)
     READS SQL DATA
     COMMENT '@idUser @SessionId @isAdmin'
 BEGIN
@@ -183,7 +202,7 @@ BEGIN
 END$$
 
 DROP PROCEDURE IF EXISTS `getEmplByEml`$$
-CREATE PROCEDURE `getEmplByEml`(IN `Email` VARCHAR(255) CHARSET utf8)
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getEmplByEml`(IN `Email` VARCHAR(255) CHARSET utf8)
     READS SQL DATA
     COMMENT '@Email'
 BEGIN
@@ -193,7 +212,7 @@ BEGIN
 END$$
 
 DROP PROCEDURE IF EXISTS `getEmplByEmlPass`$$
-CREATE PROCEDURE `getEmplByEmlPass`(IN `Email` VARCHAR(255) CHARSET utf8, IN `Passw` VARCHAR(50) CHARSET utf8)
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getEmplByEmlPass`(IN `Email` VARCHAR(255) CHARSET utf8, IN `Passw` VARCHAR(50) CHARSET utf8)
     READS SQL DATA
     COMMENT '@Email @Password'
 BEGIN
@@ -204,18 +223,76 @@ BEGIN
 END$$
 
 DROP PROCEDURE IF EXISTS `getRooms`$$
-CREATE PROCEDURE `getRooms`()
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getRooms`()
     READS SQL DATA
 BEGIN
 	SELECT rm.idRoom, rm.Name
     FROM rooms AS rm;
 END$$
 
+DROP PROCEDURE IF EXISTS `isRecurringAppn`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `isRecurringAppn`(IN `idAppn` INT(6) UNSIGNED)
+    READS SQL DATA
+    COMMENT '@idAppn'
+BEGIN
+	SELECT COUNT(app.idAppointment) AS isRecurring
+    FROM appointments AS app
+    WHERE app.idRecurring = (SELECT app.idRecurring 
+                             FROM appointments AS app
+                             WHERE app.idAppointment = idAppn);
+END$$
+
+DROP PROCEDURE IF EXISTS `updateAppointment`$$
+CREATE DEFINER=`root`@`localhost` PROCEDURE `updateAppointment`(IN `idAppn` INT(6) UNSIGNED, IN `newStart` TIME, IN `newEnd` TIME, IN `newDescr` TEXT CHARSET utf8, IN `idEmpl` INT(6) UNSIGNED, IN `isRecurr` BOOLEAN, IN `idRoom` INT(6) UNSIGNED)
+    MODIFIES SQL DATA
+    COMMENT '@idAppn @newStart @newEnd @newDescr'
+BEGIN   
+	IF(isRecurred = 0) THEN
+		SELECT *
+        FROM appointments
+        WHERE (appointments.Date + INTERVAL appointments.Start HOUR_SECOND) > NOW()
+        	AND appointments.idAppointment = idAppn
+            AND (appointments.idEmployee = idEmpl 
+                 OR EXISTS(SELECT employees.idEmployee
+                           FROM employees
+                           WHERE employees.idEmployee = idEmpl
+                           AND employees.IsAdmin = 1)
+           	AND NOT EXISTS(SELECT DISTINCT app.Date
+                            FROM appointments AS app
+                            WHERE (
+                                    (newStart <= app.Start AND app.Start < newEnd) OR
+                                    (newStart < app.End AND app.End <= newEnd) OR
+                                    (app.Start <= newStart AND newEnd <= app.End) OR
+                                    (newStart <= app.Start AND app.End <= newEnd)
+                                ) 
+                                AND
+                                app.Date = (SELECT appointments.Date FROM appointments WHERE appointments.idAppointment = idAppn)
+                           		AND
+                                app.idRoom = idRoom));
+    ELSE       
+        SELECT DISTINCT app.Date
+        FROM appointments AS app
+        WHERE (
+        	(newStart <= app.Start AND app.Start < newEnd) OR
+            (newStart < app.End AND app.End <= newEnd) OR
+            (app.Start <= newStart AND newEnd <= app.End) OR
+            (newStart <= app.Start AND app.End <= newEnd)
+       	) 
+        AND app.Date IN (SELECT app.Date 
+                         FROM appointments AS app
+                         WHERE app.idRecurring = (SELECT app.idRecurring 
+                                                  FROM appointments AS app
+                                                  WHERE app.idAppointment = idAppn))
+        AND app.idRoom = idRoom;
+
+    END IF;
+END$$
+
 --
 -- Функции
 --
 DROP FUNCTION IF EXISTS `getColision`$$
-CREATE FUNCTION `getColision`(`NewDate` DATE, `NewStart` TIME, `NewEnd` TIME, `idRoom` INT(6) UNSIGNED) RETURNS varchar(15) CHARSET utf8
+CREATE DEFINER=`root`@`localhost` FUNCTION `getColision`(`NewDate` DATE, `NewStart` TIME, `NewEnd` TIME, `idRoom` INT(6) UNSIGNED) RETURNS varchar(15) CHARSET utf8
     READS SQL DATA
     COMMENT '@Date @Start @End @idRoom'
 BEGIN

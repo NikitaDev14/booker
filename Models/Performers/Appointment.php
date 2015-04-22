@@ -33,4 +33,12 @@
 				->setParam([$idAppointment])
 				->execute()->getResult();
 		}
+
+		public function deleteAppointment($idAppn, $idEmpl, $isRecurred)
+		{
+			return $this->objFactory->getObjDatabase()
+				->setQuery('CALL deleteAppointment(?, ?, ?)')
+				->setParam([$idAppn, $idEmpl, $isRecurred])
+				->execute()->getResult()[0]['ROW_COUNT()'];
+		}
 	}

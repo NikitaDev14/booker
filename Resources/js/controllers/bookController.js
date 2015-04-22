@@ -4,6 +4,7 @@ booker.controller('bookController', function ($scope, eventService, userService,
     this.user = userFactory;
     this.lang = langFactory;
     this.baseDate = new Date(Number(localStorage.getItem('baseDate')));
+    this.form = $scope;
 
     if(true === this.user.isAdmin) {
         userService.getAllUsers(function (response) {
@@ -13,7 +14,7 @@ booker.controller('bookController', function ($scope, eventService, userService,
         });
     }
     else {
-        $scope.employee = self.user.name;
+        $scope.employee = self.user.id;
     }
 
     this.addEvent = function () {
@@ -34,10 +35,25 @@ booker.controller('bookController', function ($scope, eventService, userService,
             (($scope.end.getMinutes() === 0) ?
                 '00' : $scope.end.getMinutes());
 
-        eventService.addEvent(date, start, end, roomFactory.get(), $scope.employee, $scope.description, $scope.recurring, $scope.duration, function (response) {
-            console.log(response);
+        eventService.addEvent(date, start, end, roomFactory.get(), $scope.employee, $scope.description || '', $scope.isRecurring, $scope.recurring, $scope.duration, function (response) {
+            if('' === response) {
+                self.messHead = 'Error';
+                self.messText = 'Wrong data';
+            }
+            else if('0' === response[0]['result']) {
+                self.messHead = 'Overlapping events';
+                self.messText = 'In: ' + response[0]['mess'];
+            }
+            else if('1' === response[0]['result']) {
+                self.messHead = 'Success';
+                self.messText = 'Your event has added successfully';
+            }
+
         });
     };
+
+    $scope.isRecurring = '0';
+    $scope.recurring = 'weekly';
 
     $scope.date = (new Date()).getTime();
 
@@ -49,7 +65,6 @@ booker.controller('bookController', function ($scope, eventService, userService,
     };
 
     $scope.minDate = new Date();
-
 
     $scope.open = function($event) {
         $event.preventDefault();
@@ -77,13 +92,4 @@ booker.controller('bookController', function ($scope, eventService, userService,
     $scope.mstep = 15;
 
     $scope.ismeridian = localStorage.getItem('timeForm') === 'hh:mm a';
-
-    /*
-    $scope.update = function() {
-        var d = new Date();
-        d.setHours( 14 );
-        d.setMinutes( 0 );
-        $scope.mytime = d;
-    };
-    */
 });

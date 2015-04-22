@@ -28,13 +28,25 @@
 		{
 			$now = new \DateTime();
 			$form = $this->form;
+			$duration = (int) $form['dur'];
+			$recurring = $form['recurr'];
 			$day = $form['date']->format('N');
 
 			if($form['start'] < $form['end'] &&
 				$form['start'] >  $now &&
-				$day != '6' && $day != '7')
+				$day != SATURDAY && $day != SUNDAY)
 			{
-				$result = true;
+				if(true == $form['isRecurr'] && $duration <= 0 &&
+					(('weekly' === $recurring && $duration > 4) ||
+					('bi-weekly' === $recurring && $duration > 2) ||
+					('monthly' === $recurring && $duration > 1)))
+				{
+					$result = false;
+				}
+				else
+				{
+					$result = true;
+				}
 			}
 			else
 			{

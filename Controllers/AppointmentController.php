@@ -68,4 +68,37 @@
 			$this->objFactory->getObjDataContainer()
 				->setParams(['nextPage' => $nextPage, 'result' => $result]);
 		}
+		public function deleteAppointment()
+		{
+			$cookie = $this->objFactory->getObjCookie();
+			$validatorUser = $this->objFactory->getObjValidatorUser();
+
+			$formData = $this->objFactory->getObjHttp()
+				->setParams($this->form)->getParams();
+
+			if($formData['idEmpl'] === $cookie->getCookie('id'))
+			{
+				$user = $validatorUser->isValidUser();
+			}
+			else
+			{
+				$user = $validatorUser->isValidAdmin();
+			}
+
+			$result = false;
+
+			if (true == $user)
+			{
+				$result = $this->objFactory->getObjAppointment()
+					->deleteAppointment
+					(
+						$formData['idAppn'],
+						$formData['idEmpl'],
+						(int) ($formData['isRecurred'] === 'true')
+					);
+			}
+
+			$this->objFactory->getObjDataContainer()
+				->setParams(['nextPage' => 'Echo', 'result' => $result]);
+		}
 	}
