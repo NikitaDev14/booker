@@ -5,6 +5,7 @@ booker.controller('bookController', function ($scope, eventService, userService,
     this.lang = langFactory;
     this.baseDate = new Date(Number(localStorage.getItem('baseDate')));
     this.form = $scope;
+    this.isValidDate = this.form.date >= this.form.minDate;
 
     if(true === this.user.isAdmin) {
         userService.getAllUsers(function (response) {
@@ -64,7 +65,7 @@ booker.controller('bookController', function ($scope, eventService, userService,
             || date.getDay() === 6));
     };
 
-    $scope.minDate = new Date();
+    $scope.minDate = (new Date()).getTime();
 
     $scope.open = function($event) {
         $event.preventDefault();

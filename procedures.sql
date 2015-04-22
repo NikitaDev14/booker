@@ -3,7 +3,7 @@ DELIMITER $$
 -- Процедуры
 --
 DROP PROCEDURE IF EXISTS `addAppointment`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `addAppointment`(IN `NewDate` DATE, IN `NewStart` TIME, IN `NewEnd` TIME, IN `idRoom` INT(6) UNSIGNED, IN `idEmployee` INT(6) UNSIGNED, IN `Description` TEXT CHARSET utf8, IN `Recurring` ENUM('','weekly','bi-weekly','monthly') CHARSET utf8, IN `Duration` INT(1) UNSIGNED)
+CREATE PROCEDURE `addAppointment`(IN `NewDate` DATE, IN `NewStart` TIME, IN `NewEnd` TIME, IN `idRoom` INT(6) UNSIGNED, IN `idEmployee` INT(6) UNSIGNED, IN `Description` TEXT CHARSET utf8, IN `Recurring` ENUM('','weekly','bi-weekly','monthly') CHARSET utf8, IN `Duration` INT(1) UNSIGNED)
     MODIFIES SQL DATA
     COMMENT '@Date @Start @End @idRoom @idEmpl @Descr @Recurring @Duration'
 BEGIN
@@ -85,7 +85,7 @@ BEGIN
 END$$
 
 DROP PROCEDURE IF EXISTS `addEmployee`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `addEmployee`(IN `Email` VARCHAR(255) CHARSET utf8, IN `Name` VARCHAR(50) CHARSET utf8, IN `Passw` VARCHAR(50) CHARSET utf8, IN `IsAdmin` TINYINT(1) UNSIGNED)
+CREATE PROCEDURE `addEmployee`(IN `Email` VARCHAR(255) CHARSET utf8, IN `Name` VARCHAR(50) CHARSET utf8, IN `Passw` VARCHAR(50) CHARSET utf8, IN `IsAdmin` TINYINT(1) UNSIGNED)
     MODIFIES SQL DATA
     COMMENT '@Email @Name @Password'
 BEGIN
@@ -96,7 +96,7 @@ BEGIN
 END$$
 
 DROP PROCEDURE IF EXISTS `bkr_sessionDestroy`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `bkr_sessionDestroy`(IN `idEmployee` INT(6) UNSIGNED)
+CREATE PROCEDURE `bkr_sessionDestroy`(IN `idEmployee` INT(6) UNSIGNED)
     MODIFIES SQL DATA
     COMMENT '@idEmployee'
 BEGIN
@@ -108,7 +108,7 @@ BEGIN
 END$$
 
 DROP PROCEDURE IF EXISTS `bkr_sessionStart`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `bkr_sessionStart`(IN `idEmployee` INT(6) UNSIGNED, IN `SessionId` VARCHAR(50) CHARSET utf8)
+CREATE PROCEDURE `bkr_sessionStart`(IN `idEmployee` INT(6) UNSIGNED, IN `SessionId` VARCHAR(50) CHARSET utf8)
     MODIFIES SQL DATA
     COMMENT '@idEmployee @SessionId'
 BEGIN
@@ -120,7 +120,7 @@ BEGIN
 END$$
 
 DROP PROCEDURE IF EXISTS `deleteAppointment`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteAppointment`(IN `idAppn` INT(6) UNSIGNED, IN `idEmpl` INT(6) UNSIGNED, IN `isRecurred` BOOLEAN)
+CREATE PROCEDURE `deleteAppointment`(IN `idAppn` INT(6) UNSIGNED, IN `idEmpl` INT(6) UNSIGNED, IN `isRecurred` BOOLEAN)
     MODIFIES SQL DATA
     COMMENT '@idAppn @isRecurring'
 BEGIN
@@ -158,7 +158,7 @@ BEGIN
 END$$
 
 DROP PROCEDURE IF EXISTS `getAllEmpl`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `getAllEmpl`()
+CREATE PROCEDURE `getAllEmpl`()
     READS SQL DATA
 BEGIN
 	SELECT empl.idEmployee, empl.Name, empl.Email, empl.IsAdmin
@@ -166,7 +166,7 @@ BEGIN
 END$$
 
 DROP PROCEDURE IF EXISTS `getAppnDetails`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `getAppnDetails`(IN `idAppn` INT(6) UNSIGNED)
+CREATE PROCEDURE `getAppnDetails`(IN `idAppn` INT(6) UNSIGNED)
     READS SQL DATA
     COMMENT '@idAppn'
 BEGIN
@@ -178,7 +178,7 @@ BEGIN
 END$$
 
 DROP PROCEDURE IF EXISTS `getAppnsByMonthRoom`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `getAppnsByMonthRoom`(IN `Year` VARCHAR(4) CHARSET utf8, IN `Month` VARCHAR(2) CHARSET utf8, IN `idRoom` INT(6) UNSIGNED)
+CREATE PROCEDURE `getAppnsByMonthRoom`(IN `Year` VARCHAR(4) CHARSET utf8, IN `Month` VARCHAR(2) CHARSET utf8, IN `idRoom` INT(6) UNSIGNED)
     READS SQL DATA
     COMMENT '@Year @Month @idRoom'
 BEGIN
@@ -190,7 +190,7 @@ BEGIN
 END$$
 
 DROP PROCEDURE IF EXISTS `getEmplByCookie`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `getEmplByCookie`(IN `idUser` INT(6) UNSIGNED, IN `SessionId` VARCHAR(50) CHARSET utf8, IN `isAdmin` BOOLEAN)
+CREATE PROCEDURE `getEmplByCookie`(IN `idUser` INT(6) UNSIGNED, IN `SessionId` VARCHAR(50) CHARSET utf8, IN `isAdmin` BOOLEAN)
     READS SQL DATA
     COMMENT '@idUser @SessionId @isAdmin'
 BEGIN
@@ -202,7 +202,7 @@ BEGIN
 END$$
 
 DROP PROCEDURE IF EXISTS `getEmplByEml`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `getEmplByEml`(IN `Email` VARCHAR(255) CHARSET utf8)
+CREATE PROCEDURE `getEmplByEml`(IN `Email` VARCHAR(255) CHARSET utf8)
     READS SQL DATA
     COMMENT '@Email'
 BEGIN
@@ -212,7 +212,7 @@ BEGIN
 END$$
 
 DROP PROCEDURE IF EXISTS `getEmplByEmlPass`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `getEmplByEmlPass`(IN `Email` VARCHAR(255) CHARSET utf8, IN `Passw` VARCHAR(50) CHARSET utf8)
+CREATE PROCEDURE `getEmplByEmlPass`(IN `Email` VARCHAR(255) CHARSET utf8, IN `Passw` VARCHAR(50) CHARSET utf8)
     READS SQL DATA
     COMMENT '@Email @Password'
 BEGIN
@@ -223,7 +223,7 @@ BEGIN
 END$$
 
 DROP PROCEDURE IF EXISTS `getRooms`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `getRooms`()
+CREATE PROCEDURE `getRooms`()
     READS SQL DATA
 BEGIN
 	SELECT rm.idRoom, rm.Name
@@ -231,7 +231,7 @@ BEGIN
 END$$
 
 DROP PROCEDURE IF EXISTS `isRecurringAppn`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `isRecurringAppn`(IN `idAppn` INT(6) UNSIGNED)
+CREATE PROCEDURE `isRecurringAppn`(IN `idAppn` INT(6) UNSIGNED)
     READS SQL DATA
     COMMENT '@idAppn'
 BEGIN
@@ -243,7 +243,7 @@ BEGIN
 END$$
 
 DROP PROCEDURE IF EXISTS `updateAppointment`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `updateAppointment`(IN `idAppn` INT(6) UNSIGNED, IN `newStart` TIME, IN `newEnd` TIME, IN `newDescr` TEXT CHARSET utf8, IN `idEmpl` INT(6) UNSIGNED, IN `isRecurr` BOOLEAN, IN `idRoom` INT(6) UNSIGNED)
+CREATE PROCEDURE `updateAppointment`(IN `idAppn` INT(6) UNSIGNED, IN `newStart` TIME, IN `newEnd` TIME, IN `newDescr` TEXT CHARSET utf8, IN `idEmpl` INT(6) UNSIGNED, IN `isRecurr` BOOLEAN, IN `idRoom` INT(6) UNSIGNED)
     MODIFIES SQL DATA
     COMMENT '@idAppn @newStart @newEnd @newDescr'
 BEGIN   
@@ -292,7 +292,7 @@ END$$
 -- Функции
 --
 DROP FUNCTION IF EXISTS `getColision`$$
-CREATE DEFINER=`root`@`localhost` FUNCTION `getColision`(`NewDate` DATE, `NewStart` TIME, `NewEnd` TIME, `idRoom` INT(6) UNSIGNED) RETURNS varchar(15) CHARSET utf8
+CREATE FUNCTION `getColision`(`NewDate` DATE, `NewStart` TIME, `NewEnd` TIME, `idRoom` INT(6) UNSIGNED) RETURNS varchar(15) CHARSET utf8
     READS SQL DATA
     COMMENT '@Date @Start @End @idRoom'
 BEGIN
