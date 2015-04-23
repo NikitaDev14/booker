@@ -24,8 +24,9 @@
 			return $this->params;
 		}
 
-		public function convertDates()
+		public function convertDateTime($name)
 		{
+			/*
 			$date = $this->params['date'];
 
 			$this->params['date'] =
@@ -39,9 +40,24 @@
 				\DateTime::createFromFormat('Y-n-j G:i', $date .
 					' ' . $this->params['end']);
 
+			*/
+			$this->params[$name] = \DateTime::createFromFormat('U', $this->params[$name]);
 
+			$this->params[$name]->modify(LOCAL_TIMEZONE_OFFSET);
 
 			return self::$instance;
+		}
+
+		public function setDateOfAppointment()
+		{
+			$date = $this->params['date'];
+
+			$year = $date->format('Y');
+			$month = $date->format('n');
+			$day = $date->format('j');
+
+			$this->params['start']->setDate($year, $month, $day);
+			$this->params['end']->setDate($year, $month, $day);
 		}
 
 		public function setParams($params)

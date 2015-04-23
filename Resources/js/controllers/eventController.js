@@ -1,4 +1,4 @@
-booker.controller('eventController', function ($scope, userService, eventService, userFactory, langFactory, roomFactory, calendarFactory, $stateParams) {
+booker.controller('eventController', function ($scope, userService, eventService, userFactory, langFactory, roomFactory, calendarFactory, $stateParams, $window) {
     var self = this;
 
     this.lang = langFactory;
@@ -33,10 +33,31 @@ booker.controller('eventController', function ($scope, userService, eventService
 
     this.updateEvent = function () {
 
+        eventService.updateEvent(self.event['idAppointment'], $scope.employee, Number($scope.recurred), ($scope.start.getTime()/1000+'').split('.')[0], ($scope.end.getTime()/1000+'').split('.')[0], $scope.description, function (response) {
+            console.log(response);
+
+            if('' === response) {
+                self.messHead = 'Error';
+                self.messText = 'You are not admin';
+            }
+            else if('0' === response) {
+                self.messHead = 'Fail';
+                self.messText = 'The event could not be updated';
+            }
+            else {
+                self.messHead = 'Success';
+                self.messText = 'The event updated successfully';
+
+                $('#event').on('hidden.bs.modal', function (e) {
+                    $window.location.reload();
+                    $window.opener.location.reload();
+                })
+            }
+        });
     };
 
     this.deleteEvent = function () {
-        eventService.deleteEvent(self.event['idAppointment'], self.event['idEmployee'], $scope.recurred, function (response) {
+        eventService.deleteEvent(self.event['idAppointment'], self.user.id, Number($scope.recurred), function (response) {
             console.log(response);
 
             if('' === response) {
@@ -50,6 +71,11 @@ booker.controller('eventController', function ($scope, userService, eventService
             else {
                 self.messHead = 'Success';
                 self.messText = 'The event deleted successfully';
+
+                $('#event').on('hidden.bs.modal', function (e) {
+                    $window.opener.location.reload();
+                    $window.close();
+                })
             }
         });
     };

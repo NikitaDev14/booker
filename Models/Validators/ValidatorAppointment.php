@@ -24,16 +24,16 @@
 			return self::$instance;
 		}
 
-		public function isValidAppointment()
+		public function isValidNewAppointment()
 		{
-			$now = new \DateTime();
+			$now = (new \DateTime())->modify(LOCAL_TIMEZONE_OFFSET);
 			$form = $this->form;
 			$duration = (int) $form['dur'];
 			$recurring = $form['recurr'];
 			$day = $form['date']->format('N');
 
 			if($form['start'] < $form['end'] &&
-				$form['start'] >  $now &&
+				$form['start'] > $now &&
 				$day != SATURDAY && $day != SUNDAY)
 			{
 				if(true == $form['isRecurr'] && $duration <= 0 &&
@@ -47,6 +47,22 @@
 				{
 					$result = true;
 				}
+			}
+			else
+			{
+				$result = false;
+			}
+
+			return $result;
+		}
+
+		public function isValidUpdAppointment()
+		{
+			$form = $this->form;
+
+			if($form['start'] < $form['end'])
+			{
+				$result = true;
 			}
 			else
 			{

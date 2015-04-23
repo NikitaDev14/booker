@@ -5,7 +5,6 @@ booker.controller('bookController', function ($scope, eventService, userService,
     this.lang = langFactory;
     this.baseDate = new Date(Number(localStorage.getItem('baseDate')));
     this.form = $scope;
-    this.isValidDate = this.form.date >= this.form.minDate;
 
     if(true === this.user.isAdmin) {
         userService.getAllUsers(function (response) {
@@ -19,24 +18,16 @@ booker.controller('bookController', function ($scope, eventService, userService,
     }
 
     this.addEvent = function () {
-        var temp = new Date($scope.date);
+        eventService.addEvent((new Date($scope.date).getTime()/1000+'').split('.')[0],
+            ($scope.start.getTime()/1000+'').split('.')[0],
+            ($scope.end.getTime()/1000+'').split('.')[0],
+            roomFactory.get(),
+            $scope.employee,
+            $scope.description || '',
+            $scope.isRecurring,
+            $scope.recurring,
+            $scope.duration, function (response) {
 
-        var date =
-            temp.getFullYear()+'-'+
-            (temp.getMonth()+1)+'-'+
-            temp.getDate();
-
-        var start =
-            $scope.start.getHours()+':'+
-            (($scope.start.getMinutes() === 0) ?
-                '00' : $scope.start.getMinutes());
-
-        var end =
-            $scope.end.getHours()+':'+
-            (($scope.end.getMinutes() === 0) ?
-                '00' : $scope.end.getMinutes());
-
-        eventService.addEvent(date, start, end, roomFactory.get(), $scope.employee, $scope.description || '', $scope.isRecurring, $scope.recurring, $scope.duration, function (response) {
             if('' === response) {
                 self.messHead = 'Error';
                 self.messText = 'Wrong data';
@@ -55,14 +46,15 @@ booker.controller('bookController', function ($scope, eventService, userService,
 
     $scope.isRecurring = '0';
     $scope.recurring = 'weekly';
+    $scope.duration = 1;
 
     $scope.date = (new Date()).getTime();
 
     // Disable weekend selection
     $scope.disabled = function(date, mode) {
         return (mode === 'day'
-            && (date.getDay() === 0
-            || date.getDay() === 6));
+            && (date.getUTCDay() === 0
+            || date.getUTCDay() === 6));
     };
 
     $scope.minDate = (new Date()).getTime();
@@ -83,8 +75,8 @@ booker.controller('bookController', function ($scope, eventService, userService,
 
     //////////////////////////////////////////////////////////////
 
-    var start = new Date((new Date).setMinutes(0));
-    var end = new Date((new Date(start)).setHours(start.getHours()+1));
+    var start = new Date((new Date).setUTCMinutes(0));
+    var end = new Date((new Date(start)).setUTCHours(start.getUTCHours()+1));
 
     $scope.start = start;
     $scope.end = end;

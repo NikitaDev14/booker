@@ -16,3 +16,13 @@ a:hover
 {
     cursor: pointer;
 }
+
+.calendar-cell
+{
+    height: 100px;
+    width: 125px;
+}
+.event-cell
+{
+    overflow-y: auto;
+}

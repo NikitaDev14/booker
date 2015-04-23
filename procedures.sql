@@ -129,7 +129,7 @@ BEGIN
 	IF(isRecurred = 0) THEN
 		DELETE
         FROM appointments
-        WHERE (appointments.Date + INTERVAL appointments.Start HOUR_SECOND) > NOW()
+        WHERE (appointments.Date + INTERVAL appointments.Start HOUR_SECOND) > getCurrentTime()
         	AND appointments.idAppointment = idAppn
             AND (appointments.idEmployee = idEmpl 
                  OR EXISTS(SELECT employees.idEmployee
@@ -144,7 +144,7 @@ BEGIN
         
         DELETE 
         FROM appointments
-        WHERE (appointments.Date + INTERVAL appointments.Start HOUR_SECOND) > NOW()
+        WHERE (appointments.Date + INTERVAL appointments.Start HOUR_SECOND) > getCurrentTime()
         	AND appointments.idRecurring = tempId
             AND (appointments.idEmployee = idEmpl 
                  OR EXISTS(SELECT employees.idEmployee
@@ -170,11 +170,10 @@ CREATE PROCEDURE `getAppnDetails`(IN `idAppn` INT(6) UNSIGNED)
     READS SQL DATA
     COMMENT '@idAppn'
 BEGIN
-	SELECT UNIX_TIMESTAMP(app.Date) AS Date, UNIX_TIMESTAMP(CONCAT(app.Date, ' ', app.Start)) AS Start, UNIX_TIMESTAMP(CONCAT(app.Date, ' ', app.End)) AS End, app.idAppointment, app.idEmployee, empl.Name AS EmployeeName, app.idRecurring, app.Description, app.Submitted
-    FROM appointments AS app
-    	JOIN employees AS empl
-        	ON app.idEmployee = empl.idEmployee
-    WHERE app.idAppointment = idAppn;
+	SELECT UNIX_TIMESTAMP(app.Date) AS Date, UNIX_TIMESTAMP(CONCAT(app.Date, ' ', app.Start)) AS Start, UNIX_TIMESTAMP(CONCAT(app.Date, ' ', app.End)) AS End, app.idAppointment, app.idEmployee, IF(app.idEmployee IS NULL, 'user deleted', empl.Name) AS EmployeeName, app.idRecurring, app.Description, app.Submitted
+    FROM appointments AS app, employees AS empl
+    WHERE app.idAppointment = idAppn AND (app.idEmployee = empl.idEmployee OR app.idEmployee IS NULL)
+    LIMIT 1;
 END$$
 
 DROP PROCEDURE IF EXISTS `getAppnsByMonthRoom`$$
@@ -243,34 +242,49 @@ BEGIN
 END$$
 
 DROP PROCEDURE IF EXISTS `updateAppointment`$$
-CREATE PROCEDURE `updateAppointment`(IN `idAppn` INT(6) UNSIGNED, IN `newStart` TIME, IN `newEnd` TIME, IN `newDescr` TEXT CHARSET utf8, IN `idEmpl` INT(6) UNSIGNED, IN `isRecurr` BOOLEAN, IN `idRoom` INT(6) UNSIGNED)
+CREATE PROCEDURE `updateAppointment`(IN `idAppn` INT(6) UNSIGNED, IN `newStart` TIME, IN `newEnd` TIME, IN `newDescr` TEXT CHARSET utf8, IN `idEmpl` INT(6) UNSIGNED, IN `isRecurred` BOOLEAN)
     MODIFIES SQL DATA
     COMMENT '@idAppn @newStart @newEnd @newDescr'
-BEGIN   
-	IF(isRecurred = 0) THEN
-		SELECT *
-        FROM appointments
-        WHERE (appointments.Date + INTERVAL appointments.Start HOUR_SECOND) > NOW()
+BEGIN
+	DECLARE colision INT(6) UNSIGNED DEFAULT 0;
+    DECLARE idRecurr INT(6) UNSIGNED;
+    
+    If(isRecurred = 0) THEN
+    
+	  	SELECT COUNT(app.Date)
+        INTO colision
+      	FROM appointments AS app
+        WHERE (
+            (newStart <= app.Start AND app.Start < newEnd) OR
+            (newStart < app.End AND app.End <= newEnd) OR
+            (app.Start <= newStart AND newEnd <= app.End) OR
+            (newStart <= app.Start AND app.End <= newEnd)
+        ) 
+            AND app.idAppointment <> idAppn
+            AND app.Date = (SELECT appointments.Date 
+                            FROM appointments
+                            WHERE appointments.idAppointment = idAppn);
+    
+    	UPDATE appointments
+        SET appointments.Start = newStart, appointments.End = newEnd, appointments.Description = newDescr, appointments.idEmployee = idEmpl
+        WHERE (appointments.Date + INTERVAL appointments.Start HOUR_SECOND) > getCurrentTime()
         	AND appointments.idAppointment = idAppn
-            AND (appointments.idEmployee = idEmpl 
+            AND (appointments.idEmployee = idEmpl
                  OR EXISTS(SELECT employees.idEmployee
                            FROM employees
                            WHERE employees.idEmployee = idEmpl
-                           AND employees.IsAdmin = 1)
-           	AND NOT EXISTS(SELECT DISTINCT app.Date
-                            FROM appointments AS app
-                            WHERE (
-                                    (newStart <= app.Start AND app.Start < newEnd) OR
-                                    (newStart < app.End AND app.End <= newEnd) OR
-                                    (app.Start <= newStart AND newEnd <= app.End) OR
-                                    (newStart <= app.Start AND app.End <= newEnd)
-                                ) 
-                                AND
-                                app.Date = (SELECT appointments.Date FROM appointments WHERE appointments.idAppointment = idAppn)
-                           		AND
-                                app.idRoom = idRoom));
-    ELSE       
-        SELECT DISTINCT app.Date
+                           AND employees.IsAdmin = 1))
+           	AND colision = 0;
+            
+    ELSE
+        
+        SELECT app.idRecurring 
+        INTO idRecurr
+        FROM appointments AS app
+        WHERE app.idAppointment = idAppn;
+    
+    	SELECT COUNT(app.Date)
+        INTO colision
         FROM appointments AS app
         WHERE (
         	(newStart <= app.Start AND app.Start < newEnd) OR
@@ -280,12 +294,23 @@ BEGIN
        	) 
         AND app.Date IN (SELECT app.Date 
                          FROM appointments AS app
-                         WHERE app.idRecurring = (SELECT app.idRecurring 
-                                                  FROM appointments AS app
-                                                  WHERE app.idAppointment = idAppn))
-        AND app.idRoom = idRoom;
-
+                         WHERE app.idRecurring = idRecurr)
+        AND app.idRecurring <> idRecurr;
+        
+        UPDATE appointments
+        SET appointments.Start = newStart, appointments.End = newEnd, appointments.Description = newDescr, appointments.idEmployee = idEmpl
+        WHERE (appointments.Date + INTERVAL appointments.Start HOUR_SECOND) > getCurrentTime()
+        	AND appointments.idRecurring = idRecurr
+            AND (appointments.idEmployee = idEmpl
+                 OR EXISTS(SELECT employees.idEmployee
+                           FROM employees
+                           WHERE employees.idEmployee = idEmpl
+                           AND employees.IsAdmin = 1))
+           	AND colision = 0;
+    
     END IF;
+    
+    SELECT ROW_COUNT();
 END$$
 
 --
@@ -307,6 +332,14 @@ BEGIN
             ) AND
             app.Date = NewDate AND
             app.idRoom = idRoom);
+END$$
+
+DROP FUNCTION IF EXISTS `getCurrentTime`$$
+CREATE FUNCTION `getCurrentTime`() RETURNS timestamp
+    NO SQL
+    COMMENT 'returns current timestamp with set offset'
+BEGIN
+	RETURN UTC_TIMESTAMP() + INTERVAL 3 HOUR;
 END$$
 
 DELIMITER ;

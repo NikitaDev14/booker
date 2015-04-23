@@ -30,14 +30,13 @@ booker.service('eventService', function ($http) {
             '&idAppn='+idEvent
         ).success(callback);
     };
-    this.updateEvent = function (idEvent, idEmpl, isRecurr, idRoom, start, end, descr, callback) {
+    this.updateEvent = function (idEvent, idEmpl, isRecurr, start, end, descr, callback) {
         $http.get('index.php'+
             '?controller=Appointment'+
-            '&action=updateAppointment' +
+            '&action=updateAppointment'+
             '&idAppn='+idEvent+
             '&idEmpl='+idEmpl+
             '&isRecurr='+isRecurr+
-            '&idRoom='+idRoom+
             '&start='+start+
             '&end='+end+
             '&descr='+descr

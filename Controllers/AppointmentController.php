@@ -10,7 +10,12 @@
 			$validatorUser = $this->objFactory->getObjValidatorUser();
 
 			$formData = $this->objFactory->getObjHttp()
-				->setParams($this->form)->convertDates()->getParams();
+				->setParams($this->form)
+				->convertDateTime('date')
+				->convertDateTime('start')
+				->convertDateTime('end')
+				->setDateOfAppointment()
+				->getParams();
 
 			if($formData['empl'] === $cookie->getCookie('id'))
 			{
@@ -22,10 +27,12 @@
 			}
 
 			$isValidAppn = $this->objFactory->getObjValidatorAppointment()
-				->setForm($formData)->isValidAppointment();
+				->setForm($formData)->isValidNewAppointment();
 
 			$nextPage = 'Echo';
 			$result = false;
+
+			var_dump($formData);
 
 			if (true === $isValidUser && true === $isValidAppn)
 			{
@@ -94,7 +101,49 @@
 					(
 						$formData['idAppn'],
 						$formData['idEmpl'],
-						(int) ($formData['isRecurred'] === 'true')
+						$formData['isRecurred']
+					);
+			}
+
+			$this->objFactory->getObjDataContainer()
+				->setParams(['nextPage' => 'Echo', 'result' => $result]);
+		}
+		public function updateAppointment()
+		{
+			$cookie = $this->objFactory->getObjCookie();
+			$validatorUser = $this->objFactory->getObjValidatorUser();
+
+			$formData = $this->objFactory->getObjHttp()
+				->setParams($this->form)
+				->convertDateTime('start')
+				->convertDateTime('end')
+				->getParams();
+
+			if($formData['idEmpl'] === $cookie->getCookie('id'))
+			{
+				$user = $validatorUser->isValidUser();
+			}
+			else
+			{
+				$user = $validatorUser->isValidAdmin();
+			}
+
+			$isValidAppn = $this->objFactory->getObjValidatorAppointment()
+				->setForm($formData)->isValidUpdAppointment();
+
+			$result = false;
+
+			if (true == $user && true === $isValidAppn)
+			{
+				$result = $this->objFactory->getObjAppointment()
+					->updateAppointment
+					(
+						$formData['idAppn'],
+						$formData['start']->format('H:i'),
+						$formData['end']->format('H:i'),
+						$formData['descr'],
+						$formData['idEmpl'],
+						$formData['isRecurr']
 					);
 			}
 

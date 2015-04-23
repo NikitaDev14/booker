@@ -18,11 +18,13 @@
 		 * string with dates when was overlapping 'result' = 0,
 		 * otherwise 'mess' = new id of parent event 'result' = 1
 		 */
-		public function addAppn($date, $start, $end, $room, $empl, $descr, $recurr, $dur)
+		public function addAppn($date, $start, $end, $room,
+		                        $empl, $descr, $recurr, $dur)
 		{
 			return $this->objFactory->getObjDatabase()
 				->setQuery('CALL addAppointment(?, ?, ?, ?, ?, ?, ?, ?)')
-				->setParam([$date, $start, $end, $room, $empl, $descr, $recurr, $dur])
+				->setParam([$date, $start, $end, $room,
+					$empl, $descr, $recurr, $dur])
 				->execute()->getResult();
 		}
 
@@ -39,6 +41,16 @@
 			return $this->objFactory->getObjDatabase()
 				->setQuery('CALL deleteAppointment(?, ?, ?)')
 				->setParam([$idAppn, $idEmpl, $isRecurred])
+				->execute()->getResult()[0]['ROW_COUNT()'];
+		}
+
+		public function updateAppointment($idAppn, $newStart, $newEnd,
+		                                  $newDescr, $idEmpl, $isRecurred)
+		{
+			return $this->objFactory->getObjDatabase()
+				->setQuery('CALL updateAppointment(?, ?, ?, ?, ?, ?)')
+				->setParam([$idAppn, $newStart, $newEnd,
+					$newDescr, $idEmpl, $isRecurred])
 				->execute()->getResult()[0]['ROW_COUNT()'];
 		}
 	}
