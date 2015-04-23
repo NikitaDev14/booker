@@ -4,7 +4,7 @@
             <div class="col-xs-3">
                 <a class="btn btn-primary" ng-href="#/" role="button" ng-show="userCtrl.isValidUser" ng-bind="userCtrl.lang.template.header.mainPage"></a>
                 <a class="btn btn-success" ng-href="#/book" role="button" ng-show="userCtrl.isValidUser" ng-bind="userCtrl.lang.template.header.bookIt"></a>
-                <a class="btn btn-warning" ng-href="#/" role="button" ng-show="userCtrl.isValidUser && userCtrl.isValidAdmin" ng-bind="userCtrl.lang.template.header.emplLst"></a>
+                <a class="btn btn-warning" ng-href="#/employee-list" role="button" ng-show="userCtrl.isValidUser && userCtrl.isValidAdmin" ng-bind="userCtrl.lang.template.header.emplLst"></a>
             </div>
             <div class="col-xs-4 text-center">
                 <button class="btn btn-info" type="button" ng-repeat="room in userCtrl.rooms" ng-click="userCtrl.calendar.setRoom(room.idRoom)"

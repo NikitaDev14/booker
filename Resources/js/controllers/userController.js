@@ -1,8 +1,9 @@
 booker.controller('userController',
-    function ($scope, $http, userService, roomService, userFactory, roomFactory, calendarFactory, langFactory, $location) {
+    function ($scope, $http, userService, roomService, userFactory, roomFactory, calendarFactory, langFactory, $location, $window) {
         this.template = {
             email: '[0-9a-z_]+@[0-9a-z_]+\\.[a-z]{1,3}',
-            password: '.{4,}'
+            password: '.{4,}',
+            name : '[A-Za-z\- ]{3,}'
         };
 
         var self = this;
@@ -33,6 +34,12 @@ booker.controller('userController',
 
         userService.isValidAdmin(function (response) {
             self.isValidAdmin = Boolean(response);
+
+            if(true === self.isValidAdmin) {
+                userService.getAllUsers(function (users) {
+                    self.userList = users['users'];
+                });
+            }
         });
 
         this.login = function () {
@@ -65,5 +72,29 @@ booker.controller('userController',
                         self.message = 'This email has already registered.';
                     }
                 });
+        };
+
+        this.removeUser = function (id) {
+            if(true === confirm('Are you sure?')) {
+                userService.removeUser(id, function (response) {
+                    if('1' === response) {
+                        $window.location.reload();
+                        alert('User delete successfully.');
+                    }
+                });
+            }
+        };
+
+        this.showUpdateMenu = function (id, name, email) {
+            self.activeIdUser = id;
+            $scope.userName = name;
+            $scope.userEmail = email;
+        };
+
+        this.updateUser = function (newName, newEmail) {
+            userService.updateUser(self.activeIdUser, newName, newEmail, function (response) {
+                console.log(response);
+                $('#employee').modal('hide');
+            });
         };
     });

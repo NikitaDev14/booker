@@ -1,18 +1,20 @@
 <div class="container" ng-controller="eventController as eventCtrl">
     <h4>B.B.Details</h4>
 
-    <div>
-        <p>When:</p>
-
-        <timepicker ng-model="start" hour-step="hstep" minute-step="mstep" show-meridian="ismeridian"></timepicker>
-
-        <timepicker ng-model="end" hour-step="hstep" minute-step="mstep" show-meridian="ismeridian"></timepicker>
-
+    <div class="form-group">
+        <div class="col-sm-4">
+            <label>Start:</label>
+            <timepicker ng-model="start" hour-step="hstep" minute-step="mstep" show-meridian="ismeridian"></timepicker>
+        </div>
+        <div class="col-sm-4">
+            <label>End:</label>
+            <timepicker ng-model="end" hour-step="hstep" minute-step="mstep" show-meridian="ismeridian"></timepicker>
+        </div>
     </div>
 
-    <div>
-        <p>Notes:</p>
-        <textarea ng-model="description"></textarea>
+    <div class="form-group">
+        <label>Notes:</label>
+        <textarea class="form-control" ng-model="description"></textarea>
     </div>
     <p>Who:</p>
 
@@ -25,9 +27,9 @@
         <p>Submitted: {{eventCtrl.event.Submitted}}</p>
     </div>
 
-    <div class="checkbox">
+    <div class="checkbox" ng-class="{'disabled' : eventCtrl.event.idRecurring == null}">
         <label>
-            <input type="checkbox" ng-model="recurred" name="recurred" value="1">
+            <input type="checkbox" ng-model="recurred" ng-disabled="eventCtrl.event.idRecurring == null" name="recurred" value="1">
             Apply to all occurrences?
         </label>
     </div>

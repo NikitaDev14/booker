@@ -64,6 +64,50 @@
 				->setParams(['nextPage' => $nextPage, 'result' => $result]);
 		}
 
+		public function removeUser()
+		{
+			$user = (bool) $this->objFactory->getObjValidatorUser()
+				->isValidAdmin();
+
+			$formData = $this->objFactory->getObjHttp()
+				->setParams($this->form)->getParams();
+
+			$result = false;
+
+			if(true === $user)
+			{
+				$result = $this->objFactory->getObjUser()
+					->removeUser($formData['idEmpl']);
+			}
+
+			$this->objFactory->getObjDataContainer()
+				->setParams(['nextPage' => 'Echo', 'result' => $result]);
+		}
+
+		public function updateUser()
+		{
+			$user = (bool) $this->objFactory->getObjValidatorUser()
+				->isValidAdmin();
+
+			$formData = $this->objFactory->getObjHttp()
+				->setParams($this->form)->getParams();
+
+			$result = false;
+
+			if(true === $user)
+			{
+				$result = $this->objFactory->getObjUser()
+					->updateUser(
+						$formData['idEmpl'],
+						$formData['name'],
+						$formData['email']
+					);
+			}
+
+			$this->objFactory->getObjDataContainer()
+				->setParams(['nextPage' => 'Echo', 'result' => $result]);
+		}
+
 		/**
 		 * get from HTTP form an email and password
 		 * if this pair is valid begin session and set cookie,

@@ -1,3 +1,6 @@
+var TIMEZONE_OFFSET = 3; //for home server
+//var TIMEZONE_OFFSET = 10; //for GFL server
+
 booker.config(function ($stateProvider, $urlRouterProvider) {
     $urlRouterProvider.otherwise('/');
 
@@ -27,7 +30,11 @@ booker.config(function ($stateProvider, $urlRouterProvider) {
             templateUrl: 'Resources/html/book.html',
             controller: 'bookController'
         })
-
+        .state('employeeList', {
+            url: '/employee-list',
+            templateUrl: 'Resources/html/employeeList.html',
+            controller: 'userController'
+        })
         .state('error 404', {
             url: '/error_404',
             templateUrl: 'Resources/html/404.html'

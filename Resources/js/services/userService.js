@@ -32,4 +32,20 @@ booker.service('userService', function ($http) {
             passwordRepeat: passwordRepeat
         }).success(callback);
     };
+    this.removeUser = function (idEmpl, callback) {
+        $http.get('index.php' +
+            '?controller=User' +
+            '&action=removeUser' +
+            '&idEmpl='+idEmpl
+        ).success(callback);
+    };
+    this.updateUser = function (idEmpl, newName, newEmail, callback) {
+        $http.post('index.php', {
+            controller: 'User',
+            action: 'updateUser',
+            idEmpl: idEmpl,
+            name: newName,
+            email: newEmail
+        }).success(callback);
+    };
 });

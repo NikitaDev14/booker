@@ -32,8 +32,6 @@
 			$nextPage = 'Echo';
 			$result = false;
 
-			var_dump($formData);
-
 			if (true === $isValidUser && true === $isValidAppn)
 			{
 				$result = $this->objFactory->getObjAppointment()

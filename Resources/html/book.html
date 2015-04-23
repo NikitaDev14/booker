@@ -1,18 +1,12 @@
 <div header></div>
 <div ng-controller="bookController as bkCtrl">
     <form class="form-horizontal" name="bookForm">
-        <div class="form-group has-feedback" ng-hide="(bkCtrl.users == undefined)" ng-class="(bkCtrl.form.employee != undefined)? 'has-success' : 'has-error'">
-            <h4 for="selectEmployee" class="col-sm-4 control-label">1.Booked for:</h4>
+        <div class="form-group" ng-hide="(bkCtrl.users == undefined)">
             <div class="col-sm-4">
+                <h4 for="selectEmployee">1.Booked for:</h4>
                 <select class="form-control" id="selectEmployee" name="employee" aria-describedby="employeeStatus" ng-model="employee">
                     <option ng-repeat="user in bkCtrl.users" value="{{user.idEmployee}}" ng-bind="user.Name"></option>
                 </select>
-            </div>
-            <div class="col-sm-4">
-                <span class="glyphicon glyphicon-ok form-control-feedback" aria-hidden="true" ng-show="(bkCtrl.form.employee != undefined)"></span>
-                <span id="employeeStatus" class="sr-only" ng-show="(bkCtrl.form.employee != undefined)">(success)</span>
-                <span class="glyphicon glyphicon-remove form-control-feedback" aria-hidden="true" ng-show="(bkCtrl.form.employee == undefined)"></span>
-                <span id="employeeStatus" class="sr-only" ng-show="(bkCtrl.form.employee == undefined)">(error)</span>
             </div>
         </div>
         <h4 ng-show="(bkCtrl.users == undefined)">1.Booked for: {{bkCtrl.user.name}}</h4>
@@ -33,28 +27,14 @@
         <h4>3.Specify what the time and end of the meeting (This will be what people see on the calendar.)</h4>
 
         <div class="form-group">
-            <label for="inputStart" class="col-sm-2 control-label">Start:</label>
-            <div class="col-sm-2">
-                <timepicker id="inputStart" aria-describedby="startStatus" ng-model="start" hour-step="hstep" minute-step="mstep" show-meridian="ismeridian"></timepicker>
+            <div class="col-sm-4">
+                <label>Start:</label>
+                <timepicker ng-model="start" hour-step="hstep" minute-step="mstep" show-meridian="ismeridian"></timepicker>
             </div>
-            <div class="col-sm-1">
-                <span class="glyphicon glyphicon-ok form-control-feedback" aria-hidden="true" ng-show="(bkCtrl.form.employee != undefined)"></span>
-                <span id="startStatus" class="sr-only" ng-show="(bkCtrl.form.employee != undefined)">(success)</span>
-                <span class="glyphicon glyphicon-remove form-control-feedback" aria-hidden="true" ng-show="(bkCtrl.form.employee == undefined)"></span>
-                <span id="startStatus" class="sr-only" ng-show="(bkCtrl.form.employee == undefined)">(error)</span>
+            <div class="col-sm-4">
+                <label>End:</label>
+                <timepicker ng-model="end" hour-step="hstep" minute-step="mstep" show-meridian="ismeridian"></timepicker>
             </div>
-
-            <label for="inputEnd" class="col-sm-2 control-label">End:</label>
-            <div class="col-sm-2">
-                <timepicker id="inputEnd" aria-describedby="endStatus" ng-model="end" hour-step="hstep" minute-step="mstep" show-meridian="ismeridian"></timepicker>
-            </div>
-            <div class="col-sm-1">
-                <span class="glyphicon glyphicon-ok form-control-feedback" aria-hidden="true" ng-show="(bkCtrl.form.employee != undefined)"></span>
-                <span id="endStatus" class="sr-only" ng-show="(bkCtrl.form.employee != undefined)">(success)</span>
-                <span class="glyphicon glyphicon-remove form-control-feedback" aria-hidden="true" ng-show="(bkCtrl.form.employee == undefined)"></span>
-                <span id="endStatus" class="sr-only" ng-show="(bkCtrl.form.employee == undefined)">(error)</span>
-            </div>
-
         </div>
         
         <h4>4.Enter the specifics for the meeting. (This will be what people see when they click on an event link)</h4>
@@ -102,7 +82,7 @@
             month. (If you choose "bi-weekly" and put in an odd number of weeks, the computer will round down).
 
             <div class="col-sm-4">
-                <input class="form-control" type="number" min="1" max="4" ng-model="duration">
+                <input class="form-control" type="number" min="1" max="4" ng-disabled="isRecurring === '0'" ng-model="duration">
             </div>
             <div class="col-sm-4">
                 duration (max 4 weeks)
@@ -110,7 +90,7 @@
 
         </div>
 
-        <button class="btn btn-primary" data-toggle="modal" data-target="#book" type="button" ng-click="bkCtrl.addEvent()">Submit</button>
+        <button class="btn btn-primary" data-toggle="modal" data-target="#book" type="button" ng-class="{'disabled' : bookForm.$invalid || duration == undefined}" ng-click="bkCtrl.addEvent()">Submit</button>
     </form>
 
     <!-- Modal -->

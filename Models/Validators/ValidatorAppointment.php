@@ -36,10 +36,11 @@
 				$form['start'] > $now &&
 				$day != SATURDAY && $day != SUNDAY)
 			{
-				if(true == $form['isRecurr'] && $duration <= 0 &&
+				if(true == $form['isRecurr'] &&
 					(('weekly' === $recurring && $duration > 4) ||
 					('bi-weekly' === $recurring && $duration > 2) ||
-					('monthly' === $recurring && $duration > 1)))
+					('monthly' === $recurring && $duration > 1)) &&
+					$duration <= 0)
 				{
 					$result = false;
 				}

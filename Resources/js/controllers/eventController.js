@@ -27,8 +27,6 @@ booker.controller('eventController', function ($scope, userService, eventService
         $scope.ismeridian = localStorage.getItem('timeForm') === 'hh:mm a';
         $scope.recurred = false;
         $scope.description = self.event.Description;
-
-        self.disabled = self.user.isAdmin == false || self.event.idRecurring == null || self.event.idEmployee != self.user.id || $scope.start < (new Date());
     });
 
     this.updateEvent = function () {

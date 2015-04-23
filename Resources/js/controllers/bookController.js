@@ -37,8 +37,18 @@ booker.controller('bookController', function ($scope, eventService, userService,
                 self.messText = 'In: ' + response[0]['mess'];
             }
             else if('1' === response[0]['result']) {
+
+                var start = new Date($scope.start.getTime());
+                start.setUTCHours(start.getUTCHours() + TIMEZONE_OFFSET);
+
+                var end = new Date($scope.end.getTime());
+                end.setUTCHours(end.getUTCHours() + TIMEZONE_OFFSET);
+
                 self.messHead = 'Success';
-                self.messText = 'Your event has added successfully';
+                self.messText = 'Your event has added successfully. '+
+                'The event'+start.getUTCHours()+':'+start.getUTCMinutes()+
+                '-'+end.getUTCHours()+':'+end.getUTCMinutes()+
+                '. Text of this event is'+$scope.description;
             }
 
         });
@@ -47,8 +57,6 @@ booker.controller('bookController', function ($scope, eventService, userService,
     $scope.isRecurring = '0';
     $scope.recurring = 'weekly';
     $scope.duration = 1;
-
-    $scope.date = (new Date()).getTime();
 
     // Disable weekend selection
     $scope.disabled = function(date, mode) {

@@ -52,5 +52,3 @@ booker.service('eventService', function ($http) {
         ).success(callback);
     };
 });
-
-//date, start, end, roomFactory.get(), $scope.employee, $scope.description || '', $scope.isRecurring, $scope.recurring, $scope.duration, function (response)

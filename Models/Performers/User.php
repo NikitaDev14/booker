@@ -70,6 +70,22 @@
 				->execute()->getResult();
 		}
 
+		public function removeUser($idEmpl)
+		{
+			return $this->objFactory->getObjDatabase()
+				->setQuery('CALL removeEmployee(?)')
+				->setParam([$idEmpl])->execute()
+				->getResult()[0]['ROW_COUNT()'];
+		}
+
+		public function updateUser($idEmpl, $newName, $newEmail)
+		{
+			return $this->objFactory->getObjDatabase()
+				->setQuery('CALL updateEmployee(?, ?, ?)')
+				->setParam([$idEmpl, $newName, $newEmail])
+				->execute()->getResult()[0]['ROW_COUNT()'];
+		}
+
 		/**
 		 * @param $idUser
 		 * @param $sessionId
