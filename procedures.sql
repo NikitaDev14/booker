@@ -339,7 +339,7 @@ CREATE FUNCTION `getCurrentTime`() RETURNS timestamp
     NO SQL
     COMMENT 'returns current timestamp with set offset'
 BEGIN
-	RETURN UTC_TIMESTAMP() + INTERVAL 3 HOUR;
+	RETURN UTC_TIMESTAMP() + INTERVAL '10:25' HOUR_MINUTE;
 END$$
 
 DELIMITER ;

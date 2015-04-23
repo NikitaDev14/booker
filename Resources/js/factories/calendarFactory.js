@@ -7,7 +7,9 @@ booker.factory('calendarFactory', function (eventService) {
         var result = [];
 
         for(var event in params.events) {
-            if((new Date(params.events[event].Date)).getDate() === day) {
+            if((new Date(params.events[event].Date)).getUTCDate() === day) {
+                
+
                 result.push(params.events[event]);
             }
         }

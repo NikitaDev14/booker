@@ -57,7 +57,9 @@
 			$day = $date->format('j');
 
 			$this->params['start']->setDate($year, $month, $day);
-			$this->params['end']->setDate($year, $month, $day);
+            $this->params['end']->setDate($year, $month, $day);
+
+            return self::$instance;
 		}
 
 		public function setParams($params)
