@@ -1,5 +1,5 @@
-var TIMEZONE_OFFSET = 3; //for home client
-//var TIMEZONE_OFFSET = 10; //for GFL-student client
+//var TIMEZONE_OFFSET = 3; //for home client
+var TIMEZONE_OFFSET = 10; //for GFL-student client
 
 booker.config(function ($stateProvider, $urlRouterProvider) {
 

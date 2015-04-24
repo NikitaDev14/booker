@@ -31,7 +31,8 @@
 
 			$nextPage = 'Echo';
 			$result = false;
-
+            //var_dump(new \DateTime());
+            //var_dump($formData);
 			if (true === $isValidUser && true === $isValidAppn)
 			{
 				$result = $this->objFactory->getObjAppointment()
@@ -45,9 +46,11 @@
 						$formData['descr'],
 						$formData['recurr'],
 						$formData['dur']
-					);
+                    );
 
-				$nextPage = 'AppointmentResponse';
+                var_dump($result);
+
+				//$nextPage = 'AppointmentResponse';
 			}
 
 			$this->objFactory->getObjDataContainer()

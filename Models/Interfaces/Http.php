@@ -43,7 +43,7 @@
 			*/
 			$this->params[$name] = \DateTime::createFromFormat('U', $this->params[$name]);
 
-			$this->params[$name]->modify(LOCAL_TIMEZONE_OFFSET);
+			$this->params[$name]->modify(EVENT_TIME_OFFSET);
 
 			return self::$instance;
 		}

@@ -25,7 +25,7 @@ booker.controller('bookController', function ($scope, eventService, userService,
             $scope.employee,
             $scope.description || '',
             $scope.isRecurring,
-            $scope.recurring,
+            ('0' === $scope.isRecurring)? '' : $scope.recurring,
             $scope.duration, function (response) {
 
             if('' === response) {
@@ -83,7 +83,7 @@ booker.controller('bookController', function ($scope, eventService, userService,
 
     //////////////////////////////////////////////////////////////
 
-    var start = new Date((new Date).setUTCMinutes(0));
+    var start = new Date((new Date((new Date).setUTCMinutes(0))).setUTCHours((new Date()).getUTCHours()+TIMEZONE_OFFSET));
     var end = new Date((new Date(start)).setUTCHours(start.getUTCHours()+1));
 
     $scope.start = start;

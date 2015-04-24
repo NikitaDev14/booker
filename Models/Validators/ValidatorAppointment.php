@@ -26,7 +26,7 @@
 
 		public function isValidNewAppointment()
 		{
-			$now = (new \DateTime())->modify(LOCAL_TIMEZONE_OFFSET);
+			$now = (new \DateTime())->modify(CURRENT_TIME_OFFSET);
 			$form = $this->form;
 			$duration = (int) $form['dur'];
 			$recurring = $form['recurr'];
