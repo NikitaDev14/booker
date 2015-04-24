@@ -105,6 +105,7 @@ ALTER TABLE `appointments`
 --
 -- Индексы таблицы `employees`
 --
+
 ALTER TABLE `employees`
   ADD PRIMARY KEY (`idEmployee`);
 
