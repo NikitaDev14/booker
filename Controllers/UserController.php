@@ -167,4 +167,33 @@
 			$this->objFactory->getObjDataContainer()
 				->setParams(['nextPage' => 'Echo', 'result' => $result]);
 		}
+
+		public function signup()
+		{
+			$user = (bool) $this->objFactory->getObjValidatorUser()
+				->isValidAdmin();
+
+			$formData = $this->objFactory->getObjHttp()
+				->setParams($this->form)->getParams();
+
+			$form = $this->objFactory->getObjValidatorSignup()
+				->setForm($formData)->isValidForm();
+
+			$result = false;
+
+			if(true === $user && true === $form)
+			{
+				$result = $this->objFactory->getObjUser()
+					->addUser
+					(
+						$formData['name'],
+						$formData['email'],
+						$formData['password'],
+						(bool) $formData['isAdmin']
+					);
+			}
+
+			$this->objFactory->getObjDataContainer()
+				->setParams(['nextPage' => 'Echo', 'result' => $result]);
+		}
 	}

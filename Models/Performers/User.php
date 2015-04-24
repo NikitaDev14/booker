@@ -12,12 +12,12 @@
 		 * add new email, name, password, isAdmin (flag)
 		 * @return (newId)
 		 */
-		public function addUser($email, $name, $password, $isAdmin)
+		public function addUser($name, $email, $password, $isAdmin)
 		{
 			return $this->objFactory->getObjDatabase()
 				->setQuery('CALL addEmployee(?, ?, ?, ?)')
 				->setParam([$email, $name, $password, $isAdmin])
-				->execute()->getResult();
+				->execute()->getResult()[0]['newId'];
 		}
 
 		/**

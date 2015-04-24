@@ -14,6 +14,7 @@
 
 	define('TIMEZONE', 'UTC');
 
+	define('NAME_TEMPLATE', '/[A-Za-z\- ]{3,}/');
 	define('EMAIL_TEMPLATE', '/[0-9a-z_]+@[0-9a-z_]+\\.[a-z]{1,3}/i');
 	define('PASSWORD_TEMPLATE', '/.{4,}/');
 
@@ -24,3 +25,5 @@
 
 	define('SATURDAY', '6');
 	define('SUNDAY', '7');
+
+	define('BASE_PATH_FOR_TESTS', '../../');

@@ -23,11 +23,13 @@ booker.service('userService', function ($http) {
             password: password
         }).success(callback);
     };
-    this.signup = function (email, password, passwordRepeat, callback) {
+    this.signup = function (name, email, isAdmin, password, passwordRepeat, callback) {
         $http.post('index.php', {
             controller: 'User',
             action: 'signup',
+            name: name,
             email: email,
+            isAdmin: isAdmin,
             password: password,
             passwordRepeat: passwordRepeat
         }).success(callback);

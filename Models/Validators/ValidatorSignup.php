@@ -25,9 +25,10 @@
 
 		public function isValidForm()
 		{
-			return $this->isValidEmail() &&
-			$this->isValidPassword() &&
-			$this->isValidPasswordRepeat();
+			return $this->isValidName() &&
+				$this->isValidEmail() &&
+				$this->isValidPassword() &&
+				$this->isValidPasswordRepeat();
 		}
 
 		/**
@@ -36,17 +37,49 @@
 		 */
 		public function isValidEmail()
 		{
-			$userExsists = $this->objFactory->getObjUser()->
-			exsistsUser($this->form['email']);
+			if(!empty($this->form['email']))
+			{
+				$userExsists = $this->objFactory->getObjUser()
+					->getUserByEml($this->form['email']);
 
-			return preg_match(EMAIL_TEMPLATE, $this->form['email']) &&
-			!$userExsists;
+				$result = preg_match(EMAIL_TEMPLATE, $this->form['email']) &&
+					!$userExsists;
+			}
+			else
+			{
+				$result = false;
+			}
+
+			return $result;
+		}
+
+		public function isValidName()
+		{
+			if(!empty($this->form['name']))
+			{
+				$result = (bool)preg_match(NAME_TEMPLATE, $this->form['name']);
+			}
+			else
+			{
+				$result = false;
+			}
+
+			return $result;
 		}
 
 		public function isValidPassword()
 		{
-			return (bool)preg_match(PASSWORD_TEMPLATE,
-				$this->form['password']);
+			if(!empty($this->form['password']))
+			{
+				$result = (bool)preg_match(PASSWORD_TEMPLATE,
+					$this->form['password']);
+			}
+			else
+			{
+				$result = false;
+			}
+
+			return $result;
 		}
 
 		public function isValidPasswordRepeat()

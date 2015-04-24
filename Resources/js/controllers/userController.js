@@ -61,16 +61,21 @@ booker.controller('userController',
             });
         };
 
-        this.signup = function () {
-            userService.signup($scope.email, $scope.password,
-                $scope.passwordRepeat, function (data) {
+        this.addUser = function (name, email, isAdmin, password, passwordRepeat) {
+            userService.signup(name, email, Number(isAdmin), password, passwordRepeat, function (response) {
 
-                    if ('1' === data) {
-                        $location.path('/');
+                    var mess = '';
+
+                    if(true === Boolean(response)) {
+                        mess = 'The employee has added successfully.';
                     }
                     else {
-                        self.message = 'This email has already registered.';
+                        mess = 'Sorry. The employee could not be added, '+
+                            'because you input a wrong data or such email '+
+                            'has already registered.';
                     }
+
+                    alert(mess);
                 });
         };
 

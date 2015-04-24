@@ -1,8 +1,11 @@
-var TIMEZONE_OFFSET = 3; //for home server
-//var TIMEZONE_OFFSET = 10; //for GFL server
+var TIMEZONE_OFFSET = 3; //for home client
+//var TIMEZONE_OFFSET = 10; //for GFL-student client
 
 booker.config(function ($stateProvider, $urlRouterProvider) {
-    $urlRouterProvider.otherwise('/');
+
+    $urlRouterProvider.when('', '/');
+
+    $urlRouterProvider.otherwise('/error_404');
 
     $stateProvider
         .state('default', {
@@ -38,5 +41,5 @@ booker.config(function ($stateProvider, $urlRouterProvider) {
         .state('error 404', {
             url: '/error_404',
             templateUrl: 'Resources/html/404.html'
-        })
+        });
 });
