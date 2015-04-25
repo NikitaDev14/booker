@@ -124,8 +124,8 @@ CREATE PROCEDURE `deleteAppointment`(IN `idAppn` INT(6) UNSIGNED, IN `idEmpl` IN
     MODIFIES SQL DATA
     COMMENT '@idAppn @isRecurring'
 BEGIN
-	DECLARE tempId INT(6) UNSIGNED DEFAULT 0;
-    DECLARE tempDate DATE;
+	DECLARE recurrId INT(6) UNSIGNED DEFAULT 0;
+    DECLARE selectedDate DATE;
     
 	IF(isRecurred = 0) THEN
 		DELETE
@@ -139,20 +139,20 @@ BEGIN
                            AND employees.IsAdmin = 1));
     ELSE 
     	SELECT app.idRecurring
-        INTO tempId
+        INTO recurrId
         FROM appointments AS app
         WHERE app.idAppointment = idAppn;
         
         SELECT app.Date
-        INTO tempDate
+        INTO selectedDate
         FROM appointments AS app
         WHERE app.idAppointment = idAppn;
         
         DELETE 
         FROM appointments
         WHERE (appointments.Date + INTERVAL appointments.Start HOUR_SECOND) > getCurrentTime()
-        	AND appointments.idRecurring = tempId
-            AND appointments.Date >= tempDate
+        	AND appointments.idRecurring = recurrId
+            AND appointments.Date >= selectedDate
             AND (appointments.idEmployee = idEmpl 
                  OR EXISTS(SELECT employees.idEmployee
                            FROM employees
@@ -237,7 +237,7 @@ BEGIN
 END$$
 
 DROP PROCEDURE IF EXISTS `isRecurringAppn`$$
-CREATE DEFINER=`root`@`localhost` PROCEDURE `isRecurringAppn`(IN `idAppn` INT(6) UNSIGNED)
+CREATE PROCEDURE `isRecurringAppn`(IN `idAppn` INT(6) UNSIGNED)
     READS SQL DATA
     COMMENT '@idAppn'
 BEGIN
@@ -382,8 +382,8 @@ CREATE FUNCTION `getCurrentTime`() RETURNS timestamp
     NO SQL
     COMMENT 'returns current timestamp with set offset'
 BEGIN
--- 	RETURN UTC_TIMESTAMP() + INTERVAL '10:25' HOUR_MINUTE; -- for GFL server
-	RETURN UTC_TIMESTAMP() + INTERVAL '3' HOUR;            -- for home server
+ 	RETURN UTC_TIMESTAMP() + INTERVAL '10:25' HOUR_MINUTE; -- for GFL server
+--	RETURN UTC_TIMESTAMP() + INTERVAL '3' HOUR;            -- for home server
 END$$
 
 DELIMITER ;

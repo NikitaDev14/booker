@@ -18,8 +18,12 @@ booker.controller('eventController', function ($scope, userService, eventService
     eventService.getEventDetails($stateParams.id, function (response) {
         self.event = response['event'][0];
 
-        $scope.start = new Date((response['event'][0]['Start'].split('.'))[0]*1000);
-        $scope.end = new Date((response['event'][0]['End'].split('.'))[0]*1000);
+        var start = new Date((response['event'][0]['Start'].split('.'))[0]*1000);
+        var end = new Date((response['event'][0]['End'].split('.'))[0]*1000);
+
+
+        $scope.start = start.setUTCHours(start.getUTCHours()-TIMEZONE_OFFSET*2);
+        $scope.end = end.setUTCHours(end.getUTCHours()-TIMEZONE_OFFSET*2);
 
         $scope.hstep = 1;
         $scope.mstep = 15;
@@ -31,7 +35,7 @@ booker.controller('eventController', function ($scope, userService, eventService
 
     this.updateEvent = function () {
 
-        eventService.updateEvent(self.event['idAppointment'], $scope.employee, Number($scope.recurred), ($scope.start.getTime()/1000+'').split('.')[0], ($scope.end.getTime()/1000+'').split('.')[0], $scope.description, function (response) {
+        eventService.updateEvent(self.event['idAppointment'], $scope.employee, Number($scope.recurred), ($scope.start/1000+'').split('.')[0], ($scope.end/1000+'').split('.')[0], $scope.description, function (response) {
             console.log(response);
 
             if('' === response) {

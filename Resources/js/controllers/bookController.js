@@ -83,8 +83,12 @@ booker.controller('bookController', function ($scope, eventService, userService,
 
     //////////////////////////////////////////////////////////////
 
-    var start = new Date((new Date((new Date).setUTCMinutes(0))).setUTCHours((new Date()).getHours()+TIMEZONE_OFFSET));
-    var end = new Date((new Date(start)).setUTCHours(start.getUTCHours()+1));
+    var start = new Date();
+    start.setUTCHours(start.getHours()-TIMEZONE_OFFSET);
+    start.setUTCMinutes(0);
+ 
+    var end = new Date(start);
+    end.setUTCHours(start.getUTCHours()+1);
 
     $scope.start = start;
     $scope.end = end;

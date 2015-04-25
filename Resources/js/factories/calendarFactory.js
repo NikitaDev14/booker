@@ -8,7 +8,7 @@ booker.factory('calendarFactory', function (eventService) {
 
         for(var event in params.events) {
             var dayOfEvent = new Date(params.events[event].Date);
-            dayOfEvent.setUTCHours(dayOfEvent.getUTCHours() - TIMEZONE_OFFSET);
+            //dayOfEvent.setUTCHours(dayOfEvent.getUTCHours() - TIMEZONE_OFFSET);
 
             if(dayOfEvent.getUTCDate() === day) {
                 result.push(params.events[event]);

@@ -68,6 +68,8 @@ booker.controller('userController',
 
                     if(true === Boolean(response)) {
                         mess = 'The employee has added successfully.';
+
+                        $scope.newUserName = $scope.newUserEmail = $scope.newUserPassword = $scope.newUserPasswordRepeat = '';
                     }
                     else {
                         mess = 'Sorry. The employee could not be added, '+
@@ -100,6 +102,7 @@ booker.controller('userController',
             userService.updateUser(self.activeIdUser, newName, newEmail, function (response) {
                 console.log(response);
                 $('#employee').modal('hide');
+                $window.location.reload();
             });
         };
     });
