@@ -29,10 +29,10 @@
 			$isValidAppn = $this->objFactory->getObjValidatorAppointment()
 				->setForm($formData)->isValidNewAppointment();
 
-			$nextPage = 'Echo';
 			$result = false;
             //var_dump(new \DateTime());
             //var_dump($formData);
+
 			if (true === $isValidUser && true === $isValidAppn)
 			{
 				$result = $this->objFactory->getObjAppointment()
@@ -48,13 +48,11 @@
 						$formData['dur']
                     );
 
-                var_dump($result);
-
-				//$nextPage = 'AppointmentResponse';
+				//var_dump($result);
 			}
 
 			$this->objFactory->getObjDataContainer()
-				->setParams(['nextPage' => $nextPage, 'result' => $result]);
+				->setParams(['nextPage' => 'Echo', 'result' => $result]);
 		}
 		public function getAppointmentDetails()
 		{

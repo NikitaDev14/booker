@@ -1,18 +1,19 @@
 <?php
-	                                  //for GFL server
+	/*                                  //for GFL server
 	define('DB_HOST', 'localhost');
 	define('DB_NAME', 'user10');
 	define('DB_USER', 'user10');
 	define('DB_PASS', 'tuser10');
     define('CURRENT_TIME_OFFSET', '+10 hour +25 minute');
     define('EVENT_TIME_OFFSET', '-7 hour');
-	/*                                  //for home server
+	*/                                 //for home server
 	define('DB_NAME', 'booker');
 	define('DB_HOST', 'localhost');
 	define('DB_USER', 'root');
 	define('DB_PASS', '1234');
-	define('LOCAL_TIMEZONE_OFFSET', '+3 hour');
-    */
+	define('CURRENT_TIME_OFFSET', '+3 hour');
+	define('EVENT_TIME_OFFSET', CURRENT_TIME_OFFSET);
+
 	define('TIMEZONE', 'UTC');
 
 	define('NAME_TEMPLATE', '/[A-Za-z\- ]{3,}/');

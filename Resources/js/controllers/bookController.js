@@ -26,17 +26,17 @@ booker.controller('bookController', function ($scope, eventService, userService,
             $scope.description || '',
             $scope.isRecurring,
             ('0' === $scope.isRecurring)? '' : $scope.recurring,
-            $scope.duration, function (response) {
+            ('0' === $scope.isRecurring)? '' : $scope.duration, function (response) {
 
             if('' === response) {
                 self.messHead = 'Error';
                 self.messText = 'Wrong data';
             }
-            else if('0' === response[0]['result']) {
-                self.messHead = 'Overlapping events';
-                self.messText = 'In: ' + response[0]['mess'];
+            else if('0' === response) {
+                self.messHead = 'Fail';
+                self.messText = 'Sorry, there is overlapping events';
             }
-            else if('1' === response[0]['result']) {
+            else if('1' === response) {
 
                 var start = new Date($scope.start.getTime());
                 start.setUTCHours(start.getUTCHours() + TIMEZONE_OFFSET);
@@ -83,7 +83,7 @@ booker.controller('bookController', function ($scope, eventService, userService,
 
     //////////////////////////////////////////////////////////////
 
-    var start = new Date((new Date((new Date).setUTCMinutes(0))).setUTCHours((new Date()).getUTCHours()+TIMEZONE_OFFSET));
+    var start = new Date((new Date((new Date).setUTCMinutes(0))).setUTCHours((new Date()).getHours()+TIMEZONE_OFFSET));
     var end = new Date((new Date(start)).setUTCHours(start.getUTCHours()+1));
 
     $scope.start = start;

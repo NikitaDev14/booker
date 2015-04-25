@@ -11,7 +11,7 @@ BEGIN
     DECLARE idNewRecurring INT(6) UNSIGNED;
     DECLARE tempDate DATE;
     DECLARE i INT(2) UNSIGNED DEFAULT 0;
-    DECLARE colision INT(6) DEFAULT 0;
+    DECLARE colision INT(6) UNSIGNED DEFAULT 0;
     
     SET tempDate = NewDate;
     
@@ -19,7 +19,7 @@ BEGIN
     
     START TRANSACTION;
     
-    SELECT (getColision(tempDate, NewStart, NewEnd, idRoom)+colision)
+    SELECT (getColision(tempDate, NewStart, NewEnd, idRoom) + colision)
     INTO colision;
     
     INSERT INTO appointments (appointments.Date, appointments.Start, appointments.End, appointments.idRoom, appointments.idEmployee, appointments.Description)
@@ -54,7 +54,7 @@ BEGIN
             LEAVE addApp;
         END IF;
         
-        SELECT (getColision(tempDate, NewStart, NewEnd, idRoom)+colision)
+        SELECT CONCAT_WS(',', getColision(tempDate, NewStart, NewEnd, idRoom), colision)
         INTO colision;
         
         INSERT INTO appointments (appointments.Date, appointments.Start, appointments.End, appointments.idRecurring, appointments.idRoom, appointments.idEmployee, appointments.Description)
@@ -70,13 +70,13 @@ BEGIN
     
     IF(colision = 0) THEN
     
-    	SELECT idNewRecurring AS mess, 1 AS result;
+    	SELECT 1 AS result;
         
         COMMIT;
         
     ELSE
     	
-        SELECT colision AS mess, 0 AS result;
+        SELECT 0 AS result;
         
         ROLLBACK;
         
@@ -122,9 +122,10 @@ END$$
 DROP PROCEDURE IF EXISTS `deleteAppointment`$$
 CREATE PROCEDURE `deleteAppointment`(IN `idAppn` INT(6) UNSIGNED, IN `idEmpl` INT(6) UNSIGNED, IN `isRecurred` BOOLEAN)
     MODIFIES SQL DATA
-    COMMENT '@idAppn @idEmpl @isRecurring'
+    COMMENT '@idAppn @isRecurring'
 BEGIN
 	DECLARE tempId INT(6) UNSIGNED DEFAULT 0;
+    DECLARE tempDate DATE;
     
 	IF(isRecurred = 0) THEN
 		DELETE
@@ -137,15 +138,21 @@ BEGIN
                            WHERE employees.idEmployee = idEmpl
                            AND employees.IsAdmin = 1));
     ELSE 
-    	SELECT appointments.idRecurring
+    	SELECT app.idRecurring
         INTO tempId
-        FROM appointments 
-        WHERE appointments.idAppointment = idAppn;
+        FROM appointments AS app
+        WHERE app.idAppointment = idAppn;
+        
+        SELECT app.Date
+        INTO tempDate
+        FROM appointments AS app
+        WHERE app.idAppointment = idAppn;
         
         DELETE 
         FROM appointments
         WHERE (appointments.Date + INTERVAL appointments.Start HOUR_SECOND) > getCurrentTime()
         	AND appointments.idRecurring = tempId
+            AND appointments.Date >= tempDate
             AND (appointments.idEmployee = idEmpl 
                  OR EXISTS(SELECT employees.idEmployee
                            FROM employees
@@ -230,7 +237,7 @@ BEGIN
 END$$
 
 DROP PROCEDURE IF EXISTS `isRecurringAppn`$$
-CREATE PROCEDURE `isRecurringAppn`(IN `idAppn` INT(6) UNSIGNED)
+CREATE DEFINER=`root`@`localhost` PROCEDURE `isRecurringAppn`(IN `idAppn` INT(6) UNSIGNED)
     READS SQL DATA
     COMMENT '@idAppn'
 BEGIN
@@ -246,7 +253,12 @@ CREATE PROCEDURE `removeEmployee`(IN `idEmpl` INT(6) UNSIGNED)
     MODIFIES SQL DATA
     COMMENT '@idEmpl'
 BEGIN
-	DELETE 
+    DELETE 
+    FROM appointments
+    WHERE (appointments.Date + INTERVAL appointments.Start HOUR_SECOND) > getCurrentTime()
+        AND appointments.idEmployee = idEmpl;
+                          
+    DELETE 
     FROM employees
     WHERE employees.idEmployee = idEmpl;
     
@@ -260,6 +272,7 @@ CREATE PROCEDURE `updateAppointment`(IN `idAppn` INT(6) UNSIGNED, IN `newStart` 
 BEGIN
 	DECLARE colision INT(6) UNSIGNED DEFAULT 0;
     DECLARE idRecurr INT(6) UNSIGNED;
+    DECLARE selectedDate DATE;
     
     If(isRecurred = 0) THEN
     
@@ -294,6 +307,11 @@ BEGIN
         INTO idRecurr
         FROM appointments AS app
         WHERE app.idAppointment = idAppn;
+        
+        SELECT app.Date
+        INTO selectedDate
+        FROM appointments AS app
+        WHERE app.idAppointment = idAppn;
     
     	SELECT COUNT(app.Date)
         INTO colision
@@ -312,9 +330,7 @@ BEGIN
         UPDATE appointments
         SET appointments.Start = newStart, appointments.End = newEnd, appointments.Description = newDescr, appointments.idEmployee = idEmpl
         WHERE (appointments.Date + INTERVAL appointments.Start HOUR_SECOND) > getCurrentTime()
-            AND appointments.Date >= (SELECT appointments.Date
-                                      FROM appointments
-                                      WHERE appointments.idAppointment = idAppn)
+        	AND appointments.Date >= selectedDate
         	AND appointments.idRecurring = idRecurr
             AND (appointments.idEmployee = idEmpl
                  OR EXISTS(SELECT employees.idEmployee
@@ -344,7 +360,7 @@ END$$
 -- Функции
 --
 DROP FUNCTION IF EXISTS `getColision`$$
-CREATE FUNCTION `getColision`(`NewDate` DATE, `NewStart` TIME, `NewEnd` TIME, `idRoom` INT(6) UNSIGNED) RETURNS INT(6) UNSIGNED
+CREATE FUNCTION `getColision`(`NewDate` DATE, `NewStart` TIME, `NewEnd` TIME, `idRoom` INT(6) UNSIGNED) RETURNS int(6) unsigned
     READS SQL DATA
     COMMENT '@Date @Start @End @idRoom'
 BEGIN
@@ -366,8 +382,8 @@ CREATE FUNCTION `getCurrentTime`() RETURNS timestamp
     NO SQL
     COMMENT 'returns current timestamp with set offset'
 BEGIN
- 	RETURN UTC_TIMESTAMP() + INTERVAL '10:25' HOUR_MINUTE;  -- for GFL server
---	RETURN UTC_TIMESTAMP() + INTERVAL '3' HOUR;             -- for Home server
+-- 	RETURN UTC_TIMESTAMP() + INTERVAL '10:25' HOUR_MINUTE; -- for GFL server
+	RETURN UTC_TIMESTAMP() + INTERVAL '3' HOUR;            -- for home server
 END$$
 
 DELIMITER ;

@@ -34,7 +34,12 @@
 
 			if($form['start'] < $form['end'] &&
 				$form['start'] > $now &&
-				$day != SATURDAY && $day != SUNDAY)
+				$day != SATURDAY && $day != SUNDAY &&
+				(
+					(true == $form['isRecurr'] && $duration > 0) ||
+					(false == $form['isRecurr'] && $duration === 0)
+				)
+			)
 			{
 				if(true == $form['isRecurr'] &&
 					(('weekly' === $recurring && $duration > 4) ||
