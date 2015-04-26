@@ -7,7 +7,6 @@
 		public function addAppointment()
 		{
 			$cookie = $this->objFactory->getObjCookie();
-			$validatorUser = $this->objFactory->getObjValidatorUser();
 
 			$formData = $this->objFactory->getObjHttp()
 				->setParams($this->form)
@@ -17,23 +16,18 @@
 				->setDateOfAppointment()
 				->getParams();
 
-			if($formData['empl'] === $cookie->getCookie('id'))
-			{
-				$isValidUser = (bool) $validatorUser->isValidUser();
-			}
-			else
-			{
-				$isValidUser = (bool) $validatorUser->isValidAdmin();
-			}
-
 			$isValidAppn = $this->objFactory->getObjValidatorAppointment()
 				->setForm($formData)->isValidNewAppointment();
 
 			$result = false;
             //var_dump(new \DateTime());
-            var_dump($formData);
+            //var_dump($formData);
 
-			if (true === $isValidUser && true === $isValidAppn)
+			if (true === $isValidAppn &&
+				(($formData['empl'] === $cookie->getCookie('id'))?
+					true === (bool) $this->user :
+					true === (bool) $this->admin)
+			)
 			{
 				$result = $this->objFactory->getObjAppointment()
 					->addAppn
@@ -47,53 +41,38 @@
 						$formData['recurr'],
 						$formData['dur']
                     );
-
-				var_dump($result);
+				//var_dump($result);
 			}
 
 			$this->objFactory->getObjDataContainer()
-				->setParams(['nextPage' => 'Echo', 'result' => $result]);
+				->setParams(['nextPage' => $this->nextPage,
+					'result' => $result]);
 		}
 		public function getAppointmentDetails()
 		{
 			$formData = $this->objFactory->getObjHttp()
 				->setParams($this->form)->getParams();
 
-			$isValidUser = (bool) $this->objFactory
-				->getObjValidatorUser()->isValidUser();
-
-			$nextPage = 'Echo';
 			$result = false;
 
-			if (true === $isValidUser)
+			if (true === (bool) $this->user)
 			{
-				$nextPage = 'AppointmentDetails';
+				$this->nextPage = 'AppointmentDetails';
 				$result = $formData['idAppn'];
 			}
 
 			$this->objFactory->getObjDataContainer()
-				->setParams(['nextPage' => $nextPage, 'result' => $result]);
+				->setParams(['nextPage' => $this->nextPage,
+					'result' => $result]);
 		}
 		public function deleteAppointment()
 		{
-			$cookie = $this->objFactory->getObjCookie();
-			$validatorUser = $this->objFactory->getObjValidatorUser();
-
 			$formData = $this->objFactory->getObjHttp()
 				->setParams($this->form)->getParams();
 
-			if($formData['idEmpl'] === $cookie->getCookie('id'))
-			{
-				$user = $validatorUser->isValidUser();
-			}
-			else
-			{
-				$user = $validatorUser->isValidAdmin();
-			}
-
 			$result = false;
 
-			if (true == $user)
+			if (true === (bool) $this->user)
 			{
 				$result = $this->objFactory->getObjAppointment()
 					->deleteAppointment
@@ -105,12 +84,12 @@
 			}
 
 			$this->objFactory->getObjDataContainer()
-				->setParams(['nextPage' => 'Echo', 'result' => $result]);
+				->setParams(['nextPage' => $this->nextPage,
+					'result' => $result]);
 		}
 		public function updateAppointment()
 		{
 			$cookie = $this->objFactory->getObjCookie();
-			$validatorUser = $this->objFactory->getObjValidatorUser();
 
 			$formData = $this->objFactory->getObjHttp()
 				->setParams($this->form)
@@ -118,21 +97,16 @@
 				->convertDateTime('end')
 				->getParams();
 
-			if($formData['idEmpl'] === $cookie->getCookie('id'))
-			{
-				$user = $validatorUser->isValidUser();
-			}
-			else
-			{
-				$user = $validatorUser->isValidAdmin();
-			}
-
 			$isValidAppn = $this->objFactory->getObjValidatorAppointment()
 				->setForm($formData)->isValidUpdAppointment();
 
 			$result = false;
 
-			if (true == $user && true === $isValidAppn)
+			if (true === $isValidAppn &&
+				(($formData['empl'] === $cookie->getCookie('id'))?
+					true === (bool) $this->user :
+					true === (bool) $this->admin)
+			)
 			{
 				$result = $this->objFactory->getObjAppointment()
 					->updateAppointment
@@ -147,6 +121,7 @@
 			}
 
 			$this->objFactory->getObjDataContainer()
-				->setParams(['nextPage' => 'Echo', 'result' => $result]);
+				->setParams(['nextPage' => $this->nextPage,
+					'result' => $result]);
 		}
 	}

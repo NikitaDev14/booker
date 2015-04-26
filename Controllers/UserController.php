@@ -10,20 +10,17 @@
 		 */
 		public function validateUser()
 		{
-			$user = $this->objFactory->getObjValidatorUser()
-				->isValidUser();
-
-			$nextPage = 'Echo';
 			$result = false;
 
-			if(true == $user)
+			if(true === (bool) $this->user)
 			{
-				$nextPage = 'User';
-				$result = $user;
+				$this->nextPage = 'User';
+				$result = $this->user;
 			}
 
 			$this->objFactory->getObjDataContainer()
-				->setParams(['nextPage' => $nextPage, 'result' => $result]);
+				->setParams(['nextPage' => $this->nextPage,
+					'result' => $result]);
 		}
 
 		/**
@@ -32,72 +29,61 @@
 		 */
 		public function validateAdmin()
 		{
-			$user = $this->objFactory->getObjValidatorUser()
-				->isValidAdmin();
-
-			$nextPage = 'Echo';
 			$result = false;
 
-			if(true == $user)
+			if(true === (bool) $this->admin)
 			{
-				$nextPage = 'User';
-				$result = $user;
+				$this->nextPage = 'User';
+				$result = $this->admin;
 			}
 
 			$this->objFactory->getObjDataContainer()
-				->setParams(['nextPage' => $nextPage, 'result' => $result]);
+				->setParams(['nextPage' => $this->nextPage,
+					'result' => $result]);
 		}
 
 		public function getAllUsers()
 		{
-			$result = (bool) $this->objFactory->getObjValidatorUser()
-				->isValidAdmin();
-
-			$nextPage = 'Echo';
-
-			if(true === $result)
+			if(true === (bool) $this->admin)
 			{
-				$nextPage = 'EmployeeList';
+				$this->nextPage = 'EmployeeList';
 			}
 
 			$this->objFactory->getObjDataContainer()
-				->setParams(['nextPage' => $nextPage, 'result' => $result]);
+				->setParams(['nextPage' => $this->nextPage,
+					'result' => $this->admin]);
 		}
 
 		public function removeUser()
 		{
-			$user = (bool) $this->objFactory->getObjValidatorUser()
-				->isValidAdmin();
-
 			$formData = $this->objFactory->getObjHttp()
 				->setParams($this->form)->getParams();
 
 			$result = false;
 
-			if(true === $user)
+			if(true === (bool) $this->admin)
 			{
 				$result = $this->objFactory->getObjUser()
 					->removeUser($formData['idEmpl']);
 			}
 
 			$this->objFactory->getObjDataContainer()
-				->setParams(['nextPage' => 'Echo', 'result' => $result]);
+				->setParams(['nextPage' => $this->nextPage,
+					'result' => $result]);
 		}
 
 		public function updateUser()
 		{
-			$user = (bool) $this->objFactory->getObjValidatorUser()
-				->isValidAdmin();
-
 			$formData = $this->objFactory->getObjHttp()
 				->setParams($this->form)->getParams();
 
 			$result = false;
 
-			if(true === $user)
+			if(true === (bool) $this->admin)
 			{
 				$result = $this->objFactory->getObjUser()
-					->updateUser(
+					->updateUser
+					(
 						$formData['idEmpl'],
 						$formData['name'],
 						$formData['email']
@@ -105,7 +91,8 @@
 			}
 
 			$this->objFactory->getObjDataContainer()
-				->setParams(['nextPage' => 'Echo', 'result' => $result]);
+				->setParams(['nextPage' => $this->nextPage,
+					'result' => $result]);
 		}
 
 		/**
@@ -123,7 +110,7 @@
 
 			$result = false;
 
-			if (true == $user)
+			if (true === (bool) $user)
 			{
 				$userId = $user[0]['idEmployee'];
 
@@ -142,7 +129,8 @@
 			}
 
 			$this->objFactory->getObjDataContainer()
-				->setParams(['nextPage' => 'Echo', 'result' => $result]);
+				->setParams(['nextPage' => $this->nextPage,
+					'result' => $result]);
 		}
 
 		/**
@@ -151,12 +139,12 @@
 		 */
 		public function logout()
 		{
-			$result = $this->objFactory->getObjValidatorUser()->isValidUser();
+			$result = false;
 
-			if(true == $result)
+			if(true === (bool) $this->user)
 			{
 				$result = $this->objFactory->getObjUser()
-					->sessionDestroy($result[0]['idEmployee']);
+					->sessionDestroy($this->user[0]['idEmployee']);
 
 				$this->objFactory->getObjCookie()
 					->deleteCookie('id')
@@ -165,14 +153,12 @@
 			}
 
 			$this->objFactory->getObjDataContainer()
-				->setParams(['nextPage' => 'Echo', 'result' => $result]);
+				->setParams(['nextPage' => $this->nextPage,
+					'result' => $result]);
 		}
 
 		public function signup()
 		{
-			$user = (bool) $this->objFactory->getObjValidatorUser()
-				->isValidAdmin();
-
 			$formData = $this->objFactory->getObjHttp()
 				->setParams($this->form)->getParams();
 
@@ -181,7 +167,7 @@
 
 			$result = false;
 
-			if(true === $user && true === $form)
+			if(true === (bool) $this->admin && true === $form)
 			{
 				$result = $this->objFactory->getObjUser()
 					->addUser
@@ -194,6 +180,7 @@
 			}
 
 			$this->objFactory->getObjDataContainer()
-				->setParams(['nextPage' => 'Echo', 'result' => $result]);
+				->setParams(['nextPage' => $this->nextPage,
+					'result' => $result]);
 		}
 	}

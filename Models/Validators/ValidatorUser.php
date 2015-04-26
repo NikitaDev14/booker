@@ -4,7 +4,31 @@
 
 	class ValidatorUser extends \BaseSingleton
 	{
+		private $idUser;
+		private $sessionId;
+		private $isAdmin;
+		private $user;
+
 		private static $instance;
+
+		protected function __construct()
+		{
+			parent::__construct();
+
+			$cookie = $this->objFactory->getObjCookie();
+
+			$this->idUser = $cookie->getCookie('id');
+			$this->sessionId = $cookie->getCookie('session');
+			$this->isAdmin = $cookie->getCookie('isAdmin');
+
+			$this->user = $this->objFactory->getObjUser()
+				->getUserByCookie
+				(
+					$this->idUser,
+					$this->sessionId,
+					$this->isAdmin
+				);
+		}
 
 		public static function getInstance()
 		{
@@ -22,28 +46,17 @@
 		 */
 		public function isValidUser()
 		{
-			$cookie = $this->objFactory->getObjCookie();
-
-			$idUser = $cookie->getCookie('id');
-			$sessionId = $cookie->getCookie('session');
-			$isAdmin = $cookie->getCookie('isAdmin');
-
-			return $this->objFactory->getObjUser()
-				->getUserByCookie($idUser, $sessionId, $isAdmin);
+			return $this->user;
 		}
 
 		public function isValidAdmin()
 		{
-			$cookie = $this->objFactory->getObjCookie();
-
-			$idUser = $cookie->getCookie('id');
-			$sessionId = $cookie->getCookie('session');
-			$isAdmin = $cookie->getCookie('isAdmin');
-
-			if('1' === $isAdmin)
+			if('1' === $this->isAdmin &&
+				'1' ===
+					((!empty($this->user[0]['IsAdmin']))?
+						$this->user[0]['IsAdmin'] : '0'))
 			{
-				$result = $this->objFactory->getObjUser()
-					->getUserByCookie($idUser, $sessionId, $isAdmin);
+				$result = $this->user;
 			}
 			else
 			{

@@ -1,4 +1,7 @@
-booker.controller('eventController', function ($scope, userService, eventService, userFactory, langFactory, roomFactory, calendarFactory, $stateParams, $window) {
+booker.controller('eventController',
+    function ($scope, userService, eventService, userFactory, langFactory,
+              roomFactory, calendarFactory, $stateParams, $window) {
+
     var self = this;
 
     this.lang = langFactory;
@@ -22,8 +25,11 @@ booker.controller('eventController', function ($scope, userService, eventService
         var end = new Date((response['event'][0]['End'].split('.'))[0]*1000);
 
 
-        $scope.start = start.setUTCHours(start.getUTCHours()-TIMEZONE_OFFSET*2);
-        $scope.end = end.setUTCHours(end.getUTCHours()-TIMEZONE_OFFSET*2);
+        //$scope.start = start.setUTCHours(start.getUTCHours()-TIMEZONE_OFFSET*2);
+        //$scope.end = end.setUTCHours(end.getUTCHours()-TIMEZONE_OFFSET*2);
+
+        $scope.start = start;
+        $scope.end = end;
 
         $scope.hstep = 1;
         $scope.mstep = 15;
@@ -35,8 +41,10 @@ booker.controller('eventController', function ($scope, userService, eventService
 
     this.updateEvent = function () {
 
-        eventService.updateEvent(self.event['idAppointment'], $scope.employee, Number($scope.recurred), ($scope.start/1000+'').split('.')[0], ($scope.end/1000+'').split('.')[0], $scope.description, function (response) {
-            console.log(response);
+        eventService.updateEvent(self.event['idAppointment'], $scope.employee,
+            Number($scope.recurred), ($scope.start/1000+'').split('.')[0],
+            ($scope.end/1000+'').split('.')[0], $scope.description,
+            function (response) {
 
             if('' === response) {
                 self.messHead = 'Error';
@@ -59,8 +67,8 @@ booker.controller('eventController', function ($scope, userService, eventService
     };
 
     this.deleteEvent = function () {
-        eventService.deleteEvent(self.event['idAppointment'], self.user.id, Number($scope.recurred), function (response) {
-            console.log(response);
+        eventService.deleteEvent(self.event['idAppointment'], self.user.id,
+            Number($scope.recurred), function (response) {
 
             if('' === response) {
                 self.messHead = 'Error';

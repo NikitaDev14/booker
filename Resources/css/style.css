@@ -2,27 +2,19 @@ body
 {
     padding-top: 70px;
 }
-
 .calendar td:hover, .otherMonth
 {
     background-color: rgb(240, 240, 240);
 }
-
 .lang-button {
     height: 20px;
 }
-
 a:hover
 {
     cursor: pointer;
 }
-
-.calendar-cell
-{
-    height: 100px;
-    width: 125px;
-}
 .event-cell
 {
+    height: 100px;
     overflow-y: auto;
 }

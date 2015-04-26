@@ -50,38 +50,5 @@
     "fri": "Friday",
     "sat": "Saturday",
     "sun": "Sunday"
-  },
-  "bookDet": {
-    "name": "Name",
-    "authors": "Authors",
-    "genres": "Genres",
-    "descr": "Description",
-    "price": "Price",
-    "quantt": "Quantity",
-    "btnAdd": "Add to cart"
-  },
-  "cart": {
-    "name": "Name",
-    "price": "Price",
-    "quantt": "Quantity",
-    "amount": "Amount",
-    "del": "Delete",
-    "total": "Total amount",
-    "btnOrder": "Validate order"
-  },
-  "order": {
-    "head": "Please, select pay method",
-    "btnOrder": "Order",
-    "messHead": "Book shop",
-    "messText": "Thanks for your order"
-  },
-  "myOrders": {
-    "date": "Date",
-    "payMeth": "Pay method",
-    "sum": "Amount",
-    "status": "Status",
-    "bkName": "Book name",
-    "quantt": "Quantity",
-    "price": "Book price"
   }
 }

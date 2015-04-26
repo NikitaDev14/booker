@@ -18,7 +18,8 @@ booker.controller('bookController', function ($scope, eventService, userService,
     }
 
     this.addEvent = function () {
-        eventService.addEvent((new Date($scope.date).getTime()/1000+'').split('.')[0],
+        eventService.addEvent(
+            (new Date($scope.date).getTime()/1000+'').split('.')[0],
             ($scope.start.getTime()/1000+'').split('.')[0],
             ($scope.end.getTime()/1000+'').split('.')[0],
             roomFactory.get(),
@@ -26,7 +27,8 @@ booker.controller('bookController', function ($scope, eventService, userService,
             $scope.description || '',
             $scope.isRecurring,
             ('0' === $scope.isRecurring)? '' : $scope.recurring,
-            ('0' === $scope.isRecurring)? '' : $scope.duration, function (response) {
+            ('0' === $scope.isRecurring)? '' : $scope.duration,
+            function (response) {
 
             if('' === response) {
                 self.messHead = 'Error';
@@ -38,19 +40,22 @@ booker.controller('bookController', function ($scope, eventService, userService,
             }
             else if('1' === response) {
 
+                /*
                 var start = new Date($scope.start.getTime());
                 start.setUTCHours(start.getUTCHours() + TIMEZONE_OFFSET);
 
                 var end = new Date($scope.end.getTime());
                 end.setUTCHours(end.getUTCHours() + TIMEZONE_OFFSET);
+                */
+
+                $scope.date = '';
 
                 self.messHead = 'Success';
                 self.messText = 'Your event has added successfully. '+
-                'The event'+start.getUTCHours()+':'+start.getUTCMinutes()+
-                '-'+end.getUTCHours()+':'+end.getUTCMinutes()+
-                '. Text of this event is'+$scope.description;
+                'The event '+start.getHours()+':'+start.getMinutes()+
+                '-'+end.getHours()+':'+end.getMinutes()+
+                '. Text of this event is '+$scope.description;
             }
-
         });
     };
 
@@ -84,11 +89,15 @@ booker.controller('bookController', function ($scope, eventService, userService,
     //////////////////////////////////////////////////////////////
 
     var start = new Date();
-    start.setUTCHours(start.getHours()-TIMEZONE_OFFSET);
-    start.setUTCMinutes(0);
+    //start.setUTCHours(start.getHours()-TIMEZONE_OFFSET);
+    //start.setUTCMinutes(0);
+
+    start.setMinutes(0);
  
     var end = new Date(start);
-    end.setUTCHours(start.getUTCHours()+1);
+    //end.setUTCHours(start.getUTCHours()+1);
+
+    end.setHours(start.getHours()+1);
 
     $scope.start = start;
     $scope.end = end;

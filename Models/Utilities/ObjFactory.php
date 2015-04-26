@@ -10,13 +10,12 @@
 		private static $database;
 		private static $instance;
 
-		private function __construct()
-		{
-		}
+		private function __construct() {}
 
 		public static function getInstance()
 		{
-			if (null === self::$instance) {
+			if (null === self::$instance)
+			{
 				self::$instance = new ObjFactory();
 			}
 
@@ -25,7 +24,8 @@
 
 		public function getObjDatabase()
 		{
-			if (null === self::$database) {
+			if (null === self::$database)
+			{
 				self::$database = new \Models\Interfaces\Database
 				(
 					DB_NAME, DB_HOST, DB_USER, DB_PASS

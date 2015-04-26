@@ -11,17 +11,14 @@
 
 		public function getRooms()
 		{
-			$result = $this->objFactory->getObjValidatorUser()->isValidUser();
-
-			$nextPage = 'Echo';
-
-			if(false !== $result)
+			if(true === (bool) $this->user)
 			{
-				$nextPage = 'Room';
+				$this->nextPage = 'Room';
 			}
 
 			$this->objFactory->getObjDataContainer()
-				->setParams(['nextPage' => $nextPage, 'result' => $result]);
+				->setParams(['nextPage' => $this->nextPage,
+					'result' => $this->user]);
 		}
 
 		public function getAppointments()
@@ -29,16 +26,13 @@
 			$formData = $this->objFactory->getObjHttp()
 				->setParams($this->form)->getParams();
 
-			$result = $this->objFactory->getObjValidatorUser()->isValidUser();
-
-			$nextPage = 'Echo';
-
-			if(false !== $result)
+			if(true === (bool) $this->user)
 			{
-				$nextPage = 'AppointmentList';
+				$this->nextPage = 'AppointmentList';
 			}
 
 			$this->objFactory->getObjDataContainer()
-				->setParams(['nextPage' => $nextPage, 'result' => $formData]);
+				->setParams(['nextPage' => $this->nextPage,
+					'result' => $formData]);
 		}
 	}

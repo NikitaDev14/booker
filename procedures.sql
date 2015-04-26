@@ -54,7 +54,7 @@ BEGIN
             LEAVE addApp;
         END IF;
         
-        SELECT CONCAT_WS(',', getColision(tempDate, NewStart, NewEnd, idRoom), colision)
+        SELECT (getColision(tempDate, NewStart, NewEnd, idRoom) + colision)
         INTO colision;
         
         INSERT INTO appointments (appointments.Date, appointments.Start, appointments.End, appointments.idRecurring, appointments.idRoom, appointments.idEmployee, appointments.Description)
