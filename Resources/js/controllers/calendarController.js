@@ -8,7 +8,7 @@ booker.controller('calendarController', function ($scope, eventService, roomFact
 
     this.showEvent = function (id) {
         $window.open('#/event/'+id, '_blank',
-            'width=500,height=600,resizable=0,status=0,menubar=0,toolbar=0,location=0,scrollbars=0');
+            'width=500,height=650,resizable=0,status=0,menubar=0,toolbar=0,location=0,scrollbars=0');
     };
 
     this.setTimeFormat = function (timeForm) {

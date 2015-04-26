@@ -1,4 +1,7 @@
-booker.controller('bookController', function ($scope, eventService, userService, userFactory, langFactory, roomFactory) {
+booker.controller('bookController',
+    function ($scope, eventService, userService,
+              userFactory, langFactory, roomFactory) {
+
     var self = this;
 
     this.user = userFactory;
@@ -31,12 +34,12 @@ booker.controller('bookController', function ($scope, eventService, userService,
             function (response) {
 
             if('' === response) {
-                self.messHead = 'Error';
-                self.messText = 'Wrong data';
+                self.messHead = self.lang.template.book.messHeadErr;
+                self.messText = self.lang.template.book.messTextErr;
             }
             else if('0' === response) {
-                self.messHead = 'Fail';
-                self.messText = 'Sorry, there is overlapping events';
+                self.messHead = self.lang.template.book.messHeadFail;
+                self.messText = self.lang.template.book.messTextFail;
             }
             else if('1' === response) {
 
@@ -50,11 +53,11 @@ booker.controller('bookController', function ($scope, eventService, userService,
 
                 $scope.date = '';
 
-                self.messHead = 'Success';
-                self.messText = 'Your event has added successfully. '+
-                'The event '+start.getHours()+':'+start.getMinutes()+
-                '-'+end.getHours()+':'+end.getMinutes()+
-                '. Text of this event is '+$scope.description;
+                self.messHead = self.lang.template.book.messHeadSucc;
+                self.messText = self.lang.template.book.messTextSucc +
+                    start.getHours()+':'+start.getMinutes()+
+                    '-'+end.getHours()+':'+end.getMinutes()+
+                    '. '+$scope.description;
             }
         });
     };

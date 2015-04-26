@@ -8,7 +8,8 @@ booker.service('eventService', function ($http) {
             '&room='+room
         ).success(callback);
     };
-    this.addEvent = function (date, start, end, room, empl, descr, isRecurr, recurr, dur, callback) {
+    this.addEvent = function (date, start, end, room, empl, descr,
+                              isRecurr, recurr, dur, callback) {
         $http.get('index.php'+
             '?controller=Appointment'+
             '&action=addAppointment'+
@@ -30,7 +31,8 @@ booker.service('eventService', function ($http) {
             '&idAppn='+idEvent
         ).success(callback);
     };
-    this.updateEvent = function (idEvent, idEmpl, isRecurr, start, end, descr, callback) {
+    this.updateEvent = function (idEvent, idEmpl, isRecurr,
+                                 start, end, descr, callback) {
         $http.get('index.php'+
             '?controller=Appointment'+
             '&action=updateAppointment'+

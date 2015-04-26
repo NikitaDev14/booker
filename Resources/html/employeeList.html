@@ -5,14 +5,14 @@
         <tr ng-repeat="user in userCtrl.userList">
             <td ng-bind="user.Name"></td>
             <td>
-                <button class="btn btn-warning" type="button" data-toggle="modal" data-target="#employee" ng-click="userCtrl.showUpdateMenu(user.idEmployee, user.Name, user.Email)">Update</button>
+                <button class="btn btn-warning" type="button" data-toggle="modal" data-target="#employee" ng-click="userCtrl.showUpdateMenu(user.idEmployee, user.Name, user.Email)" ng-bind="userCtrl.lang.template.event.btnUpd"></button>
             </td>
             <td>
-                <button class="btn btn-danger" type="button" ng-click="userCtrl.removeUser(user.idEmployee)">Delete</button>
+                <button class="btn btn-danger" type="button" ng-click="userCtrl.removeUser(user.idEmployee)" ng-bind="userCtrl.lang.template.event.btnDel"></button>
             </td>
         </tr>
     </table>
-    <button class="btn btn-primary" type="button" data-toggle="modal" data-target="#add">Add new employee</button>
+    <button class="btn btn-primary" type="button" data-toggle="modal" data-target="#add" ng-bind="userCtrl.lang.template.emplList.btnAdd"></button>
 
     <!-- Update modal -->
 
@@ -21,19 +21,19 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title" id="updateModalLabel">Update employee</h4>
+                    <h4 class="modal-title" id="updateModalLabel" ng-bind="userCtrl.lang.template.emplList.updLab"></h4>
                 </div>
                 <div class="modal-body">
                     <form class="form-horizontal" name="updateForm" ng-submit="userCtrl.updateUser(userName, userEmail)">
                         <div class="form-group has-feedback" ng-class="(updateForm.name.$valid)? 'has-success' : 'has-error'">
-                            <label for="inputName" class="col-sm-2 control-label">Name</label>
+                            <label for="inputName" class="col-sm-2 control-label" ng-bind="userCtrl.lang.template.emplList.nameLab"></label>
                             <div class="col-sm-10">
                                 <input type="text" name="name" class="form-control" id="inputName" placeholder="Name" aria-describedby="nameStatus" ng-model="userName" ng-pattern="userCtrl.template.name" ng-trim="true" required>
                                 <span class="glyphicon glyphicon-ok form-control-feedback" aria-hidden="true" ng-show="updateForm.name.$valid"></span>
                                 <span id="nameStatus" class="sr-only" ng-show="updateForm.name.$valid">(success)</span>
                                 <span class="glyphicon glyphicon-remove form-control-feedback" aria-hidden="true" ng-show="updateForm.name.$invalid"></span>
                                 <span id="nameStatus" class="sr-only" ng-show="updateForm.name.$invalid">(error)</span>
-                                <span class="error" ng-show="updateForm.name.$invalid">Only letters of the Latin alphabet, spaces and dashes are allowed, at least three symbols.</span>
+                                <span class="error" ng-show="updateForm.name.$invalid" ng-bind="userCtrl.lang.template.emplList.wrongNameMess"></span>
                             </div>
                         </div>
                         <div class="form-group has-feedback" ng-class="(updateForm.email.$valid)? 'has-success' : 'has-error'">
@@ -44,13 +44,13 @@
                                 <span id="emailStatus" class="sr-only" ng-show="updateForm.email.$valid">(success)</span>
                                 <span class="glyphicon glyphicon-remove form-control-feedback" aria-hidden="true" ng-show="updateForm.email.$invalid"></span>
                                 <span id="emailStatus" class="sr-only" ng-show="updateForm.email.$invalid">(error)</span>
-                                <span class="error" ng-show="updateForm.email.$invalid">Invalid email.</span>
+                                <span class="error" ng-show="updateForm.email.$invalid" ng-bind="userCtrl.lang.template.emplList.wrongEmailMess"></span>
                             </div>
                         </div>
                         <div class="form-group">
                             <div class="col-sm-offset-2 col-sm-10">
-                                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                                <button type="submit" class="btn btn-primary" ng-class="{'disabled': updateForm.$invalid}">Update</button>
+                                <button type="button" class="btn btn-default" data-dismiss="modal" ng-bind="userCtrl.lang.template.emplList.btnCls"></button>
+                                <button type="submit" class="btn btn-primary" ng-class="{'disabled': updateForm.$invalid}" ng-bind="userCtrl.lang.template.event.btnUpd"></button>
                             </div>
                         </div>
                     </form>
@@ -66,19 +66,19 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title" id="addModalLabel">Add new employee</h4>
+                    <h4 class="modal-title" id="addModalLabel" ng-bind="userCtrl.lang.template.emplList.btnAdd"></h4>
                 </div>
                 <div class="modal-body">
                     <form class="form-horizontal" name="addForm" ng-submit="userCtrl.addUser(newUserName, newUserEmail, isAdmin, newUserPassword, newUserPasswordRepeat)">
                         <div class="form-group has-feedback" ng-class="(addForm.name.$valid)? 'has-success' : 'has-error'">
-                            <label for="inputNewName" class="col-sm-2 control-label">Name</label>
+                            <label for="inputNewName" class="col-sm-2 control-label" ng-bind="userCtrl.lang.template.emplList.nameLab"></label>
                             <div class="col-sm-10">
                                 <input type="text" name="name" class="form-control" id="inputNewName" placeholder="Name" aria-describedby="nameStatus" ng-model="newUserName" ng-pattern="userCtrl.template.name" ng-trim="true" required>
                                 <span class="glyphicon glyphicon-ok form-control-feedback" aria-hidden="true" ng-show="addForm.name.$valid"></span>
                                 <span id="nameStatus" class="sr-only" ng-show="addForm.name.$valid">(success)</span>
                                 <span class="glyphicon glyphicon-remove form-control-feedback" aria-hidden="true" ng-show="addForm.name.$invalid"></span>
                                 <span id="nameStatus" class="sr-only" ng-show="addForm.name.$invalid">(error)</span>
-                                <span class="error" ng-show="addForm.name.$invalid">Only letters of the Latin alphabet, spaces and dashes are allowed, at least three symbols.</span>
+                                <span class="error" ng-show="addForm.name.$invalid" ng-bind="userCtrl.lang.template.emplList.nameLab"></span>
                             </div>
                         </div>
                         <div class="form-group has-feedback" ng-class="(addForm.email.$valid)? 'has-success' : 'has-error'">
@@ -89,29 +89,29 @@
                                 <span id="emailStatus" class="sr-only" ng-show="addForm.email.$valid">(success)</span>
                                 <span class="glyphicon glyphicon-remove form-control-feedback" aria-hidden="true" ng-show="addForm.email.$invalid"></span>
                                 <span id="emailStatus" class="sr-only" ng-show="addForm.email.$invalid">(error)</span>
-                                <span class="error" ng-show="addForm.email.$invalid">Invalid email.</span>
+                                <span class="error" ng-show="addForm.email.$invalid" ng-bind="userCtrl.lang.template.emplList.wrongEmailMess"></span>
                             </div>
                         </div>
                         <div class="form-group has-feedback" ng-class="(addForm.password.$valid)? 'has-success' : 'has-error'">
-                            <label for="inputNewPassword" class="col-sm-2 control-label">Password</label>
+                            <label for="inputNewPassword" class="col-sm-2 control-label" ng-bind="userCtrl.lang.template.emplList.passwLab"></label>
                             <div class="col-sm-10">
                                 <input type="password" name="password" class="form-control" id="inputNewPassword" placeholder="Password" aria-describedby="passwordStatus" ng-model="newUserPassword" ng-pattern="userCtrl.template.password" ng-trim="true" required>
                                 <span class="glyphicon glyphicon-ok form-control-feedback" aria-hidden="true" ng-show="addForm.password.$valid"></span>
                                 <span id="passwordStatus" class="sr-only" ng-show="addForm.password.$valid">(success)</span>
                                 <span class="glyphicon glyphicon-remove form-control-feedback" aria-hidden="true" ng-show="addForm.password.$invalid"></span>
                                 <span id="passwordStatus" class="sr-only" ng-show="addForm.password.$invalid">(error)</span>
-                                <span class="error" ng-show="addForm.password.$invalid">At least 4 symbols</span>
+                                <span class="error" ng-show="addForm.password.$invalid" ng-bind="userCtrl.lang.template.emplList.wrongEmailMess"></span>
                             </div>
                         </div>
                         <div class="form-group has-feedback" ng-class="(addForm.passwordRepeat.$valid)? 'has-success' : 'has-error'">
-                            <label for="inputNewPasswordRepeat" class="col-sm-2 control-label">Repeat password</label>
+                            <label for="inputNewPasswordRepeat" class="col-sm-2 control-label" ng-bind="userCtrl.lang.template.emplList.repPasswLab"></label>
                             <div class="col-sm-10">
                                 <input type="password" name="passwordRepeat" class="form-control" id="inputNewPasswordRepeat" placeholder="Repeat password" aria-describedby="passwordRepeatStatus" ng-model="newUserPasswordRepeat" ng-pattern="newUserPassword" ng-trim="true" required>
                                 <span class="glyphicon glyphicon-ok form-control-feedback" aria-hidden="true" ng-show="addForm.passwordRepeat.$valid"></span>
                                 <span id="passwordRepeatStatus" class="sr-only" ng-show="addForm.passwordRepeat.$valid">(success)</span>
                                 <span class="glyphicon glyphicon-remove form-control-feedback" aria-hidden="true" ng-show="addForm.passwordRepeat.$invalid"></span>
                                 <span id="passwordRepeatStatus" class="sr-only" ng-show="addForm.passwordRepeat.$invalid">(error)</span>
-                                <span class="error" ng-show="addForm.passwordRepeat.$invalid">Passwords are not identical</span>
+                                <span class="error" ng-show="addForm.passwordRepeat.$invalid" ng-bind="userCtrl.lang.template.emplList.wrongRepPasswMess"></span>
                             </div>
                         </div>
                         <div class="form-group">
@@ -124,8 +124,8 @@
                         </div>
                         <div class="form-group">
                             <div class="col-sm-offset-2 col-sm-10">
-                                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                                <button type="submit" class="btn btn-primary" ng-class="{'disabled': addForm.$invalid}">Add</button>
+                                <button type="button" class="btn btn-default" data-dismiss="modal" ng-bind="userCtrl.lang.template.emplList.btnCls">Close</button>
+                                <button type="submit" class="btn btn-primary" ng-class="{'disabled': addForm.$invalid}" ng-bind="userCtrl.lang.template.emplList.btnAdd"></button>
                             </div>
                         </div>
                     </form>

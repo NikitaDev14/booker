@@ -1,41 +1,41 @@
 <div class="container" ng-controller="eventController as eventCtrl">
-    <h4>B.B.Details</h4>
+    <h4 ng-bind="eventCtrl.lang.template.event.headLab"></h4>
 
     <div class="form-group">
         <div class="col-sm-4">
-            <label>Start:</label>
+            <label ng-bind="eventCtrl.lang.template.book.startLab"></label>
             <timepicker ng-model="start" hour-step="hstep" minute-step="mstep" show-meridian="ismeridian"></timepicker>
         </div>
         <div class="col-sm-4">
-            <label>End:</label>
+            <label ng-bind="eventCtrl.lang.template.book.startLab"></label>
             <timepicker ng-model="end" hour-step="hstep" minute-step="mstep" show-meridian="ismeridian"></timepicker>
         </div>
     </div>
 
     <div class="form-group">
-        <label>Notes:</label>
+        <label ng-bind="eventCtrl.lang.template.event.notesLab"></label>
         <textarea class="form-control" ng-model="description"></textarea>
     </div>
-    <p>Who:</p>
+    <p ng-bind="eventCtrl.lang.template.event.who"></p>
 
     <select class="form-control" ng-show="(eventCtrl.user.isAdmin == true)" ng-model="employee">
         <option ng-repeat="user in eventCtrl.users" value="{{user.idEmployee}}" ng-bind="user.Name"></option>
     </select>
 
-    <h4 ng-show="(eventCtrl.user.isAdmin == false)">{{eventCtrl.event.EmployeeName}}</h4>
+    <h4 ng-show="(eventCtrl.user.isAdmin == false)" ng-bind="eventCtrl.event.EmployeeName"></h4>
     <div>
-        <p>Submitted: {{eventCtrl.event.Submitted}}</p>
+        <p ng-bind="eventCtrl.lang.template.event.when+eventCtrl.event.Submitted"></p>
     </div>
 
     <div class="checkbox" ng-class="{'disabled' : eventCtrl.event.idRecurring == null}">
         <label>
             <input type="checkbox" ng-model="recurred" ng-disabled="eventCtrl.event.idRecurring == null" name="recurred" value="1">
-            Apply to all occurrences?
+            {{eventCtrl.lang.template.event.ocurrLab}}
         </label>
     </div>
 
-    <button class="btn btn-warning" type="button" data-toggle="modal" data-target="#event" ng-click="eventCtrl.updateEvent()">Update</button>
-    <button class="btn btn-danger" type="button" data-toggle="modal" data-target="#event" ng-click="eventCtrl.deleteEvent()">Delete</button>
+    <button class="btn btn-warning" type="button" data-toggle="modal" data-target="#event" ng-click="eventCtrl.updateEvent()" ng-bind="eventCtrl.lang.template.event.btnUpd"></button>
+    <button class="btn btn-danger" type="button" data-toggle="modal" data-target="#event" ng-click="eventCtrl.deleteEvent()" ng-bind="eventCtrl.lang.template.event.btnDel"></button>
 
     <!-- Modal -->
 

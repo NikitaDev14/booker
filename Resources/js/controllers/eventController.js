@@ -21,8 +21,10 @@ booker.controller('eventController',
     eventService.getEventDetails($stateParams.id, function (response) {
         self.event = response['event'][0];
 
-        var start = new Date((response['event'][0]['Start'].split('.'))[0]*1000);
-        var end = new Date((response['event'][0]['End'].split('.'))[0]*1000);
+        var start =
+            new Date((response['event'][0]['Start'].split('.'))[0]*1000);
+        var end =
+            new Date((response['event'][0]['End'].split('.'))[0]*1000);
 
 
         //$scope.start = start.setUTCHours(start.getUTCHours()-TIMEZONE_OFFSET*2);
@@ -46,23 +48,20 @@ booker.controller('eventController',
             ($scope.end/1000+'').split('.')[0], $scope.description,
             function (response) {
 
-            if('' === response) {
-                self.messHead = 'Error';
-                self.messText = 'You are not admin';
-            }
-            else if('0' === response) {
-                self.messHead = 'Fail';
-                self.messText = 'The event could not be updated';
-            }
-            else {
-                self.messHead = 'Success';
-                self.messText = 'The event updated successfully';
+            if(Number(response) > 0) {
+                self.messHead = self.lang.template.event.messHeadUpdSucc;
+                self.messText = self.lang.template.event.messTextUpdSucc;
 
                 $('#event').on('hidden.bs.modal', function (e) {
                     $window.location.reload();
                     $window.opener.location.reload();
                 })
             }
+            else {
+                self.messHead = self.lang.template.event.messHeadUpdFail;
+                self.messText = self.lang.template.event.messTextUpdFail;
+            }
+
         });
     };
 
@@ -70,22 +69,18 @@ booker.controller('eventController',
         eventService.deleteEvent(self.event['idAppointment'], self.user.id,
             Number($scope.recurred), function (response) {
 
-            if('' === response) {
-                self.messHead = 'Error';
-                self.messText = 'You are not admin';
-            }
-            else if('0' === response) {
-                self.messHead = 'Fail';
-                self.messText = 'The event could not be deleted';
-            }
-            else {
-                self.messHead = 'Success';
-                self.messText = 'The event deleted successfully';
+            if(Number(response) > 0) {
+                self.messHead = self.lang.template.event.messHeadDelSucc;
+                self.messText = self.lang.template.event.messTextDelSucc;
 
                 $('#event').on('hidden.bs.modal', function (e) {
                     $window.opener.location.reload();
                     $window.close();
                 })
+            }
+            else {
+                self.messHead = self.lang.template.event.messHeadDelFail;
+                self.messText = self.lang.template.event.messTextDelFail;
             }
         });
     };

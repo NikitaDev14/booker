@@ -1,5 +1,6 @@
 booker.controller('userController',
-    function ($scope, $http, userService, roomService, userFactory, roomFactory, calendarFactory, langFactory, $location, $window) {
+    function ($scope, $http, userService, roomService, userFactory,
+              roomFactory, calendarFactory, langFactory, $location, $window) {
         this.template = {
             email: '[0-9a-z_]+@[0-9a-z_]+\\.[a-z]{1,3}',
             password: '.{4,}',
@@ -58,23 +59,28 @@ booker.controller('userController',
         this.logout = function () {
             userService.logout(function () {
                 $location.path('/login');
+                $window.location.reload();
             });
         };
 
-        this.addUser = function (name, email, isAdmin, password, passwordRepeat) {
-            userService.signup(name, email, Number(isAdmin), password, passwordRepeat, function (response) {
+        this.addUser = function (name, email, isAdmin,
+                                 password, passwordRepeat) {
+
+            userService.signup(name, email, Number(isAdmin),
+                password, passwordRepeat, function (response) {
 
                     var mess = '';
 
                     if(true === Boolean(response)) {
-                        mess = 'The employee has added successfully.';
+                        mess = self.lang.template.emplList.addMessSucc;
 
-                        $scope.newUserName = $scope.newUserEmail = $scope.newUserPassword = $scope.newUserPasswordRepeat = '';
+                        $scope.newUserName =
+                            $scope.newUserEmail =
+                            $scope.newUserPassword =
+                            $scope.newUserPasswordRepeat = '';
                     }
                     else {
-                        mess = 'Sorry. The employee could not be added, '+
-                            'because you input a wrong data or such email '+
-                            'has already registered.';
+                        mess = self.lang.template.emplList.addMessFail;
                     }
 
                     alert(mess);
@@ -84,10 +90,18 @@ booker.controller('userController',
         this.removeUser = function (id) {
             if(true === confirm('Are you sure?')) {
                 userService.removeUser(id, function (response) {
+                    var mess = '';
+
                     if('1' === response) {
                         $window.location.reload();
-                        alert('User delete successfully.');
+
+                        mess = self.lang.template.emplList.addMessSucc;
                     }
+                    else {
+                        mess = self.lang.template.emplList.delMessFail;
+                    }
+
+                    alert(mess);
                 });
             }
         };
@@ -99,10 +113,13 @@ booker.controller('userController',
         };
 
         this.updateUser = function (newName, newEmail) {
-            userService.updateUser(self.activeIdUser, newName, newEmail, function (response) {
-                console.log(response);
-                $('#employee').modal('hide');
-                $window.location.reload();
+            userService.updateUser(self.activeIdUser, newName,
+                newEmail, function (response) {
+
+                    if('1' === response) {
+                        $('#employee').modal('hide');
+                        $window.location.reload();
+                    }
             });
         };
     });
