@@ -3,7 +3,7 @@ DELIMITER $$
 -- Процедуры
 --
 DROP PROCEDURE IF EXISTS `addAppointment`$$
-CREATE PROCEDURE `addAppointment`(IN `NewDate` DATE, IN `NewStart` TIME, IN `NewEnd` TIME, IN `idRoom` INT(6) UNSIGNED, IN `idEmployee` INT(6) UNSIGNED, IN `Description` TEXT CHARSET utf8, IN `Recurring` ENUM('','weekly','bi-weekly','monthly') CHARSET utf8, IN `Duration` INT(1) UNSIGNED)
+CREATE DEFINER=`root`@`localhost` PROCEDURE `addAppointment`(IN `NewDate` DATE, IN `NewStart` TIME, IN `NewEnd` TIME, IN `idRoom` INT(6) UNSIGNED, IN `idEmployee` INT(6) UNSIGNED, IN `Description` TEXT CHARSET utf8, IN `Recurring` ENUM('','weekly','bi-weekly','monthly') CHARSET utf8, IN `Duration` INT(1) UNSIGNED)
     MODIFIES SQL DATA
     COMMENT '@Date @Start @End @idRoom @idEmpl @Descr @Recurring @Duration'
 BEGIN
@@ -85,7 +85,7 @@ BEGIN
 END$$
 
 DROP PROCEDURE IF EXISTS `addEmployee`$$
-CREATE PROCEDURE `addEmployee`(IN `Email` VARCHAR(255) CHARSET utf8, IN `Name` VARCHAR(50) CHARSET utf8, IN `Passw` VARCHAR(50) CHARSET utf8, IN `IsAdmin` TINYINT(1) UNSIGNED)
+CREATE DEFINER=`root`@`localhost` PROCEDURE `addEmployee`(IN `Email` VARCHAR(255) CHARSET utf8, IN `Name` VARCHAR(50) CHARSET utf8, IN `Passw` VARCHAR(50) CHARSET utf8, IN `IsAdmin` TINYINT(1) UNSIGNED)
     MODIFIES SQL DATA
     COMMENT '@Email @Name @Password'
 BEGIN
@@ -96,7 +96,7 @@ BEGIN
 END$$
 
 DROP PROCEDURE IF EXISTS `bkr_sessionDestroy`$$
-CREATE PROCEDURE `bkr_sessionDestroy`(IN `idEmployee` INT(6) UNSIGNED)
+CREATE DEFINER=`root`@`localhost` PROCEDURE `bkr_sessionDestroy`(IN `idEmployee` INT(6) UNSIGNED)
     MODIFIES SQL DATA
     COMMENT '@idEmployee'
 BEGIN
@@ -108,7 +108,7 @@ BEGIN
 END$$
 
 DROP PROCEDURE IF EXISTS `bkr_sessionStart`$$
-CREATE PROCEDURE `bkr_sessionStart`(IN `idEmployee` INT(6) UNSIGNED, IN `SessionId` VARCHAR(50) CHARSET utf8)
+CREATE DEFINER=`root`@`localhost` PROCEDURE `bkr_sessionStart`(IN `idEmployee` INT(6) UNSIGNED, IN `SessionId` VARCHAR(50) CHARSET utf8)
     MODIFIES SQL DATA
     COMMENT '@idEmployee @SessionId'
 BEGIN
@@ -120,12 +120,12 @@ BEGIN
 END$$
 
 DROP PROCEDURE IF EXISTS `deleteAppointment`$$
-CREATE PROCEDURE `deleteAppointment`(IN `idAppn` INT(6) UNSIGNED, IN `idEmpl` INT(6) UNSIGNED, IN `isRecurred` BOOLEAN)
+CREATE DEFINER=`root`@`localhost` PROCEDURE `deleteAppointment`(IN `idAppn` INT(6) UNSIGNED, IN `idEmpl` INT(6) UNSIGNED, IN `isRecurred` BOOLEAN)
     MODIFIES SQL DATA
     COMMENT '@idAppn @isRecurring'
 BEGIN
-	DECLARE recurrId INT(6) UNSIGNED DEFAULT 0;
-    DECLARE selectedDate DATE;
+	DECLARE tempId INT(6) UNSIGNED DEFAULT 0;
+    DECLARE tempDate DATE;
     
 	IF(isRecurred = 0) THEN
 		DELETE
@@ -139,20 +139,20 @@ BEGIN
                            AND employees.IsAdmin = 1));
     ELSE 
     	SELECT app.idRecurring
-        INTO recurrId
+        INTO tempId
         FROM appointments AS app
         WHERE app.idAppointment = idAppn;
         
         SELECT app.Date
-        INTO selectedDate
+        INTO tempDate
         FROM appointments AS app
         WHERE app.idAppointment = idAppn;
         
         DELETE 
         FROM appointments
         WHERE (appointments.Date + INTERVAL appointments.Start HOUR_SECOND) > getCurrentTime()
-        	AND appointments.idRecurring = recurrId
-            AND appointments.Date >= selectedDate
+        	AND appointments.idRecurring = tempId
+            AND appointments.Date >= tempDate
             AND (appointments.idEmployee = idEmpl 
                  OR EXISTS(SELECT employees.idEmployee
                            FROM employees
@@ -165,7 +165,7 @@ BEGIN
 END$$
 
 DROP PROCEDURE IF EXISTS `getAllEmpl`$$
-CREATE PROCEDURE `getAllEmpl`()
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getAllEmpl`()
     READS SQL DATA
 BEGIN
 	SELECT empl.idEmployee, empl.Name, empl.Email, empl.IsAdmin
@@ -173,7 +173,7 @@ BEGIN
 END$$
 
 DROP PROCEDURE IF EXISTS `getAppnDetails`$$
-CREATE PROCEDURE `getAppnDetails`(IN `idAppn` INT(6) UNSIGNED)
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getAppnDetails`(IN `idAppn` INT(6) UNSIGNED)
     READS SQL DATA
     COMMENT '@idAppn'
 BEGIN
@@ -184,7 +184,7 @@ BEGIN
 END$$
 
 DROP PROCEDURE IF EXISTS `getAppnsByMonthRoom`$$
-CREATE PROCEDURE `getAppnsByMonthRoom`(IN `Year` VARCHAR(4) CHARSET utf8, IN `Month` VARCHAR(2) CHARSET utf8, IN `idRoom` INT(6) UNSIGNED)
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getAppnsByMonthRoom`(IN `Year` VARCHAR(4) CHARSET utf8, IN `Month` VARCHAR(2) CHARSET utf8, IN `idRoom` INT(6) UNSIGNED)
     READS SQL DATA
     COMMENT '@Year @Month @idRoom'
 BEGIN
@@ -196,7 +196,7 @@ BEGIN
 END$$
 
 DROP PROCEDURE IF EXISTS `getEmplByCookie`$$
-CREATE PROCEDURE `getEmplByCookie`(IN `idUser` INT(6) UNSIGNED, IN `SessionId` VARCHAR(50) CHARSET utf8, IN `isAdmin` BOOLEAN)
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getEmplByCookie`(IN `idUser` INT(6) UNSIGNED, IN `SessionId` VARCHAR(50) CHARSET utf8, IN `isAdmin` BOOLEAN)
     READS SQL DATA
     COMMENT '@idUser @SessionId @isAdmin'
 BEGIN
@@ -208,7 +208,7 @@ BEGIN
 END$$
 
 DROP PROCEDURE IF EXISTS `getEmplByEml`$$
-CREATE PROCEDURE `getEmplByEml`(IN `Email` VARCHAR(255) CHARSET utf8)
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getEmplByEml`(IN `Email` VARCHAR(255) CHARSET utf8)
     READS SQL DATA
     COMMENT '@Email'
 BEGIN
@@ -218,7 +218,7 @@ BEGIN
 END$$
 
 DROP PROCEDURE IF EXISTS `getEmplByEmlPass`$$
-CREATE PROCEDURE `getEmplByEmlPass`(IN `Email` VARCHAR(255) CHARSET utf8, IN `Passw` VARCHAR(50) CHARSET utf8)
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getEmplByEmlPass`(IN `Email` VARCHAR(255) CHARSET utf8, IN `Passw` VARCHAR(50) CHARSET utf8)
     READS SQL DATA
     COMMENT '@Email @Password'
 BEGIN
@@ -229,7 +229,7 @@ BEGIN
 END$$
 
 DROP PROCEDURE IF EXISTS `getRooms`$$
-CREATE PROCEDURE `getRooms`()
+CREATE DEFINER=`root`@`localhost` PROCEDURE `getRooms`()
     READS SQL DATA
 BEGIN
 	SELECT rm.idRoom, rm.Name
@@ -237,7 +237,7 @@ BEGIN
 END$$
 
 DROP PROCEDURE IF EXISTS `isRecurringAppn`$$
-CREATE PROCEDURE `isRecurringAppn`(IN `idAppn` INT(6) UNSIGNED)
+CREATE DEFINER=`root`@`localhost` PROCEDURE `isRecurringAppn`(IN `idAppn` INT(6) UNSIGNED)
     READS SQL DATA
     COMMENT '@idAppn'
 BEGIN
@@ -249,7 +249,7 @@ BEGIN
 END$$
 
 DROP PROCEDURE IF EXISTS `removeEmployee`$$
-CREATE PROCEDURE `removeEmployee`(IN `idEmpl` INT(6) UNSIGNED)
+CREATE DEFINER=`root`@`localhost` PROCEDURE `removeEmployee`(IN `idEmpl` INT(6) UNSIGNED)
     MODIFIES SQL DATA
     COMMENT '@idEmpl'
 BEGIN
@@ -266,7 +266,7 @@ BEGIN
 END$$
 
 DROP PROCEDURE IF EXISTS `updateAppointment`$$
-CREATE PROCEDURE `updateAppointment`(IN `idAppn` INT(6) UNSIGNED, IN `newStart` TIME, IN `newEnd` TIME, IN `newDescr` TEXT CHARSET utf8, IN `idEmpl` INT(6) UNSIGNED, IN `isRecurred` BOOLEAN)
+CREATE DEFINER=`root`@`localhost` PROCEDURE `updateAppointment`(IN `idAppn` INT(6) UNSIGNED, IN `newStart` TIME, IN `newEnd` TIME, IN `newDescr` TEXT CHARSET utf8, IN `idEmpl` INT(6) UNSIGNED, IN `isRecurred` BOOLEAN)
     MODIFIES SQL DATA
     COMMENT '@idAppn @newStart @newEnd @newDescr'
 BEGIN
@@ -345,7 +345,7 @@ BEGIN
 END$$
 
 DROP PROCEDURE IF EXISTS `updateEmployee`$$
-CREATE PROCEDURE `updateEmployee`(IN `idEmpl` INT(6) UNSIGNED, IN `NewName` VARCHAR(50) CHARSET utf8, IN `NewEmail` VARCHAR(255) CHARSET utf8)
+CREATE DEFINER=`root`@`localhost` PROCEDURE `updateEmployee`(IN `idEmpl` INT(6) UNSIGNED, IN `NewName` VARCHAR(50) CHARSET utf8, IN `NewEmail` VARCHAR(255) CHARSET utf8)
     MODIFIES SQL DATA
     COMMENT '@idEmpl @NewName @NewEmail'
 BEGIN
@@ -360,7 +360,7 @@ END$$
 -- Функции
 --
 DROP FUNCTION IF EXISTS `getColision`$$
-CREATE FUNCTION `getColision`(`NewDate` DATE, `NewStart` TIME, `NewEnd` TIME, `idRoom` INT(6) UNSIGNED) RETURNS int(6) unsigned
+CREATE DEFINER=`root`@`localhost` FUNCTION `getColision`(`NewDate` DATE, `NewStart` TIME, `NewEnd` TIME, `idRoom` INT(6) UNSIGNED) RETURNS int(6) unsigned
     READS SQL DATA
     COMMENT '@Date @Start @End @idRoom'
 BEGIN
@@ -378,12 +378,12 @@ BEGIN
 END$$
 
 DROP FUNCTION IF EXISTS `getCurrentTime`$$
-CREATE FUNCTION `getCurrentTime`() RETURNS timestamp
+CREATE DEFINER=`root`@`localhost` FUNCTION `getCurrentTime`() RETURNS timestamp
     NO SQL
     COMMENT 'returns current timestamp with set offset'
 BEGIN
- 	RETURN UTC_TIMESTAMP() + INTERVAL '10:25' HOUR_MINUTE; -- for GFL server
---	RETURN UTC_TIMESTAMP() + INTERVAL '3' HOUR;            -- for home server
+-- 	RETURN UTC_TIMESTAMP() + INTERVAL '10:25' HOUR_MINUTE; -- for GFL server
+	RETURN UTC_TIMESTAMP() + INTERVAL '3' HOUR;            -- for home server
 END$$
 
 DELIMITER ;

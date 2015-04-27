@@ -1,5 +1,3 @@
-SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
-SET time_zone = "+02:00";
 --
 -- Структура таблицы `appointments`
 --
@@ -15,7 +13,7 @@ CREATE TABLE IF NOT EXISTS `appointments` (
   `End` time NOT NULL,
   `Description` text NOT NULL,
   `Submitted` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
-) ENGINE=InnoDB AUTO_INCREMENT=83 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=114 DEFAULT CHARSET=utf8;
 
 --
 -- Дамп данных таблицы `appointments`
@@ -43,7 +41,25 @@ INSERT INTO `appointments` (`idAppointment`, `idRoom`, `idRecurring`, `idEmploye
 (79, 1, 79, 4, '2015-04-27', '19:00:00', '20:00:00', 'qweq', '2015-04-23 16:13:24'),
 (80, 1, 79, 4, '2015-05-04', '19:00:00', '20:00:00', 'qweq', '2015-04-23 16:13:24'),
 (81, 1, 79, 4, '2015-05-11', '19:00:00', '20:00:00', 'qweq', '2015-04-23 16:13:24'),
-(82, 1, 79, 4, '2015-05-18', '19:00:00', '20:00:00', 'qweq', '2015-04-23 16:13:24');
+(82, 1, 79, 4, '2015-05-18', '19:00:00', '20:00:00', 'qweq', '2015-04-23 16:13:24'),
+(83, 1, NULL, 10, '2015-04-24', '20:00:00', '20:45:00', '', '2015-04-25 10:27:43'),
+(84, 1, NULL, 4, '2015-04-28', '13:00:00', '14:00:00', 'fghtrfh', '2015-04-25 10:52:34'),
+(90, 1, 90, 4, '2015-04-29', '13:00:00', '14:00:00', 'dfgre', '2015-04-25 10:58:40'),
+(91, 1, 90, 4, '2015-05-06', '13:00:00', '14:00:00', 'dfgre', '2015-04-25 10:58:40'),
+(92, 1, 92, 4, '2015-04-30', '13:00:00', '14:00:00', 'dgbr', '2015-04-26 10:21:01'),
+(93, 1, 92, 4, '2015-06-01', '13:00:00', '14:00:00', 'dgbr', '2015-04-26 10:21:01'),
+(94, 1, 94, 4, '2015-04-27', '15:00:00', '16:00:00', 'fghthrtyht', '2015-04-26 12:46:48'),
+(95, 1, 94, 4, '2015-05-04', '15:00:00', '16:00:00', 'fghthrtyht', '2015-04-26 12:46:48'),
+(96, 1, 94, 4, '2015-05-11', '15:00:00', '16:00:00', 'fghthrtyht', '2015-04-26 12:46:48'),
+(97, 1, 94, 4, '2015-05-18', '15:00:00', '16:00:00', 'fghthrtyht', '2015-04-26 12:46:48'),
+(98, 1, 94, 4, '2015-05-25', '15:00:00', '16:00:00', 'fghthrtyht', '2015-04-26 12:46:48'),
+(99, 1, 99, 4, '2015-04-27', '09:45:00', '10:30:00', 'ghj', '2015-04-26 12:48:15'),
+(100, 1, 99, 4, '2015-05-11', '09:45:00', '10:30:00', 'ghj', '2015-04-26 12:48:15'),
+(109, 1, 109, 4, '2015-04-27', '22:15:00', '23:45:00', 'ghjhjg', '2015-04-26 12:54:41'),
+(110, 1, 109, 4, '2015-05-11', '22:15:00', '23:45:00', 'ghjhjg', '2015-04-26 12:54:41'),
+(111, 1, 109, 4, '2015-05-25', '22:15:00', '23:45:00', 'ghjhjg', '2015-04-26 12:54:42'),
+(112, 1, 112, 4, '2015-04-27', '11:00:00', '13:00:00', 'asd', '2015-04-26 12:57:45'),
+(113, 1, 112, 4, '2015-05-27', '11:00:00', '13:00:00', 'asd', '2015-04-26 12:57:45');
 
 -- --------------------------------------------------------
 
@@ -59,14 +75,16 @@ CREATE TABLE IF NOT EXISTS `employees` (
   `Password` varchar(50) NOT NULL,
   `IsAdmin` tinyint(1) NOT NULL DEFAULT '0',
   `SessionId` varchar(50) DEFAULT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8;
 
 --
 -- Дамп данных таблицы `employees`
 --
 
 INSERT INTO `employees` (`idEmployee`, `Name`, `Email`, `Password`, `IsAdmin`, `SessionId`) VALUES
-(4, 'Asd Zxc qwe', 'max@i.ua', '*A4B6157319038724E3560894F7F932C8886EBFCF', 1, 'ib0fodcgsqdl5ihrf02hlttg70');
+(4, 'Max Boss', 'max@i.ua', '*A4B6157319038724E3560894F7F932C8886EBFCF', 1, 'ib0fodcgsqdl5ihrf02hlttg70'),
+(10, 'Andrew', 'andr@i.ua', '*A4B6157319038724E3560894F7F932C8886EBFCF', 1, NULL),
+(11, 'Ashot', 'ashot@i.ua', '*A4B6157319038724E3560894F7F932C8886EBFCF', 0, 'ib0fodcgsqdl5ihrf02hlttg70');
 
 -- --------------------------------------------------------
 
@@ -105,9 +123,9 @@ ALTER TABLE `appointments`
 --
 -- Индексы таблицы `employees`
 --
-
 ALTER TABLE `employees`
-  ADD PRIMARY KEY (`idEmployee`);
+  ADD PRIMARY KEY (`idEmployee`),
+  ADD UNIQUE KEY `Email` (`Email`);
 
 --
 -- Индексы таблицы `rooms`
@@ -123,12 +141,12 @@ ALTER TABLE `rooms`
 -- AUTO_INCREMENT для таблицы `appointments`
 --
 ALTER TABLE `appointments`
-  MODIFY `idAppointment` int(6) unsigned NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=83;
+  MODIFY `idAppointment` int(6) unsigned NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=114;
 --
 -- AUTO_INCREMENT для таблицы `employees`
 --
 ALTER TABLE `employees`
-  MODIFY `idEmployee` int(6) unsigned NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=7;
+  MODIFY `idEmployee` int(6) unsigned NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=16;
 --
 -- AUTO_INCREMENT для таблицы `rooms`
 --
