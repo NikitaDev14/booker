@@ -54,6 +54,12 @@
 				$this->instance->getObjValidatorLogin());
 		}
 
+		public function testGetValidatorAppointment()
+		{
+			$this->assertInstanceOf('\Models\Validators\ValidatorAppointment',
+				$this->instance->getObjValidatorAppointment());
+		}
+
 		public function testGetHttp()
 		{
 			$this->assertInstanceOf('\Models\Interfaces\Http',
@@ -67,27 +73,6 @@
 			$this->assertInstanceOf('\Models\Interfaces\Cookie', $obj);
 		}
 
-		public function testGetBook()
-		{
-			$obj = $this->instance->getObjBook();
-
-			$this->assertInstanceOf('\Models\Performers\Book', $obj);
-		}
-
-		public function testGetAuthor()
-		{
-			$obj = $this->instance->getObjAuthor();
-
-			$this->assertInstanceOf('\Models\Performers\Author', $obj);
-		}
-
-		public function testGetGenre()
-		{
-			$obj = $this->instance->getObjGenre();
-
-			$this->assertInstanceOf('\Models\Performers\Genre', $obj);
-		}
-
 		public function testGetUser()
 		{
 			$obj = $this->instance->getObjUser();
@@ -95,17 +80,17 @@
 			$this->assertInstanceOf('\Models\Performers\User', $obj);
 		}
 
-		public function testGetCart()
+		public function testGetRoom()
 		{
-			$obj = $this->instance->getObjCart();
+			$obj = $this->instance->getObjRoom();
 
-			$this->assertInstanceOf('\Models\Performers\Cart', $obj);
+			$this->assertInstanceOf('\Models\Performers\Room', $obj);
 		}
 
-		public function testGetOrder()
+		public function testGetAppointment()
 		{
-			$obj = $this->instance->getObjOrder();
+			$obj = $this->instance->getObjAppointment();
 
-			$this->assertInstanceOf('\Models\Performers\Order', $obj);
+			$this->assertInstanceOf('\Models\Performers\Appointment', $obj);
 		}
 	}

@@ -24,6 +24,10 @@
 			return $this->params;
 		}
 
+		/**
+		 * @param $name - key in HTTP form
+		 * convert UNIX time to DateTime object
+		 */
 		public function convertDateTime($name)
 		{
 			$this->params[$name] = \DateTime::createFromFormat('U', $this->params[$name]);
@@ -33,6 +37,9 @@
 			return self::$instance;
 		}
 
+		/**
+		 * set event date to start and end
+		 */
 		public function setDateOfAppointment()
 		{
 			$date = $this->params['date'];

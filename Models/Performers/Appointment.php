@@ -4,6 +4,9 @@
 
 	class Appointment extends \BaseRegular
 	{
+		/**
+		 * @return (idAppointment, Date, Start, End)
+		 */
 		public function getAppns($year, $month, $idRoom)
 		{
 			return $this->objFactory->getObjDatabase()
@@ -27,6 +30,10 @@
 				->execute()->getResult()[0]['result'];
 		}
 
+		/**
+		 * @return (Date, Start, End, idAppointment, idEmployee,
+		 * EmployeeName, idRecurring, Description, Submitted)
+		 */
 		public function getAppointmentDetails($idAppointment)
 		{
 			return $this->objFactory->getObjDatabase()

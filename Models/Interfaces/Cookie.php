@@ -20,9 +20,12 @@
 
 		public function getCookie($name)
 		{
-			if (!empty($_COOKIE[$name])) {
+			if (!empty($_COOKIE[$name]))
+			{
 				$result = $_COOKIE[$name];
-			} else {
+			}
+			else
+			{
 				$result = false;
 			}
 

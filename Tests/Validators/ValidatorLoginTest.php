@@ -29,6 +29,6 @@
 		{
 			$result = $this->instance->isValidForm();
 
-			$this->assertEquals(TEST_ID_USER, $result[0]['idUser']);
+			$this->assertEquals(TEST_ID_USER, $result[0]['idEmployee']);
 		}
 	}

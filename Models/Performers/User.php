@@ -5,10 +5,6 @@
 	class User extends \BaseRegular
 	{
 		/**
-		 * @param $email
-		 * @param $name
-		 * @param $password
-		 * @param $isAdmin
 		 * add new email, name, password, isAdmin (flag)
 		 * @return (newId)
 		 */
@@ -21,7 +17,6 @@
 		}
 
 		/**
-		 * @param $email
 		 * @return if $email is set true
 		 * false otherwise
 		 */
@@ -33,8 +28,6 @@
 		}
 
 		/**
-		 * @param $email
-		 * @param $password
 		 * check existing pair $email and $password
 		 * @return (idEmployee, IsAdmin)
 		 */
@@ -47,8 +40,6 @@
 		}
 
 		/**
-		 * @param $idUser
-		 * @param $sessionId
 		 * check session of specified user
 		 * @return (idEmployee, Name, Email, IsAdmin)
 		 */
@@ -87,8 +78,6 @@
 		}
 
 		/**
-		 * @param $idUser
-		 * @param $sessionId
 		 * set new session for specified user
 		 * @return bool (result)
 		 */
@@ -101,7 +90,6 @@
 		}
 
 		/**
-		 * @param $idUser
 		 * stop session of specified user
 		 * @return bool (result)
 		 */

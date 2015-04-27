@@ -24,7 +24,7 @@
 		}
 
 		/**
-		 * if user is logged
+		 * if logged user is admin
 		 * set response (idEmployee, Name, Email, IsAdmin), false otherwise
 		 */
 		public function validateAdmin()

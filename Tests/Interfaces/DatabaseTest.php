@@ -6,15 +6,15 @@
 
 	class DatabaseTest extends \PHPUnit_Framework_TestCase
 	{
-		private $className;
-		private $instance;
+		private static $className;
+		private static $instance;
 
 		public function __construct()
 		{
 			parent::__construct();
 
-			$this->className = '\Models\Interfaces\Database';
-			$this->instance = new \Models\Interfaces\Database
+			self::$className = '\Models\Interfaces\Database';
+			self::$instance = new \Models\Interfaces\Database
 			(
 				DB_NAME,
 				DB_HOST,
@@ -25,49 +25,43 @@
 
 		public function testHasDb()
 		{
-			$this->assertClassHasAttribute('db', $this->className);
+			$this->assertClassHasAttribute('db', self::$className);
 		}
 
 		public function testHasSth()
 		{
-			$this->assertClassHasAttribute('sth', $this->className);
+			$this->assertClassHasAttribute('sth', self::$className);
 		}
 
 		public function testConstruct()
 		{
-			$this->assertInstanceOf($this->className, $this->instance);
+			$this->assertInstanceOf(self::$className, self::$instance);
 		}
 
 		public function testSetQuery()
 		{
-			$query = 'SELECT u.idUser, u.Email
-					FROM users AS u
-					WHERE u.idUser = ?';
+			$query = 'SELECT e.Name
+					FROM employees AS e
+					WHERE e.idEmployee = ?';
 
-			$this->assertInstanceOf($this->className,
-				$this->instance->setQuery($query));
+			$this->assertInstanceOf(self::$className,
+				self::$instance->setQuery($query));
 		}
 
 		public function testSetParam()
 		{
-			$this->assertInstanceOf($this->className,
-				$this->instance->setParam([TEST_ID_USER]));
+			$this->assertInstanceOf(self::$className,
+				self::$instance->setParam([TEST_ID_USER]));
 		}
 
 		public function testExecute()
 		{
-			$this->assertInstanceOf($this->className,
-				$this->instance->execute());
+			$this->assertInstanceOf(self::$className,
+				self::$instance->execute());
 		}
 
 		public function testGetResultKeys()
 		{
-			$this->assertArrayHasKey('idUser', $this->instance->getResult());
-		}
-
-		public function testGetResult()
-		{
-			$this->assertEquals(TEST_ID_USER,
-				$this->instance->getResult()['idUser']);
+			$this->assertArrayHasKey('Name', self::$instance->getResult()[0]);
 		}
 	}

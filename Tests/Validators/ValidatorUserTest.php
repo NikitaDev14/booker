@@ -14,6 +14,11 @@
 
 		public function testIsValidUser()
 		{
-			$this->assertFalse($this->instance->isValidUser());
+			$this->assertEmpty($this->instance->isValidUser());
+		}
+
+		public function testIsValidAdmin()
+		{
+			$this->assertEmpty($this->instance->isValidAdmin());
 		}
 	}

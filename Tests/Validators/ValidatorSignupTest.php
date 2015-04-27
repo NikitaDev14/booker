@@ -21,10 +21,16 @@
 		{
 			$this->assertInstanceOf($this->className,
 				$this->instance->setForm([
+						'name' => TEST_NEW_NAME,
 						'email' => TEST_EMAIL,
-						'password' => TEST_PASSWORD,
-						'passwordRepeat' => TEST_PASSWORD_REPEAT]
+						'password' => TEST_NEW_PASSWORD,
+						'passwordRepeat' => TEST_NEW_PASSWORD_REPEAT]
 				));
+		}
+
+		public function testIsValidName()
+		{
+			$this->assertTrue($this->instance->isValidName());
 		}
 
 		public function testIsValidEmail()

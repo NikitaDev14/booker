@@ -24,7 +24,8 @@
 		{
 			$count = count($params);
 
-			for ($i = 1; $i <= $count; $i++) {
+			for ($i = 1; $i <= $count; $i++)
+			{
 				$this->sth->bindParam($i, $params[$i - 1]);
 			}
 

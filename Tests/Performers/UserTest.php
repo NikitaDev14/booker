@@ -16,59 +16,49 @@
 
 		public function testAddUser()
 		{
-			self::$testUser = (int)$this->instance->addUser(
-				TEST_NEW_EMAIL, TEST_NEW_PASSWORD
-			)[0]['LAST_INSERT_ID()'];
+			self::$testUser = (int) $this->instance->addUser(
+				TEST_NEW_NAME, TEST_NEW_EMAIL, TEST_NEW_PASSWORD, TEST_NEW_IS_ADMIN);
 
 			$this->assertTrue(0 < self::$testUser);
 		}
 
 		public function testExsistsUser()
 		{
-			$this->assertTrue($this->instance->exsistsUser(TEST_NEW_EMAIL));
+			$this->assertTrue($this->instance->getUserByEml(TEST_NEW_EMAIL));
 		}
 
 		public function testIsValidLogin()
 		{
-			$result = (int)$this->instance->isValidLogin(
+			$result = (int)$this->instance->getUserByEmlPass(
 				TEST_NEW_EMAIL, TEST_NEW_PASSWORD
-			)[0]['idUser'];
+			)[0]['idEmployee'];
 
 			$this->assertTrue(0 < $result);
 		}
 
 		public function testSessionStart()
 		{
-			$this->assertTrue(0 < $this->instance->sessionStart(
-					self::$testUser, TEST_ID_SESSION
-				)[0]['ROW_COUNT()']);
+			$this->assertTrue($this->instance->sessionStart(
+					self::$testUser, TEST_ID_SESSION));
 		}
 
 		public function testIsValidUser()
 		{
-			$result = $this->instance->isValidUser(
-				self::$testUser, TEST_ID_SESSION
-			)[0];
+			$result = $this->instance->getUserByCookie(
+				self::$testUser, TEST_ID_SESSION, TEST_NEW_IS_ADMIN)[0];
 
-			$this->assertTrue(self::$testUser == $result['idUser'] &&
-				TEST_ID_SESSION === $result['SessionId']);
+			$this->assertTrue(self::$testUser == $result['idEmployee']);
 		}
 
 		public function testSessionDestroy()
 		{
-			$this->assertTrue(0 < $this->instance->sessionDestroy(
-					self::$testUser)[0]['ROW_COUNT()']
-			);
+			$this->assertTrue($this->instance->sessionDestroy(
+					self::$testUser));
 		}
 
 		public function testDeleteUser()
 		{
-			$query = 'DELETE FROM users
-						WHERE users.idUser = ?';
-
-			$result = $this->objFactory->getObjDatabase()->
-			setQuery($query)->setParam([self::$testUser])->
-			execute()->getResult();
+			$result = (int) $this->instance->removeUser(self::$testUser);
 
 			$this->assertTrue(0 < $result);
 		}

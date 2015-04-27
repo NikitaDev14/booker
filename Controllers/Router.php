@@ -5,13 +5,12 @@
 	{
 		private static $instance;
 
-		private function __construct()
-		{
-		}
+		private function __construct() {}
 
 		public static function getInstance()
 		{
-			if (null === self::$instance) {
+			if (null === self::$instance)
+			{
 				self::$instance = new Router();
 			}
 

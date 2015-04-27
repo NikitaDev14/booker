@@ -4,6 +4,11 @@
 
 	class AppointmentController extends BaseController
 	{
+		/**
+		 * if user and event form is valid try to add appointment
+		 * set response 1 if is added
+		 * 0 otherwise
+		 */
 		public function addAppointment()
 		{
 			$cookie = $this->objFactory->getObjCookie();
@@ -20,8 +25,6 @@
 				->setForm($formData)->isValidNewAppointment();
 
 			$result = false;
-            //var_dump(new \DateTime());
-            //var_dump($formData);
 
 			if (true === $isValidAppn &&
 				(($formData['empl'] === $cookie->getCookie('id'))?
@@ -41,13 +44,19 @@
 						$formData['recurr'],
 						$formData['dur']
                     );
-				//var_dump($result);
 			}
 
 			$this->objFactory->getObjDataContainer()
 				->setParams(['nextPage' => $this->nextPage,
 					'result' => $result]);
 		}
+
+		/**
+		 * if user is valid set response
+		 * (Date, Start, End, idAppointment, idEmployee,
+		 * EmployeeName, idRecurring, Description, Submitted)
+		 * false otherwise
+		 */
 		public function getAppointmentDetails()
 		{
 			$formData = $this->objFactory->getObjHttp()
@@ -65,6 +74,12 @@
 				->setParams(['nextPage' => $this->nextPage,
 					'result' => $result]);
 		}
+
+		/**
+		 * if user is valid try to delete an appointment(s)
+		 * if deleted set response > 0
+		 * false otherwise
+		 */
 		public function deleteAppointment()
 		{
 			$formData = $this->objFactory->getObjHttp()
@@ -87,6 +102,12 @@
 				->setParams(['nextPage' => $this->nextPage,
 					'result' => $result]);
 		}
+
+		/**
+		 * if user is valid try to update an appointment(s)
+		 * if deleted set response > 0
+		 * false otherwise
+		 */
 		public function updateAppointment()
 		{
 			$cookie = $this->objFactory->getObjCookie();

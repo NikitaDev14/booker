@@ -41,7 +41,8 @@
 		}
 
 		/**
-		 * @return (idEmployee, Name) if session is set and cookie is not expired
+		 * @return (idEmployee, Name, Email, IsAdmin)
+		 * if session is set and cookie is not expired
 		 * otherwise false
 		 */
 		public function isValidUser()
