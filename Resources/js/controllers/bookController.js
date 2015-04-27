@@ -55,8 +55,8 @@ booker.controller('bookController',
 
                 self.messHead = self.lang.template.book.messHeadSucc;
                 self.messText = self.lang.template.book.messTextSucc +
-                    start.getHours()+':'+start.getMinutes()+
-                    '-'+end.getHours()+':'+end.getMinutes()+
+                    $scope.start.getHours()+':'+$scope.start.getMinutes()+
+                    '-'+$scope.end.getHours()+':'+$scope.end.getMinutes()+
                     '. '+$scope.description;
             }
         });

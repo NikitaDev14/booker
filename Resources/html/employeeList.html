@@ -3,7 +3,9 @@
 
     <table class="table table-striped table-hover">
         <tr ng-repeat="user in userCtrl.userList">
-            <td ng-bind="user.Name"></td>
+            <td>
+                <a href="mailto:{{user.Email}}" ng-bind="user.Name"></a>
+            </td>
             <td>
                 <button class="btn btn-warning" type="button" data-toggle="modal" data-target="#employee" ng-click="userCtrl.showUpdateMenu(user.idEmployee, user.Name, user.Email)" ng-bind="userCtrl.lang.template.event.btnUpd"></button>
             </td>
@@ -118,7 +120,7 @@
                             <div class="checkbox col-sm-offset-2 col-sm-10">
                                 <label>
                                     <input type="checkbox" ng-model="isAdmin" name="isAdmin" value="1">
-                                    Is admin?
+                                    {{userCtrl.lang.template.emplList.isAdmin}}
                                 </label>
                             </div>
                         </div>

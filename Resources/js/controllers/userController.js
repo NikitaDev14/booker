@@ -66,7 +66,7 @@ booker.controller('userController',
         this.addUser = function (name, email, isAdmin,
                                  password, passwordRepeat) {
 
-            userService.signup(name, email, Number(isAdmin),
+            userService.signup(name, email, isAdmin || 0,
                 password, passwordRepeat, function (response) {
 
                     var mess = '';
@@ -78,6 +78,8 @@ booker.controller('userController',
                             $scope.newUserEmail =
                             $scope.newUserPassword =
                             $scope.newUserPasswordRepeat = '';
+
+                        $window.location.reload;
                     }
                     else {
                         mess = self.lang.template.emplList.addMessFail;
